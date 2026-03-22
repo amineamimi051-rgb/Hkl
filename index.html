@@ -1,0 +1,3031 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>من سيربح المليون؟</title>
+<link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;700;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#010C1E;--bg2:#051840;--acc:#0B30B0;
+  --gold:#FFD700;--gold2:#FFA500;
+  --cyan:#00E5FF;--green:#00E676;--red:#FF1744;
+  --w:#fff;--dim:rgba(255,255,255,.55);--dim2:rgba(255,255,255,.22);
+  --fs-base:17px;--fs-sm:14px;--fs-xs:12px;--fs-lg:20px;--fs-xl:24px;--fs-xxl:32px;
+}
+.dark{--bg:#010C1E;--bg2:#051840;--acc:#0B30B0;--w:#fff;}
+.light{--bg:#EEF2FF;--bg2:#DDEEFF;--acc:#3056C0;--w:#111;--dim:rgba(0,0,0,.5);--dim2:rgba(0,0,0,.2);--gold:#CC9900;--gold2:#B07800;--cyan:#0077AA;}
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+body{font-family:'Cairo',sans-serif;background:var(--bg);color:var(--w);min-height:100vh;overflow-x:hidden;transition:background .4s,color .4s;}
+body.dark::before{content:'';position:fixed;inset:0;background:radial-gradient(ellipse 80% 60% at 20% 30%,rgba(0,60,200,.18) 0%,transparent 60%),radial-gradient(ellipse 60% 50% at 80% 70%,rgba(0,180,255,.1) 0%,transparent 55%);pointer-events:none;z-index:0;}
+.stars-bg{position:fixed;inset:0;z-index:0;overflow:hidden;pointer-events:none;}
+.star{position:absolute;border-radius:50%;background:#fff;animation:tw var(--d) var(--dl) infinite;}
+@keyframes tw{0%,100%{opacity:.1;transform:scale(1)}50%{opacity:1;transform:scale(1.8)}}
+.light .stars-bg{display:none;}
+
+/* ──────────────────────── SCREENS ──────────────────────── */
+.scr{display:none;position:relative;z-index:1;min-height:100vh;flex-direction:column;align-items:center;padding:14px 16px;}
+.scr.on{display:flex;}
+
+/* ──────────────────────── SIDEBAR ──────────────────────── */
+.sb-ov{position:fixed;inset:0;background:rgba(0,0,0,.65);z-index:499;display:none;backdrop-filter:blur(5px);}
+.sb-ov.on{display:block;}
+.sidebar{position:fixed;top:0;right:-290px;width:270px;height:100vh;background:linear-gradient(180deg,rgba(5,24,64,.99),rgba(1,8,24,.99));border-left:1px solid rgba(255,215,0,.18);z-index:500;transition:right .33s cubic-bezier(.4,0,.2,1);display:flex;flex-direction:column;overflow-y:auto;}
+.light .sidebar{background:linear-gradient(180deg,#d4e0f8,#e8f2ff);}
+.sidebar.open{right:0;}
+.sb-hd{padding:16px 14px 12px;border-bottom:1px solid rgba(255,215,0,.12);display:flex;align-items:center;justify-content:space-between;}
+.sb-ttl{font-size:var(--fs-lg);font-weight:900;color:var(--gold);}
+.sb-x{background:none;border:none;color:var(--dim);font-size:22px;cursor:pointer;transition:color .2s;}
+.sb-x:hover{color:var(--w);}
+.sb-user{padding:14px;border-bottom:1px solid rgba(255,255,255,.06);display:flex;align-items:center;gap:11px;}
+.sb-av{width:46px;height:46px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:22px;box-shadow:0 0 14px rgba(255,215,0,.3);flex-shrink:0;}
+.sb-nm{font-size:var(--fs-base);font-weight:700;}
+.sb-mt{font-size:var(--fs-xs);color:var(--dim);}
+.sb-streak{display:inline-flex;align-items:center;gap:4px;background:rgba(255,140,0,.15);border:1px solid rgba(255,140,0,.4);border-radius:14px;padding:3px 10px;font-size:var(--fs-xs);color:#FF8C00;margin-top:3px;}
+.sb-menu{flex:1;padding:8px 0;}
+.sbi{display:flex;align-items:center;gap:12px;padding:13px 14px;cursor:pointer;transition:all .2s;border-right:3px solid transparent;}
+.sbi:hover{background:rgba(255,215,0,.05);border-right-color:var(--gold);}
+.sbi-ic{font-size:20px;width:26px;text-align:center;}
+.sbi-tx{font-size:var(--fs-base);font-weight:600;}
+.sb-div{height:1px;background:rgba(255,255,255,.06);margin:4px 14px;}
+.sb-ft{padding:12px 14px;font-size:var(--fs-xs);color:var(--dim2);text-align:center;}
+
+/* ──────────────────────── SIDEBAR PAGES ──────────────────────── */
+.sb-pg{position:fixed;inset:0;background:linear-gradient(180deg,rgba(4,16,64,.99),rgba(1,8,24,1));z-index:600;display:none;flex-direction:column;overflow-y:auto;padding:18px 16px;}
+.light .sb-pg{background:linear-gradient(180deg,#d4e0f8,#e8f2ff);}
+.sb-pg.on{display:flex;}
+.sbp-hd{display:flex;align-items:center;gap:10px;margin-bottom:18px;}
+.sbp-bk{background:none;border:1.5px solid rgba(255,215,0,.35);border-radius:9px;padding:7px 13px;cursor:pointer;font-size:var(--fs-base);color:var(--gold);}
+.sbp-ttl{font-size:var(--fs-xl);font-weight:900;color:var(--gold);}
+.sbp-body{color:var(--w);font-size:var(--fs-base);line-height:2.1;}
+.sbp-body h3{color:var(--gold);margin:14px 0 6px;font-size:var(--fs-lg);}
+.sbp-body p{margin-bottom:9px;}
+
+/* SHARE */
+.share-wrap{background:rgba(255,215,0,.07);border:1px solid rgba(255,215,0,.2);border-radius:14px;padding:16px;margin:10px 0;text-align:center;}
+.sh-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin-top:10px;}
+.sh-btn{padding:9px 18px;border-radius:20px;border:1px solid rgba(255,255,255,.18);background:rgba(255,255,255,.07);color:var(--w);cursor:pointer;font-family:'Cairo',sans-serif;font-size:var(--fs-sm);transition:all .2s;}
+.sh-btn:hover{background:rgba(255,255,255,.16);}
+
+/* ──────────────────────── TOPBAR ──────────────────────── */
+.topbar{display:flex;align-items:center;justify-content:space-between;width:100%;max-width:860px;padding:8px 0 4px;position:sticky;top:0;z-index:10;background:linear-gradient(180deg,var(--bg) 80%,transparent);}
+.menu-btn{background:none;border:1.5px solid rgba(255,215,0,.3);border-radius:10px;padding:8px 12px;cursor:pointer;font-size:var(--fs-lg);color:var(--gold);transition:all .2s;}
+.menu-btn:hover{background:rgba(255,215,0,.1);}
+.tb-center{text-align:center;}
+.tb-plbl{font-size:var(--fs-xs);color:var(--dim);}
+.tb-pval{font-size:var(--fs-xl);font-weight:900;color:var(--gold);text-shadow:0 0 16px rgba(255,215,0,.5);}
+.tb-right{display:flex;flex-direction:column;align-items:center;gap:3px;}
+.tb-q{background:rgba(4,16,64,.8);border:1px solid rgba(0,229,255,.28);border-radius:10px;padding:6px 14px;text-align:center;}
+.tb-qn{font-size:var(--fs-xl);font-weight:900;color:var(--cyan);}
+.tb-ql{font-size:var(--fs-xs);color:var(--dim);}
+.streak-pill{background:linear-gradient(135deg,rgba(255,140,0,.25),rgba(255,80,0,.1));border:1px solid rgba(255,140,0,.5);border-radius:14px;padding:3px 10px;font-size:var(--fs-xs);font-weight:700;color:#FF8C00;display:flex;align-items:center;gap:4px;}
+.streak-ic{animation:fireAnim .6s ease infinite alternate;}
+@keyframes fireAnim{from{filter:drop-shadow(0 0 3px #FF8C00)}to{filter:drop-shadow(0 0 10px #FFD700)}}
+
+/* ──────────────────────── INTRO ──────────────────────── */
+#intro{justify-content:flex-start;padding-top:6px;}
+.intro-wrap{display:flex;flex-direction:column;align-items:center;gap:16px;width:100%;max-width:520px;}
+.logo-ring{width:120px;height:120px;border-radius:50%;border:4px solid var(--gold);background:radial-gradient(circle,rgba(4,22,84,.92) 55%,rgba(1,8,24,1));display:flex;align-items:center;justify-content:center;animation:spin 20s linear infinite;box-shadow:0 0 50px rgba(255,215,0,.4),inset 0 0 30px rgba(0,0,0,.5);position:relative;flex-shrink:0;}
+.logo-ring::before{content:'';position:absolute;inset:8px;border-radius:50%;border:2px solid rgba(255,215,0,.28);}
+.logo-ic{font-size:52px;animation:spinr 20s linear infinite;filter:drop-shadow(0 0 14px var(--gold));}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes spinr{to{transform:rotate(-360deg)}}
+.main-title{font-size:clamp(26px,6vw,50px);font-weight:900;background:linear-gradient(135deg,var(--gold) 0%,#FFFDE7 50%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.2;text-align:center;}
+.sub-ttl{color:var(--cyan);font-size:var(--fs-base);letter-spacing:3px;opacity:.8;text-align:center;}
+
+/* Stats bar */
+.stats-bar{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;width:100%;}
+.stat-chip{background:rgba(4,16,64,.8);border:1px solid rgba(255,215,0,.22);border-radius:20px;padding:9px 16px;text-align:center;min-width:88px;}
+.light .stat-chip{background:rgba(200,220,255,.6);border-color:rgba(0,100,200,.2);}
+.sc-val{font-size:var(--fs-xl);font-weight:900;color:var(--gold);}
+.sc-lbl{font-size:var(--fs-xs);color:var(--dim);}
+
+/* Streak display on intro */
+.streak-display{background:linear-gradient(135deg,rgba(255,100,0,.2),rgba(255,50,0,.08));border:2px solid rgba(255,140,0,.45);border-radius:16px;padding:12px 20px;text-align:center;width:100%;}
+.sd-num{font-size:36px;font-weight:900;color:#FF8C00;}
+.sd-lbl{font-size:var(--fs-sm);color:rgba(255,140,0,.8);}
+
+/* Achievement badge */
+.badges-row{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+.badge{background:rgba(4,16,64,.7);border:1.5px solid rgba(255,215,0,.2);border-radius:12px;padding:8px 12px;text-align:center;font-size:11px;color:var(--dim);transition:all .3s;}
+.badge.unlocked{border-color:var(--gold);color:var(--gold);background:rgba(255,215,0,.1);box-shadow:0 0 10px rgba(255,215,0,.2);}
+.badge-ic{font-size:22px;display:block;margin-bottom:3px;}
+
+/* Theme & controls row */
+.ctrl-row{display:flex;gap:14px;align-items:center;justify-content:center;flex-wrap:wrap;}
+.ctrl-grp{text-align:center;}
+.ctrl-lbl{font-size:var(--fs-xs);color:var(--dim);margin-bottom:6px;}
+.theme-row{display:flex;gap:8px;justify-content:center;}
+.tbtn{width:28px;height:28px;border-radius:50%;border:3px solid transparent;cursor:pointer;transition:all .3s;}
+.tbtn.active{border-color:var(--gold);transform:scale(1.3);}
+.tbtn.blue{background:linear-gradient(135deg,#0B2CA0,#00E5FF);}
+.tbtn.green{background:linear-gradient(135deg,#0A6020,#00FF88);}
+.tbtn.red{background:linear-gradient(135deg,#8A1010,#FF8C00);}
+.toggle-btn{background:rgba(255,215,0,.1);border:1.5px solid rgba(255,215,0,.3);color:var(--gold);border-radius:20px;padding:7px 16px;font-family:'Cairo',sans-serif;font-size:var(--fs-sm);font-weight:700;cursor:pointer;transition:all .2s;}
+.toggle-btn:hover{background:rgba(255,215,0,.2);}
+
+/* Daily challenge card */
+.daily-card{background:linear-gradient(135deg,rgba(255,165,0,.16),rgba(255,100,0,.08));border:2px solid rgba(255,165,0,.45);border-radius:16px;padding:14px 20px;text-align:center;cursor:pointer;transition:all .28s;width:100%;}
+.daily-card:hover{border-color:var(--gold2);transform:translateY(-2px);box-shadow:0 0 22px rgba(255,165,0,.3);}
+.daily-card.done{opacity:.55;cursor:default;}
+.dc-ttl{font-size:var(--fs-lg);font-weight:900;color:var(--gold2);}
+.dc-desc{font-size:var(--fs-sm);color:rgba(255,165,0,.8);margin-top:4px;}
+
+/* STAGES TABLE */
+.stages-wrap{width:100%;background:linear-gradient(145deg,rgba(4,16,64,.97),rgba(1,8,24,.99));border:2px solid rgba(255,215,0,.28);border-radius:18px;overflow:hidden;}
+.light .stages-wrap{background:rgba(220,235,255,.9);border-color:rgba(0,100,200,.25);}
+.stages-hd{padding:12px 16px;background:linear-gradient(135deg,rgba(255,215,0,.13),rgba(255,165,0,.04));border-bottom:1px solid rgba(255,215,0,.18);text-align:center;font-weight:900;font-size:var(--fs-lg);color:var(--gold);}
+.stages-scroll{max-height:320px;overflow-y:auto;}
+.stages-scroll::-webkit-scrollbar{width:3px;}
+.stages-scroll::-webkit-scrollbar-thumb{background:rgba(255,215,0,.3);border-radius:2px;}
+.st-row{display:flex;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);gap:8px;}
+.st-row:last-child{border-bottom:none;}
+.st-row.ms{background:linear-gradient(90deg,rgba(255,165,0,.1),transparent);}
+.st-num{font-size:var(--fs-sm);color:var(--dim);min-width:22px;text-align:center;font-weight:700;}
+.st-ic{font-size:16px;min-width:22px;}
+.st-lbl{font-size:var(--fs-sm);color:var(--dim);flex:1;font-weight:600;}
+.st-tag{font-size:10px;padding:2px 6px;border-radius:6px;font-weight:700;}
+.tag-ans{background:rgba(255,255,255,.07);color:var(--dim2);}
+.tag-ms{background:rgba(255,165,0,.14);border:1px solid rgba(255,165,0,.3);color:var(--gold2);}
+.st-prize{font-size:var(--fs-base);font-weight:900;}
+.ce{color:#69F0AE;}.cm{color:var(--gold);}.ch{color:#FF9100;}.cv{color:var(--red);}
+
+.big-start{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:50px;padding:17px 60px;font-size:var(--fs-xl);font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;box-shadow:0 0 30px rgba(255,215,0,.5);animation:pb 2s ease-in-out infinite;width:100%;max-width:320px;}
+@keyframes pb{0%,100%{transform:scale(1);box-shadow:0 0 30px rgba(255,215,0,.5)}50%{transform:scale(1.03);box-shadow:0 0 55px rgba(255,215,0,.85)}}
+.big-start:hover{animation:none;transform:scale(1.06)!important;}
+
+/* ──────────────────────── GAME ──────────────────────── */
+#game{padding:10px 14px;justify-content:space-between;}
+
+/* Host */
+.host-bar{width:100%;max-width:860px;margin:4px auto;display:flex;align-items:center;gap:10px;background:linear-gradient(135deg,rgba(4,16,64,.88),rgba(11,44,160,.4));border:1px solid rgba(0,229,255,.16);border-radius:13px;padding:9px 13px;min-height:48px;}
+.light .host-bar{background:linear-gradient(135deg,rgba(200,225,255,.7),rgba(180,210,255,.5));border-color:rgba(0,150,255,.25);}
+.h-av{width:36px;height:36px;border-radius:50%;background:linear-gradient(135deg,var(--gold),var(--gold2));display:flex;align-items:center;justify-content:center;font-size:17px;flex-shrink:0;box-shadow:0 0 12px rgba(255,215,0,.4);}
+.h-name{font-size:var(--fs-xs);color:var(--cyan);font-weight:700;}
+.h-msg{font-size:var(--fs-base);color:rgba(255,255,255,.9);font-style:italic;line-height:1.55;}
+.light .h-msg{color:rgba(0,0,0,.75);}
+
+/* Lifelines */
+.lls{display:flex;justify-content:center;gap:8px;width:100%;max-width:860px;margin:3px auto;flex-wrap:wrap;}
+.ll{display:flex;flex-direction:column;align-items:center;gap:3px;background:linear-gradient(145deg,rgba(4,16,64,.93),rgba(11,44,160,.6));border:2px solid rgba(255,215,0,.42);border-radius:11px;padding:8px 13px;cursor:pointer;transition:all .28s;min-width:68px;font-family:'Cairo',sans-serif;}
+.light .ll{background:rgba(200,225,255,.7);border-color:rgba(0,100,200,.3);}
+.ll:hover:not([disabled]){border-color:var(--gold);box-shadow:0 0 16px rgba(255,215,0,.3);transform:translateY(-2px);}
+.ll[disabled]{opacity:.24;cursor:not-allowed;filter:grayscale(1);}
+.ll-ic{font-size:18px;}.ll-nm{font-size:var(--fs-xs);color:var(--gold);font-weight:700;}
+
+/* Timer */
+.timer-row{width:100%;max-width:860px;margin:4px auto;display:flex;align-items:center;gap:9px;}
+.tn{font-size:22px;font-weight:900;color:var(--cyan);min-width:36px;text-align:center;transition:color .3s;}
+.tn.danger{color:var(--red);animation:tpulse .5s ease-in-out infinite;}
+@keyframes tpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.18)}}
+.tbg{flex:1;height:6px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;}
+.tf{height:100%;background:linear-gradient(90deg,var(--cyan),var(--gold));border-radius:3px;transition:width 1s linear;}
+
+/* Question */
+.q-area{width:100%;max-width:860px;margin:4px auto;display:flex;flex-direction:column;gap:10px;flex:1;justify-content:center;}
+.q-box{background:linear-gradient(145deg,rgba(4,16,64,.98),rgba(1,8,24,.99));border:2px solid rgba(255,215,0,.3);border-radius:18px;padding:20px 24px;text-align:center;position:relative;overflow:hidden;box-shadow:0 0 35px rgba(0,0,0,.5);}
+.light .q-box{background:rgba(230,242,255,.92);border-color:rgba(0,100,200,.2);}
+.q-box::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(transparent 0deg,rgba(255,215,0,.04) 90deg,transparent 180deg,rgba(0,229,255,.03) 270deg,transparent 360deg);animation:rot 10s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg)}}
+.q-cat{font-size:var(--fs-sm);color:var(--cyan);letter-spacing:2px;opacity:.75;margin-bottom:4px;}
+.q-text{font-size:clamp(16px,3vw,22px);font-weight:700;line-height:1.75;position:relative;z-index:1;color:var(--w);}
+.light .q-text{color:#111;}
+
+/* Stars rating (speed bonus) */
+.stars-row{display:flex;justify-content:center;gap:6px;margin-top:4px;}
+.s-star{font-size:20px;filter:grayscale(1);transition:filter .3s;}
+.s-star.lit{filter:none;}
+
+/* Answer grid */
+.ans-grid{display:grid;gap:9px;}
+.ag4{grid-template-columns:1fr 1fr;}
+.ag6{grid-template-columns:1fr 1fr 1fr;}
+.ag6 .ans-btn{padding:10px 10px;font-size:clamp(11px,1.9vw,14px);}
+.ag6 .a-ltr{width:24px;height:24px;font-size:11px;}
+.ans-btn{background:linear-gradient(145deg,rgba(4,16,64,.92),rgba(11,44,160,.55));border:2px solid rgba(0,229,255,.22);border-radius:14px;padding:14px 16px;cursor:pointer;font-family:'Cairo',sans-serif;font-size:clamp(14px,2.5vw,17px);font-weight:700;color:var(--w);text-align:right;display:flex;align-items:center;gap:9px;transition:all .22s;overflow:hidden;}
+.light .ans-btn{background:rgba(210,228,255,.8);border-color:rgba(0,100,200,.2);color:#111;}
+.ans-btn{
+  border-color: var(--ans-border-override, rgba(0,229,255,.22));
+  background: var(--ans-bg-override, linear-gradient(145deg,rgba(4,16,64,.92),rgba(11,44,160,.55)));
+}
+.ans-btn:hover:not([disabled]):not(.h50){border-color:var(--gold);box-shadow:0 0 14px rgba(255,215,0,.18);transform:scale(1.015);}
+.ans-btn[disabled]{cursor:not-allowed;}
+.a-ltr{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:var(--fs-base);flex-shrink:0;}
+.ans-btn.sel{border-color:var(--gold2)!important;background:linear-gradient(145deg,rgba(255,165,0,.22),rgba(255,100,0,.12))!important;}
+.ans-btn.ok{border-color:var(--green)!important;background:linear-gradient(145deg,rgba(0,230,118,.28),rgba(0,150,60,.15))!important;box-shadow:0 0 26px rgba(0,230,118,.4)!important;animation:fok .35s ease 3!important;}
+.ans-btn.no{border-color:var(--red)!important;background:linear-gradient(145deg,rgba(255,23,68,.28),rgba(180,0,0,.15))!important;box-shadow:0 0 22px rgba(255,23,68,.4)!important;}
+.ans-btn.timeout-reveal{border-color:var(--green)!important;background:linear-gradient(145deg,rgba(0,230,118,.3),rgba(0,150,60,.18))!important;box-shadow:0 0 30px rgba(0,230,118,.5)!important;animation:fok .4s ease 4!important;}
+@keyframes fok{0%,100%{opacity:1}50%{opacity:.35}}
+.h50{visibility:hidden!important;pointer-events:none!important;}
+/* Faded-out 50/50 answers */
+.ans-btn[style*="opacity: 0"]{
+  background:rgba(4,16,64,.3)!important;
+  border-color:rgba(255,255,255,.05)!important;
+}
+
+/* Withdraw btn */
+.wd-row{width:100%;max-width:860px;margin:3px auto;display:flex;justify-content:center;}
+.wd-btn{background:linear-gradient(135deg,rgba(255,23,68,.13),rgba(180,0,0,.07));border:2px solid rgba(255,23,68,.38);color:#FF6B6B;border-radius:24px;padding:9px 28px;font-family:'Cairo',sans-serif;font-size:var(--fs-base);font-weight:700;cursor:pointer;transition:all .28s;display:flex;align-items:center;gap:7px;}
+.wd-btn:hover{background:rgba(255,23,68,.22);border-color:var(--red);transform:scale(1.03);}
+
+/* Progress */
+.prog-row{width:100%;max-width:860px;margin:3px auto;display:flex;align-items:center;gap:7px;}
+.pbg{flex:1;height:4px;background:rgba(255,255,255,.08);border-radius:2px;}
+.pf{height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:2px;transition:width .8s;}
+.pl{font-size:var(--fs-sm);color:var(--dim);font-weight:700;}
+
+/* Ladder */
+.ladder{position:fixed;left:4px;top:50%;transform:translateY(-50%);display:flex;flex-direction:column-reverse;gap:2px;z-index:10;}
+.li{background:rgba(4,16,64,.65);border:1px solid rgba(255,215,0,.1);border-radius:5px;padding:3px 6px;font-size:10px;color:rgba(255,255,255,.33);text-align:center;transition:all .3s;min-width:62px;}
+.li.cur{background:linear-gradient(90deg,rgba(255,165,0,.3),rgba(255,215,0,.1));border-color:var(--gold);color:var(--gold);font-weight:700;font-size:11px;transform:scaleX(1.12);box-shadow:0 0 8px rgba(255,215,0,.3);}
+.li.ms{border-color:rgba(255,165,0,.32);color:rgba(255,165,0,.7);}
+.li.dn{color:rgba(0,230,118,.55);border-color:rgba(0,230,118,.22);}
+
+/* ──────────────────────── POPUPS ──────────────────────── */
+.pop-bg{position:fixed;inset:0;background:rgba(0,0,0,.8);backdrop-filter:blur(8px);z-index:400;display:none;align-items:center;justify-content:center;padding:14px;}
+.pop-bg.open{display:flex;}
+.pop{background:linear-gradient(145deg,rgba(4,16,64,.99),rgba(1,8,24,1));border:2px solid var(--gold);border-radius:18px;padding:24px;width:100%;max-width:420px;text-align:center;box-shadow:0 0 60px rgba(255,215,0,.3);animation:pi .3s ease;}
+.light .pop{background:linear-gradient(145deg,#d4e0f8,#e8f2ff);}
+@keyframes pi{from{transform:scale(.82);opacity:0}to{transform:scale(1);opacity:1}}
+.pop-ttl{font-size:var(--fs-xl);font-weight:900;color:var(--gold);margin-bottom:14px;}
+.pop-close{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:22px;padding:10px 26px;font-size:var(--fs-base);font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;margin-top:12px;}
+.aud-bars{display:flex;align-items:flex-end;justify-content:center;gap:10px;height:110px;margin:14px 0;}
+.bw{display:flex;flex-direction:column;align-items:center;gap:3px;flex:1;}
+.bar{width:100%;background:linear-gradient(180deg,var(--cyan),var(--acc));border-radius:3px 3px 0 0;transition:height 1.1s ease;min-height:3px;}
+.bp{font-size:var(--fs-sm);font-weight:700;}.bl{font-size:var(--fs-sm);font-weight:900;color:var(--gold);}
+.phone-msg{font-size:var(--fs-base);line-height:2;color:rgba(255,255,255,.9);background:rgba(0,100,255,.1);border-radius:12px;padding:14px;text-align:right;margin:8px 0;}
+.light .phone-msg{color:#111;background:rgba(0,100,200,.08);}
+
+/* Withdraw popup */
+.wd-box{background:linear-gradient(135deg,rgba(255,215,0,.13),rgba(255,165,0,.04));border:2px solid var(--gold);border-radius:14px;padding:18px;margin:10px 0;}
+.wd-amt{font-size:42px;font-weight:900;color:var(--gold);}
+.wd-lbl{font-size:var(--fs-sm);color:var(--dim);margin-bottom:4px;}
+.wd-warn{font-size:var(--fs-sm);color:rgba(255,255,255,.72);margin-top:8px;line-height:1.8;}
+.light .wd-warn{color:rgba(0,0,0,.6);}
+.wd-btns{display:flex;gap:10px;margin-top:14px;justify-content:center;flex-wrap:wrap;}
+.wd-yes{background:linear-gradient(135deg,var(--green),#00A152);color:var(--bg);border:none;border-radius:24px;padding:11px 26px;font-size:var(--fs-base);font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;}
+.wd-no{background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.18);color:var(--dim);border-radius:24px;padding:11px 20px;font-size:var(--fs-sm);font-family:'Cairo',sans-serif;cursor:pointer;}
+
+/* Lucky Wheel */
+.wheel-wrap{position:relative;width:260px;height:260px;margin:10px auto;}
+#lucky-wheel{width:260px;height:260px;border-radius:50%;border:5px solid var(--gold);box-shadow:0 0 30px rgba(255,215,0,.4);}
+.wheel-needle{position:absolute;top:-18px;left:50%;transform:translateX(-50%);font-size:30px;filter:drop-shadow(0 0 6px var(--gold));}
+.spin-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:50px;padding:12px 36px;font-size:var(--fs-lg);font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;margin-top:12px;transition:all .2s;}
+.spin-btn:hover{transform:scale(1.05);}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed;}
+.wheel-result{font-size:var(--fs-xl);font-weight:900;color:var(--gold);margin-top:10px;min-height:32px;}
+
+/* Achievement popup */
+.ach-pop{position:fixed;bottom:20px;left:50%;transform:translateX(-50%) translateY(120px);background:linear-gradient(135deg,rgba(255,215,0,.2),rgba(255,165,0,.1));border:2px solid var(--gold);border-radius:16px;padding:14px 24px;text-align:center;z-index:800;transition:transform .5s cubic-bezier(.34,1.56,.64,1);min-width:260px;}
+.ach-pop.show{transform:translateX(-50%) translateY(0);}
+.ach-ic{font-size:32px;}
+.ach-ttl{font-size:var(--fs-sm);color:var(--gold);font-weight:700;}
+.ach-name{font-size:var(--fs-base);font-weight:900;}
+
+/* ──────────────────────── END ──────────────────────── */
+#end{justify-content:center;gap:16px;text-align:center;}
+.end-em{font-size:72px;animation:bc 1s ease-in-out infinite;}
+@keyframes bc{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.end-ttl{font-size:30px;font-weight:900;}
+.tw{color:var(--gold);text-shadow:0 0 26px rgba(255,215,0,.5);}
+.tl{color:var(--red);}
+.twd{color:var(--green);text-shadow:0 0 22px rgba(0,230,118,.4);}
+.end-pb{background:linear-gradient(145deg,rgba(255,215,0,.13),rgba(255,165,0,.04));border:2px solid var(--gold);border-radius:16px;padding:18px 32px;}
+.ep-lbl{font-size:var(--fs-sm);color:var(--dim);margin-bottom:4px;}
+.ep-amt{font-size:42px;font-weight:900;color:var(--gold);}
+.end-stats{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;}
+.es{background:rgba(4,16,64,.75);border:1px solid rgba(255,215,0,.18);border-radius:13px;padding:11px 15px;text-align:center;}
+.light .es{background:rgba(200,220,255,.6);}
+.es-n{font-size:22px;font-weight:900;color:var(--cyan);}
+.es-l{font-size:var(--fs-xs);color:var(--dim);font-weight:600;}
+/* Stars earned */
+.earned-stars{display:flex;justify-content:center;gap:10px;font-size:36px;margin:4px 0;}
+.end-msg{color:var(--dim);font-size:var(--fs-base);max-width:420px;line-height:2;font-weight:600;}
+.end-btns{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;}
+.replay-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:50px;padding:14px 44px;font-size:var(--fs-lg);font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;box-shadow:0 0 26px rgba(255,215,0,.4);}
+.replay-btn:hover{transform:scale(1.05);}
+.wheel-end-btn{background:linear-gradient(135deg,rgba(155,89,182,.25),rgba(100,50,180,.12));border:2px solid rgba(155,89,182,.5);color:#CE93D8;border-radius:50px;padding:14px 30px;font-size:var(--fs-base);font-family:'Cairo',sans-serif;font-weight:700;cursor:pointer;transition:all .28s;}
+.wheel-end-btn:hover{background:rgba(155,89,182,.35);}
+
+/* NOTIF */
+.notif{position:fixed;top:14px;left:50%;transform:translateX(-50%) translateY(-130px);background:linear-gradient(135deg,rgba(4,16,64,.99),rgba(11,44,160,.95));border:2px solid var(--gold);border-radius:12px;padding:10px 22px;font-size:var(--fs-base);font-weight:700;color:var(--gold);z-index:700;transition:transform .4s cubic-bezier(.34,1.56,.64,1);white-space:nowrap;box-shadow:0 0 24px rgba(255,215,0,.3);}
+.notif.show{transform:translateX(-50%) translateY(0);}
+
+/* CONFETTI */
+.cf{position:fixed;border-radius:2px;animation:fall linear forwards;pointer-events:none;z-index:800;}
+@keyframes fall{from{opacity:1;transform:translateY(-10px) rotate(0)}to{opacity:0;transform:translateY(105vh) rotate(720deg)}}
+@keyframes ringExpand{from{width:10px;height:10px;opacity:1}to{width:400px;height:400px;opacity:0;border-width:1px}}
+
+/* BIG WIN OVERLAY */
+.big-win-overlay{position:fixed;inset:0;background:radial-gradient(ellipse at center,rgba(255,215,0,.18) 0%,rgba(0,0,0,.7) 70%);z-index:820;display:none;align-items:center;justify-content:center;flex-direction:column;gap:16px;}
+.big-win-overlay.show{display:flex;animation:fadeInOverlay .5s ease;}
+@keyframes fadeInOverlay{from{opacity:0}to{opacity:1}}
+.bwo-prize{font-size:clamp(48px,10vw,90px);font-weight:900;background:linear-gradient(135deg,var(--gold),#FFFDE7,var(--gold2));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:prizePulse 0.6s ease-in-out infinite alternate;text-shadow:none;}
+@keyframes prizePulse{from{transform:scale(1)}to{transform:scale(1.06)}}
+.bwo-msg{font-size:clamp(18px,4vw,32px);font-weight:900;color:#fff;text-align:center;text-shadow:0 0 20px rgba(255,215,0,.6);}
+.bwo-stars{font-size:36px;letter-spacing:8px;}
+
+@media(max-width:600px){
+  .ladder{display:none;}
+  .ag4{grid-template-columns:1fr;}
+  .ag6{grid-template-columns:1fr 1fr;}
+}
+</style>
+</head>
+<style>
+/* ══════════════════════════════════
+   SPLASH SCREEN
+══════════════════════════════════ */
+#splash{position:fixed;inset:0;background:radial-gradient(ellipse at center,#051840 0%,#010C1E 70%);z-index:9999;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:20px;transition:opacity .8s ease;}
+#splash.hide{opacity:0;pointer-events:none;}
+.splash-logo{width:140px;height:140px;border-radius:50%;border:4px solid var(--gold);background:radial-gradient(circle,rgba(4,22,84,.95) 55%,rgba(1,8,24,1));display:flex;align-items:center;justify-content:center;animation:splashPulse 1.2s ease-in-out infinite;box-shadow:0 0 60px rgba(255,215,0,.5),inset 0 0 40px rgba(0,0,0,.5);}
+.splash-logo-ic{font-size:64px;filter:drop-shadow(0 0 18px var(--gold));}
+.splash-title{font-size:clamp(28px,6vw,52px);font-weight:900;background:linear-gradient(135deg,var(--gold) 0%,#FFFDE7 50%,var(--gold2) 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;text-align:center;line-height:1.2;}
+.splash-sub{color:var(--cyan);font-size:15px;letter-spacing:3px;opacity:.8;}
+.splash-bar-wrap{width:260px;height:5px;background:rgba(255,255,255,.1);border-radius:3px;overflow:hidden;margin-top:10px;}
+.splash-bar{height:100%;width:0%;background:linear-gradient(90deg,var(--cyan),var(--gold));border-radius:3px;transition:width .08s linear;}
+.splash-tip{font-size:13px;color:rgba(255,255,255,.55);text-align:center;max-width:280px;line-height:1.7;min-height:40px;}
+.splash-stars{display:flex;gap:8px;justify-content:center;}
+.sp-star{font-size:20px;opacity:0;animation:starPop .4s ease forwards;}
+@keyframes splashPulse{0%,100%{transform:scale(1);box-shadow:0 0 60px rgba(255,215,0,.5)}50%{transform:scale(1.06);box-shadow:0 0 90px rgba(255,215,0,.8)}}
+@keyframes starPop{from{opacity:0;transform:scale(0) rotate(-20deg)}to{opacity:1;transform:scale(1) rotate(0)}}
+</style>
+
+<body class="dark">
+
+<!-- ═══════════════════════════ SPLASH SCREEN ═══════════════════════════ -->
+<div id="splash">
+  <div class="splash-logo"><span class="splash-logo-ic">💰</span></div>
+  <div class="splash-title">من سيربح المليون؟</div>
+  <div class="splash-sub">برنامج المسابقات الأشهر</div>
+  <div class="splash-stars">
+    <span class="sp-star" style="animation-delay:.2s">⭐</span>
+    <span class="sp-star" style="animation-delay:.4s">⭐</span>
+    <span class="sp-star" style="animation-delay:.6s">⭐</span>
+    <span class="sp-star" style="animation-delay:.8s">⭐</span>
+    <span class="sp-star" style="animation-delay:1s">⭐</span>
+  </div>
+  <div class="splash-bar-wrap"><div class="splash-bar" id="splash-bar"></div></div>
+  <div class="splash-tip" id="splash-tip">جاري تحميل الأسئلة...</div>
+</div>
+
+<div class="stars-bg" id="stars-bg"></div>
+<div class="notif" id="notif"></div>
+<div class="ach-pop" id="ach-pop"><div class="ach-ic" id="ach-ic">🏅</div><div class="ach-ttl">إنجاز جديد!</div><div class="ach-name" id="ach-name"></div></div>
+
+<!-- SIDEBAR -->
+<div class="sb-ov" id="sb-ov" onclick="closeSB()"></div>
+<div class="sidebar" id="sidebar">
+  <div class="sb-hd"><div class="sb-ttl">⚙️ القائمة</div><button class="sb-x" onclick="closeSB()">✕</button></div>
+  <div class="sb-user">
+    <div class="sb-av">🏆</div>
+    <div>
+      <div class="sb-nm">المتسابق</div>
+      <div class="sb-mt" id="sb-meta">أفضل نتيجة: $0</div>
+      <div class="sb-streak"><span id="sb-streak-ic">🔥</span><span id="sb-streak-txt">0 يوم متتالي</span></div>
+    </div>
+  </div>
+  <div class="sb-menu">
+    <div class="sbi" onclick="openPG('pg-stats')"><span class="sbi-ic">📊</span><span class="sbi-tx">إحصائياتي</span></div>
+    <div class="sbi" onclick="openPG('pg-achievements')"><span class="sbi-ic">🏅</span><span class="sbi-tx">إنجازاتي</span></div>
+    <div class="sbi" onclick="openPG('pg-rules')"><span class="sbi-ic">📖</span><span class="sbi-tx">قواعد اللعبة</span></div>
+    <div class="sbi" onclick="openPG('pg-share')"><span class="sbi-ic">📤</span><span class="sbi-tx">مشاركة</span></div>
+    <div class="sb-div"></div>
+    <div class="sbi" onclick="openPG('pg-priv')"><span class="sbi-ic">🔒</span><span class="sbi-tx">سياسة الخصوصية</span></div>
+    <div class="sbi" onclick="openPG('pg-about')"><span class="sbi-ic">ℹ️</span><span class="sbi-tx">حول التطبيق</span></div>
+    <div class="sb-div"></div>
+    <div class="sbi" onclick="doReset()"><span class="sbi-ic">🔄</span><span class="sbi-tx">إعادة ضبط</span></div>
+  </div>
+  <div class="sb-ft">من سيربح المليون؟ v7.0 · © 2025</div>
+</div>
+
+<!-- SB PAGES -->
+<div class="sb-pg" id="pg-stats"><div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-stats')">←</button><div class="sbp-ttl">📊 إحصائياتي</div></div><div class="sbp-body" id="stats-body"></div></div>
+<div class="sb-pg" id="pg-achievements"><div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-achievements')">←</button><div class="sbp-ttl">🏅 إنجازاتي</div></div><div class="sbp-body" id="ach-body"></div></div>
+<div class="sb-pg" id="pg-rules">
+  <div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-rules')">←</button><div class="sbp-ttl">📖 قواعد اللعبة</div></div>
+  <div class="sbp-body">
+    <h3>🎯 الهدف</h3><p>الإجابة على 25 سؤالاً متدرجاً من السهل للمستحيل للوصول إلى $5,000,000!</p>
+    <h3>⏱️ الوقت</h3><p>30 ثانية لكل سؤال. بعد انتهاء الوقت تُكشف الإجابة الصحيحة تلقائياً. كلما أجبت بسرعة كسبت نجوماً أكثر!</p>
+    <h3>⭐ نظام النجوم</h3><p>كل سؤال يُعطيك 1-3 نجوم حسب سرعة إجابتك. النجوم تُحسب في نهاية اللعبة.</p>
+    <h3>💡 المساعدات</h3>
+    <p>• 50:50 — تُحذف نصف الإجابات الخاطئة<br>• 📞 اتصال — تلميح من صديق<br>• 👥 جمهور — نسب التصويت<br>• ⏭️ تخطي — تخطى السؤال مرة</p>
+    <h3>🔒 نقاط الأمان</h3><p>السؤال 5، 10، 15، 20 — إن أخطأت بعدها تضمن مبلغها.</p>
+    <h3>🔥 سلسلة الأيام</h3><p>العب كل يوم لتحافظ على سلسلتك. السلسلة الأطول = إنجازات أقوى!</p>
+    <h3>🎰 عجلة الحظ</h3><p>بعد كل فوز تتاح لك عجلة الحظ لجائزة مفاجئة!</p>
+  </div>
+</div>
+<div class="sb-pg" id="pg-share">
+  <div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-share')">←</button><div class="sbp-ttl">📤 مشاركة</div></div>
+  <div class="sbp-body">
+    <p>شارك اللعبة مع أصدقائك!</p>
+    <div class="share-wrap"><div style="color:var(--gold);font-weight:700;font-size:16px;">📱 شارك اللعبة</div>
+      <div class="sh-row">
+        <button class="sh-btn" onclick="shareGame('whatsapp')">💬 واتساب</button>
+        <button class="sh-btn" onclick="shareGame('twitter')">🐦 تويتر</button>
+        <button class="sh-btn" onclick="shareGame('telegram')">✈️ تيليغرام</button>
+        <button class="sh-btn" onclick="shareGame('copy')">📋 نسخ رابط</button>
+      </div>
+    </div>
+    <div class="share-wrap"><div style="color:var(--gold);font-weight:700;font-size:16px;">🏆 شارك نتيجتك</div>
+      <div id="share-res" style="color:var(--dim);font-size:13px;margin:8px 0;">العب أولاً!</div>
+      <button class="sh-btn" onclick="shareRes()">📊 مشاركة نتيجتي</button>
+    </div>
+  </div>
+</div>
+<div class="sb-pg" id="pg-priv">
+  <div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-priv')">←</button><div class="sbp-ttl">🔒 سياسة الخصوصية</div></div>
+  <div class="sbp-body">
+    <h3>جمع البيانات</h3><p>اللعبة لا تجمع أي بيانات شخصية. جميع البيانات تُخزَّن محلياً على جهازك فقط.</p>
+    <h3>التخزين المحلي</h3><p>نستخدم localStorage لحفظ إحصائياتك وإنجازاتك. لا يُرسَل شيء لأي خادم.</p>
+    <h3>الإعلانات</h3><p>اللعبة خالية تماماً من الإعلانات.</p>
+    <h3>حذف البيانات</h3><p>من القائمة ← "إعادة ضبط" لحذف كل شيء.</p>
+  </div>
+</div>
+<div class="sb-pg" id="pg-about">
+  <div class="sbp-hd"><button class="sbp-bk" onclick="closePG('pg-about')">←</button><div class="sbp-ttl">ℹ️ حول التطبيق</div></div>
+  <div class="sbp-body">
+    <h3>من سيربح المليون؟ v7.0</h3><p>لعبة مسابقات ثقافية شاملة — 25 مرحلة — 500+ سؤال في 12 فئة.</p>
+    <h3>✨ المميزات</h3>
+    <p>✅ 25 مرحلة من $500 حتى $5,000,000</p><p>✅ نظام نجوم حسب سرعة الإجابة</p>
+    <p>✅ نظام Streak يومي مع إنجازات</p><p>✅ شارات الإنجاز 8+</p>
+    <p>✅ عجلة الحظ بعد كل فوز</p><p>✅ تحدي يومي بمكافأة مضاعفة</p>
+    <p>✅ وضع ليلي/نهاري + تحكم بالصوت</p><p>✅ 500+ سؤال لا يتكرر</p>
+    <h3>📚 الفئات</h3><p>🌍 ثقافة · 🔬 علوم · 📜 تاريخ · ⚽ رياضة · 🕌 إسلاميات · 🍽️ مطبخ · 🎬 سينما · 💻 تقنية · 🧠 ألغاز · 🌐 لغات</p>
+  </div>
+</div>
+
+<!-- LUCKY WHEEL POPUP -->
+<div class="pop-bg" id="wheel-pop">
+  <div class="pop" style="max-width:340px;">
+    <div class="pop-ttl">🎰 عجلة الحظ!</div>
+    <p style="color:var(--dim);font-size:14px;margin-bottom:10px;">أدر العجلة للحصول على مكافأة!</p>
+    <div class="wheel-wrap"><canvas id="lucky-wheel" width="260" height="260"></canvas><div class="wheel-needle">▼</div></div>
+    <div class="wheel-result" id="wheel-result"></div>
+    <button class="spin-btn" id="spin-btn" onclick="spinWheel()">🎯 أدر العجلة!</button>
+    <br><button class="pop-close" id="wheel-close" onclick="closePop('wheel-pop');showScr('end');" style="display:none;margin-top:10px;">متابعة →</button>
+  </div>
+</div>
+
+<!-- AUDIENCE POPUP -->
+<div class="pop-bg" id="aud-pop"><div class="pop"><div class="pop-ttl">👥 تصويت الجمهور</div><div class="aud-bars" id="aud-bars"></div><button class="pop-close" onclick="closePop('aud-pop')">شكراً!</button></div></div>
+<!-- PHONE POPUP -->
+<div class="pop-bg" id="ph-pop"><div class="pop"><div class="pop-ttl">📞 مكالمة الصديق</div><div class="phone-msg" id="ph-msg"></div><button class="pop-close" onclick="closePop('ph-pop')">شكراً!</button></div></div>
+<!-- WITHDRAW POPUP -->
+<div class="pop-bg" id="wd-pop">
+  <div class="pop">
+    <div class="pop-ttl">💸 هل تريد الانسحاب؟</div>
+    <div class="wd-box"><div class="wd-lbl">ستحصل على</div><div class="wd-amt" id="wd-amt">$0</div></div>
+    <div class="wd-warn">مبلغ مضمون إن انسحبت الآن.<br>أو واصل نحو جائزة أكبر!</div>
+    <div class="wd-btns">
+      <button class="wd-yes" onclick="doWD()">✅ نعم، انسحب!</button>
+      <button class="wd-no" onclick="closePop('wd-pop')">🎯 سأواصل!</button>
+    </div>
+  </div>
+</div>
+
+<!-- BIG WIN OVERLAY -->
+<div class="big-win-overlay" id="big-win-overlay">
+  <div class="bwo-stars">⭐⭐⭐</div>
+  <div class="bwo-prize" id="bwo-prize">$5,000,000</div>
+  <div class="bwo-msg" id="bwo-msg">🏆 مبروك! أنت المليونير! 🏆</div>
+  <div class="bwo-stars">⭐⭐⭐</div>
+</div>
+
+<!-- ──────────────────────── INTRO ──────────────────────── -->
+<div class="scr on" id="intro">
+  <div class="topbar" style="justify-content:flex-end;">
+    <button class="menu-btn" onclick="openSB()">☰</button>
+  </div>
+  <div class="intro-wrap">
+    <div class="logo-ring"><span class="logo-ic">💰</span></div>
+    <div><div class="sub-ttl">برنامج المسابقات الأشهر</div><div class="main-title">من سيربح المليون؟</div></div>
+
+    <!-- Stats -->
+    <div class="stats-bar">
+      <div class="stat-chip"><div class="sc-val" id="chip-best">$0</div><div class="sc-lbl">🏆 أفضل نتيجة</div></div>
+      <div class="stat-chip"><div class="sc-val" id="chip-games">0</div><div class="sc-lbl">🎮 جلسات</div></div>
+      <div class="stat-chip"><div class="sc-val" id="chip-stars">0⭐</div><div class="sc-lbl">نجوم مكتسبة</div></div>
+    </div>
+
+    <!-- Streak -->
+    <div class="streak-display" id="streak-display">
+      <div class="sd-num"><span id="streak-num">0</span> 🔥</div>
+      <div class="sd-lbl">أيام متتالية — العب اليوم للحفاظ على سلسلتك!</div>
+    </div>
+
+    <!-- Achievements preview -->
+    <div>
+      <div style="font-size:13px;color:var(--dim);text-align:center;margin-bottom:8px;">🏅 إنجازاتك</div>
+      <div class="badges-row" id="badges-intro"></div>
+    </div>
+
+    <!-- Daily challenge -->
+    <!-- لقب الأسبوع -->
+  <div style="background:linear-gradient(135deg,rgba(255,215,0,.1),rgba(255,165,0,.05));border:1.5px solid rgba(255,215,0,.3);border-radius:14px;padding:10px 18px;text-align:center;width:100%;">
+    <div style="font-size:11px;color:var(--dim);margin-bottom:3px;">🏅 لقبك هذا الأسبوع</div>
+    <div id="week-title-badge" style="font-size:17px;font-weight:900;color:var(--gold);">🆕 لاعب جديد</div>
+  </div>
+  <div class="daily-card" id="daily-card" onclick="startDaily()">
+      <div class="dc-ttl">📅 تحدي اليوم!</div>
+      <div class="dc-desc" id="daily-desc">سؤال خاص بمكافأة ×3 — لا تفوّته!</div>
+    </div>
+
+    <!-- Controls -->
+    <div class="ctrl-row">
+      <div class="ctrl-grp">
+        <div class="ctrl-lbl">🎨 الثيم</div>
+        <div class="theme-row">
+          <button class="tbtn blue active" onclick="setThm('blue',this)"></button>
+          <button class="tbtn green" onclick="setThm('green',this)"></button>
+          <button class="tbtn red" onclick="setThm('red',this)"></button>
+        </div>
+      </div>
+      <div class="ctrl-grp">
+        <div class="ctrl-lbl">🌙 الوضع</div>
+        <button class="toggle-btn" id="mode-btn" onclick="toggleMode()">🌙 ليلي</button>
+      </div>
+      <div class="ctrl-grp">
+        <div class="ctrl-lbl">🔊 الصوت</div>
+        <button class="toggle-btn" id="sound-btn" onclick="toggleSound()">🔊 مفعّل</button>
+      </div>
+    </div>
+
+    <!-- Stages table -->
+    <div class="stages-wrap">
+      <div class="stages-hd">🏆 جدول المراحل الـ25 · 30 ثانية لكل سؤال</div>
+      <div class="stages-scroll" id="stages-tbl"></div>
+    </div>
+
+    <button class="big-start" onclick="startGame(false)">ابدأ اللعبة! 🎯</button>
+    <div style="font-size:var(--fs-sm);color:var(--dim);text-align:center;">📚 500+ سؤال في 12 فئة · الأسئلة لا تتكرر</div>
+  </div>
+</div>
+
+<div class="scr" id="game">
+  <div class="ladder" id="ladder"></div>
+  <div class="topbar">
+    <button class="menu-btn" onclick="openSB()">☰</button>
+    <div class="tb-center">
+      <div class="tb-plbl">💵 الجائزة الحالية</div>
+      <div class="tb-pval" id="prize-val">$500</div>
+    </div>
+    <div class="tb-right">
+      <div class="tb-q"><div class="tb-ql">السؤال</div><div class="tb-qn"><span id="qnum">1</span><span style="font-size:11px;color:var(--dim)">/25</span></div></div>
+      <div class="streak-pill" id="streak-pill" style="display:none;"><span class="streak-ic">🔥</span><span id="g-streak">0</span></div>
+    </div>
+  </div>
+
+  <div class="host-bar">
+    <div class="h-av">🎙️</div>
+    <div><div class="h-name">عماد — المقدم</div><div class="h-msg" id="h-msg">مرحباً! هيا نبدأ رحلتنا! 🌟</div></div>
+  </div>
+
+  <div class="lls" id="lls-row">
+    <button class="ll" id="ll-50"  onclick="use50()"><span class="ll-ic">✂️</span><span class="ll-nm">50:50</span></button>
+    <button class="ll" id="ll-50b" onclick="use50b()" style="display:none;border-color:rgba(255,105,180,.6);"><span class="ll-ic">✂️</span><span class="ll-nm" style="color:#FF69B4;">50:50⭐</span></button>
+    <button class="ll" id="ll-ph"  onclick="usePh()"><span class="ll-ic">📞</span><span class="ll-nm">اتصال</span></button>
+    <button class="ll" id="ll-phb" onclick="usePhb()" style="display:none;border-color:rgba(255,105,180,.6);"><span class="ll-ic">📞</span><span class="ll-nm" style="color:#FF69B4;">اتصال⭐</span></button>
+    <button class="ll" id="ll-au"  onclick="useAu()"><span class="ll-ic">👥</span><span class="ll-nm">جمهور</span></button>
+    <button class="ll" id="ll-sk"  onclick="useSk()"><span class="ll-ic">⏭️</span><span class="ll-nm">تخطي</span></button>
+    <button class="ll" id="ll-bomb"   onclick="useTimeBomb()" style="display:none;border-color:rgba(255,80,0,.7);"><span class="ll-ic">💣</span><span class="ll-nm" style="color:#FF5000;">+20ث⭐</span></button>
+    <button class="ll" id="ll-frz"    onclick="useFreeze()"   style="display:none;border-color:rgba(0,229,255,.6);"><span class="ll-ic">⏸️</span><span class="ll-nm" style="color:var(--cyan);">تجميد⭐</span></button>
+    <button class="ll" id="ll-crystal" onclick="useCrystal()"  style="display:none;border-color:rgba(180,100,255,.7);"><span class="ll-ic">🔮</span><span class="ll-nm" style="color:#CE93D8;">كرة⭐</span></button>
+    <button class="ll" id="ll-dbl"    onclick="useDouble()"   style="display:none;border-color:rgba(255,215,0,.7);"><span class="ll-ic">×2</span><span class="ll-nm" style="color:var(--gold);">×2⭐</span></button>
+    <button class="ll" id="ll-swap"   onclick="useSwap()"     style="display:none;border-color:rgba(0,230,118,.6);"><span class="ll-ic">🔄</span><span class="ll-nm" style="color:var(--green);">تبديل⭐</span></button>
+    <button class="ll" id="ll-shd"    style="display:none;border-color:rgba(0,230,118,.6);pointer-events:none;opacity:.85;"><span class="ll-ic">🛡️</span><span class="ll-nm" style="color:var(--green);">محمي⭐</span></button>
+  </div>
+
+  <div class="timer-row">
+    <span class="tn" id="tn">30</span>
+    <div class="tbg"><div class="tf" id="tf" style="width:100%"></div></div>
+    <span id="live-stars" style="font-size:13px;font-weight:900;color:var(--gold);min-width:46px;text-align:center;">⭐×10</span>
+  </div>
+
+  <div class="q-area">
+    <div class="q-box">
+      <div class="q-cat" id="q-cat"></div>
+      <div class="q-text" id="q-text">...</div>
+      <div class="stars-row" id="stars-row">
+        <span class="s-star" id="ss0">⭐</span>
+        <span class="s-star" id="ss1">⭐</span>
+        <span class="s-star" id="ss2">⭐</span>
+      </div>
+    </div>
+    <div class="ans-grid ag4" id="ans-grid"></div>
+  </div>
+
+  <div class="wd-row">
+    <button class="wd-btn" onclick="openWD()">💸 انسحب وخذ مبلغك الآن</button>
+  </div>
+
+  <div class="prog-row">
+    <span class="pl" id="pl">0/25</span>
+    <div class="pbg"><div class="pf" id="pf" style="width:0%"></div></div>
+    <span class="pl" id="pp">0%</span>
+  </div>
+</div>
+
+<!-- ──────────────────────── END ──────────────────────── -->
+<div class="scr" id="end" style="justify-content:center;">
+  <div class="end-em" id="end-em">🏆</div>
+  <div class="end-ttl" id="end-ttl">أحسنت!</div>
+  <div class="end-pb"><div class="ep-lbl">💵 جائزتك</div><div class="ep-amt" id="end-amt">$0</div></div>
+  <div class="earned-stars" id="earned-stars"></div>
+  <div class="end-stats">
+    <div class="es"><div class="es-n" id="es-c">0</div><div class="es-l">✅ صحيحة</div></div>
+    <div class="es"><div class="es-n" id="es-q">0</div><div class="es-l">📊 سؤال</div></div>
+    <div class="es"><div class="es-n" id="es-st">0⭐</div><div class="es-l">نجوم</div></div>
+    <div class="es"><div class="es-n" id="es-b">$0</div><div class="es-l">🏆 أفضل</div></div>
+  </div>
+  <div class="end-msg" id="end-msg"></div>
+  <div class="end-btns">
+    <button class="replay-btn" onclick="goIntro()">🔄 العب مجدداً</button>
+    <button class="wheel-end-btn" id="wheel-end-btn" onclick="openWheel()" style="display:none;">🎰 عجلة الحظ!</button>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════════════════
+     ⭐ STARS SHOP SCREEN
+══════════════════════════════════════════════════════ -->
+<style>
+/* STARS SHOP */
+.shop-scr{background:linear-gradient(180deg,rgba(4,16,64,.98),rgba(1,8,24,1));}
+.shop-hd{text-align:center;padding:10px 0 4px;}
+.shop-balance{font-size:26px;font-weight:900;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:8px;}
+.shop-bal-lbl{font-size:13px;color:var(--dim);}
+.shop-tabs{display:flex;gap:0;background:rgba(255,255,255,.06);border-radius:14px;padding:4px;width:100%;max-width:440px;margin:10px auto 0;}
+.shop-tab{flex:1;padding:9px 6px;border:none;background:none;color:var(--dim);font-family:'Cairo',sans-serif;font-size:13px;font-weight:700;cursor:pointer;border-radius:10px;transition:all .25s;}
+.shop-tab.active{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);}
+.shop-section{display:none;width:100%;max-width:440px;margin:0 auto;}
+.shop-section.active{display:block;}
+
+/* SHOP ITEMS grid */
+.shop-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px;padding:4px 0 16px;}
+.shop-item{background:linear-gradient(145deg,rgba(4,22,84,.95),rgba(10,42,138,.5));border:2px solid rgba(255,215,0,.22);border-radius:16px;padding:16px 12px;text-align:center;cursor:pointer;transition:all .28s;position:relative;overflow:hidden;}
+.shop-item:hover:not(.si-owned):not(.si-locked){border-color:var(--gold);box-shadow:0 0 20px rgba(255,215,0,.22);transform:translateY(-3px);}
+.shop-item.si-owned{border-color:var(--green);opacity:.75;}
+.shop-item.si-owned::after{content:'✓ مملوك';position:absolute;inset:0;background:rgba(0,230,118,.1);display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;color:var(--green);}
+.shop-item.si-locked{opacity:.45;cursor:not-allowed;}
+.si-ic{font-size:34px;margin-bottom:7px;}
+.si-name{font-size:13px;font-weight:900;margin-bottom:4px;}
+.si-desc{font-size:11px;color:var(--dim);margin-bottom:10px;line-height:1.55;}
+.si-price{font-size:15px;font-weight:900;color:var(--gold);display:flex;align-items:center;justify-content:center;gap:4px;}
+.si-price.pricy{color:#FF69B4;}
+.si-badge{position:absolute;top:8px;left:8px;background:linear-gradient(135deg,#FF1744,#C0392B);color:#fff;border-radius:8px;padding:2px 7px;font-size:10px;font-weight:900;}
+
+/* AVATARS */
+.avatars-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;padding:4px 0 16px;}
+.av-item{background:rgba(4,22,84,.9);border:2px solid rgba(255,215,0,.2);border-radius:14px;padding:14px 8px;text-align:center;cursor:pointer;transition:all .25s;}
+.av-item:hover:not(.av-active):not(.av-locked){border-color:var(--gold);transform:scale(1.04);}
+.av-item.av-active{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.3);background:rgba(0,229,255,.08);}
+.av-item.av-locked{opacity:.4;cursor:not-allowed;}
+.av-em{font-size:38px;margin-bottom:6px;}
+.av-name{font-size:11px;font-weight:700;}
+.av-cost{font-size:11px;color:var(--gold);margin-top:3px;}
+.av-owned{font-size:10px;color:var(--green);}
+
+/* THEMES */
+.themes-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:4px 0 16px;}
+.thm-item{border-radius:14px;overflow:hidden;cursor:pointer;border:2px solid rgba(255,215,0,.2);transition:all .25s;position:relative;}
+.thm-item:hover:not(.thm-locked){border-color:var(--gold);transform:scale(1.03);}
+.thm-item.thm-active{border-color:var(--cyan);box-shadow:0 0 14px rgba(0,229,255,.3);}
+.thm-item.thm-locked{opacity:.4;cursor:not-allowed;}
+.thm-preview{height:60px;display:flex;align-items:center;justify-content:center;font-size:22px;}
+.thm-info{padding:8px 10px;background:rgba(0,0,0,.35);}
+.thm-name{font-size:12px;font-weight:900;}
+.thm-cost{font-size:11px;color:var(--gold);}
+
+/* MYSTERY BOX */
+.mystery-box-wrap{text-align:center;padding:10px 0 16px;}
+.m-box{width:110px;height:110px;margin:0 auto 14px;border-radius:20px;border:3px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:56px;cursor:pointer;transition:all .35s;background:linear-gradient(145deg,rgba(255,215,0,.12),rgba(255,165,0,.05));box-shadow:0 0 24px rgba(255,215,0,.25);}
+.m-box:hover{transform:scale(1.08) rotate(3deg);box-shadow:0 0 40px rgba(255,215,0,.5);}
+.m-box.opened{animation:box-open .5s ease forwards;}
+@keyframes box-open{0%{transform:scale(1)}30%{transform:scale(1.2) rotate(-5deg)}60%{transform:scale(.9) rotate(5deg)}100%{transform:scale(1)}}
+.m-box-price{font-size:16px;font-weight:900;color:var(--gold);margin-bottom:6px;}
+.m-box-desc{font-size:13px;color:var(--dim);margin-bottom:12px;}
+.m-box-result{font-size:20px;font-weight:900;color:var(--green);min-height:30px;margin:10px 0;}
+.open-box-btn{background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:24px;padding:11px 32px;font-size:16px;font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;transition:all .25s;}
+.open-box-btn:hover{transform:scale(1.05);}
+.open-box-btn:disabled{opacity:.45;cursor:not-allowed;}
+
+/* LEADERBOARD */
+.lboard{padding:4px 0 16px;}
+.lb-row{display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:14px;margin-bottom:8px;background:rgba(4,22,84,.8);border:1px solid rgba(255,215,0,.12);}
+.lb-row.lb-me{background:linear-gradient(135deg,rgba(255,215,0,.14),rgba(255,165,0,.06));border-color:rgba(255,215,0,.4);}
+.lb-rank{font-size:22px;font-weight:900;min-width:36px;text-align:center;}
+.lb-av{font-size:30px;}
+.lb-info{flex:1;}
+.lb-name{font-size:15px;font-weight:700;}
+.lb-score{font-size:12px;color:var(--dim);}
+.lb-stars{font-size:14px;font-weight:900;color:var(--gold);}
+.lb-note{font-size:11px;color:var(--dim);text-align:center;margin-top:6px;}
+
+/* SPECIAL CHALLENGES */
+.challenges-list{padding:4px 0 16px;}
+.chal-item{background:linear-gradient(145deg,rgba(4,22,84,.92),rgba(11,44,160,.5));border:2px solid rgba(255,215,0,.2);border-radius:16px;padding:14px 16px;margin-bottom:10px;display:flex;align-items:center;gap:12px;cursor:pointer;transition:all .25s;}
+.chal-item:hover:not(.chal-done):not(.chal-locked){border-color:var(--gold);transform:translateX(-3px);}
+.chal-item.chal-done{opacity:.6;border-color:var(--green);}
+.chal-item.chal-locked{opacity:.35;cursor:not-allowed;}
+.chal-ic{font-size:32px;flex-shrink:0;}
+.chal-info{flex:1;}
+.chal-name{font-size:15px;font-weight:900;}
+.chal-desc{font-size:12px;color:var(--dim);margin-top:2px;}
+.chal-reward{font-size:13px;font-weight:900;color:var(--gold);margin-top:4px;}
+.chal-status{font-size:20px;flex-shrink:0;}
+.chal-prog{height:5px;background:rgba(255,255,255,.1);border-radius:3px;margin-top:6px;overflow:hidden;}
+.chal-prog-fill{height:100%;background:linear-gradient(90deg,var(--gold),var(--cyan));border-radius:3px;transition:width .6s;}
+
+/* BACK BTN */
+.back-to-intro{background:rgba(255,255,255,.07);border:1.5px solid rgba(255,255,255,.16);color:var(--dim);border-radius:22px;padding:10px 24px;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer;transition:all .2s;display:flex;align-items:center;gap:6px;}
+.back-to-intro:hover{background:rgba(255,255,255,.14);}
+
+/* STARS SHOP open button on intro */
+.open-shop-btn{background:linear-gradient(135deg,rgba(255,215,0,.18),rgba(255,165,0,.08));border:2px solid rgba(255,215,0,.45);color:var(--gold);border-radius:24px;padding:11px 28px;font-family:'Cairo',sans-serif;font-size:15px;font-weight:900;cursor:pointer;transition:all .28s;display:flex;align-items:center;gap:8px;justify-content:center;}
+.open-shop-btn:hover{background:rgba(255,215,0,.25);transform:translateY(-2px);box-shadow:0 0 18px rgba(255,215,0,.25);}
+</style>
+
+<!-- STARS SHOP SCREEN -->
+<div class="scr shop-scr" id="stars-shop">
+  <div class="topbar" style="justify-content:space-between;width:100%;max-width:440px;">
+    <button class="back-to-intro" onclick="showScr('intro');updateIntroUI();">← رجوع</button>
+    <div class="shop-hd" style="padding:0;">
+      <div class="shop-bal-lbl">نجومك المتاحة</div>
+      <div class="shop-balance">⭐ <span id="shop-stars-bal">0</span></div>
+    </div>
+    <div style="width:80px;"></div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="shop-tabs">
+    <button class="shop-tab active" onclick="switchShopTab('tab-items',this)">🛒 مساعدات</button>
+    <button class="shop-tab" onclick="switchShopTab('tab-avatars',this)">🎭 أفاتار</button>
+    <button class="shop-tab" onclick="switchShopTab('tab-themes',this)">🎨 ثيمات</button>
+    <button class="shop-tab" onclick="switchShopTab('tab-mystery',this)">🎁 مفاجأة</button>
+  </div>
+
+  <!-- Tab: Items/Lifelines -->
+  <div class="shop-section active" id="tab-items">
+    <div class="shop-grid" id="shop-items-grid"></div>
+  </div>
+
+  <!-- Tab: Avatars -->
+  <div class="shop-section" id="tab-avatars">
+    <div style="font-size:13px;color:var(--dim);text-align:center;margin:8px 0 12px;">اختر أفاتار المقدم في لعبتك</div>
+    <div class="avatars-grid" id="avatars-grid"></div>
+  </div>
+
+  <!-- Tab: Exclusive Themes -->
+  <div class="shop-section" id="tab-themes">
+    <div style="font-size:13px;color:var(--dim);text-align:center;margin:8px 0 12px;">ثيمات حصرية تُفتح بالنجوم فقط</div>
+    <div class="themes-grid" id="themes-grid"></div>
+  </div>
+
+  <!-- Tab: Mystery Box -->
+  <div class="shop-section" id="tab-mystery">
+    <div class="mystery-box-wrap">
+      <div style="font-size:16px;font-weight:900;color:var(--gold);margin-bottom:6px;">🎁 صندوق المفاجآت</div>
+      <div style="font-size:13px;color:var(--dim);margin-bottom:14px;">كل صندوق يحتوي على مكافأة عشوائية!</div>
+      <div class="m-box" id="m-box" onclick="openMysteryBox()">🎁</div>
+      <div class="m-box-price">سعر الصندوق: ⭐ <span id="mbox-price">15</span> نجمة</div>
+      <div class="m-box-desc">قد تحصل على: مساعدات · نجوم مضاعفة · ثيمات · مكافآت سرية!</div>
+      <div class="m-box-result" id="mbox-result"></div>
+      <button class="open-box-btn" id="open-box-btn" onclick="openMysteryBox()">افتح الصندوق! 🎁</button>
+      <div style="margin-top:14px;font-size:13px;color:var(--dim);">فُتح حتى الآن: <span id="boxes-opened">0</span> صندوق</div>
+    </div>
+  </div>
+</div>
+
+<!-- SPECIAL CHALLENGES SCREEN -->
+<div class="scr shop-scr" id="special-challenges">
+  <div class="topbar" style="justify-content:space-between;width:100%;max-width:440px;">
+    <button class="back-to-intro" onclick="showScr('intro');updateIntroUI();">← رجوع</button>
+    <div style="font-size:18px;font-weight:900;color:var(--gold);">⚡ تحديات خاصة</div>
+    <div style="width:80px;text-align:left;font-size:13px;color:var(--gold);">⭐ <span id="chal-stars-bal">0</span></div>
+  </div>
+  <div style="font-size:13px;color:var(--dim);text-align:center;margin:6px 0 12px;max-width:440px;">أسئلة نادرة ومكافآت ضخمة — تُفتح بالنجوم فقط!</div>
+  <div class="challenges-list" id="challenges-list" style="width:100%;max-width:440px;"></div>
+</div>
+
+<!-- LEADERBOARD SCREEN -->
+<div class="scr shop-scr" id="leaderboard-scr">
+  <div class="topbar" style="justify-content:space-between;width:100%;max-width:440px;">
+    <button class="back-to-intro" onclick="showScr('intro');updateIntroUI();">← رجوع</button>
+    <div style="font-size:18px;font-weight:900;color:var(--gold);">🏆 لوحة المتصدرين</div>
+    <div style="width:80px;"></div>
+  </div>
+  <div style="font-size:13px;color:var(--dim);text-align:center;margin:6px 0 12px;max-width:440px;">تقييمك بالمقارنة مع أرقام قياسية عالمية</div>
+  <div class="lboard" id="lboard" style="width:100%;max-width:440px;"></div>
+</div>
+
+<script>
+// ══════════════════════════════════
+// STAGES (25 stages up to $5M)
+// ══════════════════════════════════
+const STAGES=[
+  {n:1, p:'$500',      v:500,      d:'easy',  a:4,ms:false,lbl:'سهل'},
+  {n:2, p:'$1,000',    v:1000,     d:'easy',  a:4,ms:false,lbl:'سهل'},
+  {n:3, p:'$2,000',    v:2000,     d:'easy',  a:4,ms:false,lbl:'سهل'},
+  {n:4, p:'$3,000',    v:3000,     d:'easy',  a:4,ms:false,lbl:'سهل'},
+  {n:5, p:'$5,000',    v:5000,     d:'easy',  a:4,ms:true, lbl:'سهل 🔒'},
+  {n:6, p:'$7,500',    v:7500,     d:'medium',a:4,ms:false,lbl:'متوسط'},
+  {n:7, p:'$10,000',   v:10000,    d:'medium',a:4,ms:false,lbl:'متوسط'},
+  {n:8, p:'$15,000',   v:15000,    d:'medium',a:4,ms:false,lbl:'متوسط'},
+  {n:9, p:'$25,000',   v:25000,    d:'medium',a:4,ms:false,lbl:'متوسط'},
+  {n:10,p:'$50,000',   v:50000,    d:'medium',a:4,ms:true, lbl:'متوسط 🔒'},
+  {n:11,p:'$75,000',   v:75000,    d:'hard',  a:4,ms:false,lbl:'صعب'},
+  {n:12,p:'$100,000',  v:100000,   d:'hard',  a:4,ms:false,lbl:'صعب'},
+  {n:13,p:'$150,000',  v:150000,   d:'hard',  a:4,ms:false,lbl:'صعب'},
+  {n:14,p:'$200,000',  v:200000,   d:'hard',  a:4,ms:false,lbl:'صعب'},
+  {n:15,p:'$300,000',  v:300000,   d:'hard',  a:4,ms:true, lbl:'صعب 🔒'},
+  {n:16,p:'$400,000',  v:400000,   d:'vhard', a:6,ms:false,lbl:'صعب جداً ⚠️'},
+  {n:17,p:'$500,000',  v:500000,   d:'vhard', a:6,ms:false,lbl:'صعب جداً ⚠️'},
+  {n:18,p:'$750,000',  v:750000,   d:'vhard', a:6,ms:false,lbl:'صعب جداً ⚠️'},
+  {n:19,p:'$1,000,000',v:1000000,  d:'vhard', a:6,ms:false,lbl:'صعب جداً ⚠️'},
+  {n:20,p:'$1,500,000',v:1500000,  d:'vhard', a:6,ms:true, lbl:'صعب جداً 🔒'},
+  {n:21,p:'$2,000,000',v:2000000,  d:'vhard', a:6,ms:false,lbl:'مستحيل 💀'},
+  {n:22,p:'$2,500,000',v:2500000,  d:'vhard', a:6,ms:false,lbl:'مستحيل 💀'},
+  {n:23,p:'$3,000,000',v:3000000,  d:'vhard', a:6,ms:false,lbl:'مستحيل 💀'},
+  {n:24,p:'$4,000,000',v:4000000,  d:'vhard', a:6,ms:false,lbl:'مستحيل 💀'},
+  {n:25,p:'$5,000,000',v:5000000,  d:'vhard', a:6,ms:false,lbl:'أسطوري 👑'},
+];
+const MS_IDX=[4,9,14,19];
+const LTRS=['A','B','C','D','E','F'];
+const AR=['أ','ب','ج','د','هـ','و'];
+
+// ══════════════════════════════════
+// DATA PERSISTENCE
+// ══════════════════════════════════
+const ld=()=>{try{return JSON.parse(localStorage.getItem('mq7'))||{};}catch{return{};}};
+const sv=d=>{try{localStorage.setItem('mq7',JSON.stringify(d));}catch{}};
+let PD=ld();
+if(!PD.best)PD.best=0;
+if(!PD.games)PD.games=0;
+if(!PD.totalCor)PD.totalCor=0;
+if(!PD.totalStars)PD.totalStars=0;
+if(!PD.lastPrize)PD.lastPrize='$0';
+if(PD.tutDone===undefined)PD.tutDone=false;
+if(!PD.streak)PD.streak=0;
+if(!PD.lastPlay)PD.lastPlay='';
+if(!PD.achievements)PD.achievements={};
+if(!PD.dailyDone)PD.dailyDone='';
+const persist=()=>sv(PD);
+
+// ══════════════════════════════════
+// ACHIEVEMENTS
+// ══════════════════════════════════
+const ACHIEVEMENTS=[
+  {id:'first_game',ic:'🎮',name:'الأول من نوعه',desc:'العب أول لعبة',check:()=>PD.games>=1},
+  {id:'five_correct',ic:'✅',name:'خمسة صحيحة',desc:'أجب صحيحاً على 5 أسئلة متتالية',check:()=>PD.maxStreak5>=1},
+  {id:'reach_million',ic:'💰',name:'مليونير',desc:'وصل إلى $1,000,000',check:()=>PD.best>=1000000},
+  {id:'streak3',ic:'🔥',name:'ثلاثة أيام',desc:'العب 3 أيام متتالية',check:()=>PD.streak>=3},
+  {id:'streak7',ic:'🏅',name:'أسبوع كامل',desc:'العب 7 أيام متتالية',check:()=>PD.streak>=7},
+  {id:'stars30',ic:'⭐',name:'جامع النجوم',desc:'اكسب 30 نجمة',check:()=>PD.totalStars>=30},
+  {id:'ten_games',ic:'🎯',name:'لاعب محترف',desc:'العب 10 جلسات',check:()=>PD.games>=10},
+  {id:'reach5m',ic:'👑',name:'أسطوري',desc:'وصل إلى $5,000,000',check:()=>PD.best>=5000000},
+];
+if(!PD.maxStreak5)PD.maxStreak5=0;
+function checkAchievements(){
+  ACHIEVEMENTS.forEach(a=>{
+    if(!PD.achievements[a.id]&&a.check()){
+      PD.achievements[a.id]=true;persist();
+      showAchievement(a.ic,a.name);
+    }
+  });
+}
+function showAchievement(ic,name){
+  const p=document.getElementById('ach-pop');
+  document.getElementById('ach-ic').textContent=ic;
+  document.getElementById('ach-name').textContent=name;
+  p.classList.add('show');
+  setTimeout(()=>p.classList.remove('show'),3500);
+}
+
+// ══════════════════════════════════
+// QUESTIONS (350+)
+// ══════════════════════════════════
+const Q={
+easy:[
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة المملكة العربية السعودية؟',a:['الرياض','جدة','مكة المكرمة','الدمام'],r:'A'},
+{c:'🌍 ثقافة عامة',q:'ما عاصمة مصر؟',a:['الإسكندرية','القاهرة','الجيزة','أسوان'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'كم عدد قارات العالم؟',a:['خمس','ست','سبع','ثماني'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة اليابان؟',a:['أوساكا','كيوتو','طوكيو','هيروشيما'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'في أي دولة يقع برج إيفل؟',a:['إيطاليا','إسبانيا','فرنسا','ألمانيا'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما عاصمة أستراليا؟',a:['سيدني','ملبورن','كانبيرا','بريسبان'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'أي حيوان يُعرف بملك الغابة؟',a:['النمر','الأسد','الفهد','الدب'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'كم عدد الأيام في السنة الكبيسة؟',a:['364','365','366','367'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أكبر محيط في العالم؟',a:['الأطلسي','الهندي','الهادئ','المتجمد'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة البرازيل؟',a:['ريو دي جانيرو','ساو باولو','برازيليا','مناوس'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أسرع حيوان بري؟',a:['الأسد','الفهد','الحصان','الغزال'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'ما الجهاز المسؤول عن ضخ الدم؟',a:['الكبد','الكلى','القلب','الرئة'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أطول نهر في العالم؟',a:['الأمازون','الكونغو','النيل','المسيسيبي'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة تركيا؟',a:['إسطنبول','أنقرة','إزمير','بورصة'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'كم عدد ألوان قوس قزح؟',a:['خمسة','ستة','سبعة','ثمانية'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة الإمارات؟',a:['دبي','الشارقة','أبوظبي','العين'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أصغر دولة في العالم؟',a:['موناكو','سان مارينو','الفاتيكان','ليختنشتاين'],r:'C'},
+{c:'🔬 علوم',q:'ما هو الرمز الكيميائي للذهب؟',a:['Gd','Go','Au','Ag'],r:'C'},
+{c:'🔬 علوم',q:'ما هو أكبر كوكب في المجموعة الشمسية؟',a:['زحل','أورانوس','نبتون','المشتري'],r:'D'},
+{c:'🔬 علوم',q:'من هو مؤسس شركة آبل؟',a:['بيل غيتس','مارك زوكربيرغ','ستيف جوبز','إيلون ماسك'],r:'C'},
+{c:'🔬 علوم',q:'كم عدد بيتات في البايت؟',a:['4','8','16','32'],r:'B'},
+{c:'🔬 علوم',q:'ما هو الغاز الأكثر وفرة في الهواء؟',a:['الأكسجين','ثاني أكسيد الكربون','الهيدروجين','النيتروجين'],r:'D'},
+{c:'🔬 علوم',q:'ما أشهر متصفح إنترنت في العالم؟',a:['Firefox','Safari','Edge','Chrome'],r:'D'},
+{c:'🔬 علوم',q:'من هو مؤسس ميتا؟',a:['جاك دورسي','إيلون ماسك','مارك زوكربيرغ','ساتيا نادلا'],r:'C'},
+{c:'🔬 علوم',q:'ما معنى اختصار AI؟',a:['Auto Internet','Artificial Intelligence','Automated Input','Advanced Integration'],r:'B'},
+{c:'⚽ رياضة',q:'كم عدد لاعبي كرة القدم لكل فريق؟',a:['9','10','11','12'],r:'C'},
+{c:'⚽ رياضة',q:'في أي دولة أُقيمت كأس العالم 2022؟',a:['الإمارات','السعودية','البحرين','قطر'],r:'D'},
+{c:'⚽ رياضة',q:'ما اسم بطل فيلم الأسد الملك؟',a:['نالا','تيمون','سيمبا','رافيكي'],r:'C'},
+{c:'⚽ رياضة',q:'أي دولة عربية مثّلت كأس العالم أكثر مرة؟',a:['السعودية','المغرب','مصر','تونس'],r:'A'},
+{c:'🕌 إسلاميات',q:'كم عدد سور القرآن الكريم؟',a:['100','110','114','120'],r:'C'},
+{c:'🕌 إسلاميات',q:'كم عدد أركان الإسلام؟',a:['3','4','5','6'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هي أول سورة في القرآن؟',a:['البقرة','آل عمران','الفاتحة','الناس'],r:'C'},
+{c:'🕌 إسلاميات',q:'في أي مدينة وُلد النبي ﷺ؟',a:['المدينة','الطائف','مكة المكرمة','جدة'],r:'C'},
+{c:'🕌 إسلاميات',q:'كم عدد ركعات صلاة الفجر؟',a:['1','2','3','4'],r:'B'},
+{c:'🕌 إسلاميات',q:'أي نبي بنى السفينة؟',a:['موسى','إبراهيم','نوح','يونس'],r:'C'},
+{c:'🍽️ مطبخ',q:'ما هو المكون الرئيسي في الطحينة؟',a:['الفستق','اللوز','السمسم','جوز الهند'],r:'C'},
+{c:'🍽️ مطبخ',q:'ما هو الطبق المصري من العدس والأرز والمكرونة؟',a:['الفتة','الكشري','المحشي','الملوخية'],r:'B'},
+{c:'🍽️ مطبخ',q:'من أين يأتي الشاورما أصلاً؟',a:['مصر','المغرب','بلاد الشام','العراق'],r:'C'},
+{c:'🍽️ مطبخ',q:'ما هو الزيت الأساسي في المطبخ المتوسطي؟',a:['زيت الذرة','زيت الزيتون','عباد الشمس','النخيل'],r:'B'},
+{c:'🎬 سينما',q:'من رسم لوحة الموناليزا؟',a:['ميكيلانجيلو','رافاييل','ليوناردو دافنشي','فان غوخ'],r:'C'},
+{c:'🎬 سينما',q:'ما اسم أشهر مسرحية لشكسبير؟',a:['روميو وجولييت','هاملت','ماكبث','أوثيللو'],r:'B'},
+{c:'🎬 سينما',q:'في أي سنة صدر فيلم تيتانيك؟',a:['1995','1997','1999','2001'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الشيء الذي يمشي على أربع صباحاً واثنتين ظهراً وثلاث مساءً؟',a:['الكلب','الإنسان','القرد','الفيل'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الشيء الذي له أسنان ولا يعض؟',a:['الكلب','المشط','المنشار','الشوكة'],r:'B'},
+{c:'🌐 لغات',q:'ما معنى كلمة Hello بالإنجليزية؟',a:['مع السلامة','مرحباً','شكراً','من فضلك'],r:'B'},
+{c:'🌐 لغات',q:'ما هي أكثر اللغات انتشاراً؟',a:['الإنجليزية','الإسبانية','المندرينية','العربية'],r:'C'},
+{c:'🌐 لغات',q:'كيف تقول مرحباً باللغة الإسبانية؟',a:['Ciao','Bonjour','Hola','Guten Tag'],r:'C'},
+{c:'🌐 لغات',q:'ما معنى كلمة Merci بالفرنسية؟',a:['مرحباً','من فضلك','شكراً','أهلاً'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تعبر عبرها قناة السويس؟',a:['الأردن','سوريا','مصر','السودان'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة نيوزيلندا؟',a:['أوكلاند','كرايستشيرش','ويلينغتون','هاميلتون'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أطول سلسلة جبال في العالم؟',a:['جبال الهيمالايا','جبال الأنديز','جبال الألب','جبال روكي'],r:'B'},
+{c:'🌍 جغرافيا',q:'ما هي أعمق بحيرة في العالم؟',a:['بحيرة فيكتوريا','بحيرة تيتيكاكا','بحيرة بايكال','بحيرة سوبيريور'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تسمى "بلد الشمس المشرقة"؟',a:['الصين','كوريا الجنوبية','اليابان','تايوان'],r:'C'},
+{c:'🌍 جغرافيا',q:'أي مدينة تُسمى "عروس البحر الأبيض المتوسط"؟',a:['باريس','روما','الإسكندرية','برشلونة'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أطول حدود برية بين دولتين في العالم؟',a:['الصين-روسيا','روسيا-كازاخستان','كندا-أمريكا','الصين-المنغول'],r:'C'},
+{c:'🌍 جغرافيا',q:'أين يقع نهر الأمازون؟',a:['أفريقيا','آسيا','أمريكا الجنوبية','أمريكا الشمالية'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي بها أكثر من 17000 جزيرة؟',a:['اليابان','الفلبين','إندونيسيا','اليونان'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة جنوب أفريقيا التشريعية؟',a:['جوهانسبرغ','كيب تاون','بريتوريا','ديربان'],r:'B'},
+{c:'💻 تقنية',q:'ما هو اختصار API؟',a:['Application Programming Interface','Advanced Protocol Integration','Automated Program Input','Application Process Integration'],r:'A'},
+{c:'💻 تقنية',q:'ما هي لغة البرمجة التي طورتها Google خصيصاً؟',a:['Java','Swift','Kotlin','Dart'],r:'C'},
+{c:'💻 تقنية',q:'ما هو اختصار IoT؟',a:['Internet of Things','Integrated Online Technology','Input Output Transmission','Internet Open Technology'],r:'A'},
+{c:'💻 تقنية',q:'كم بت تساوي بايت واحد؟',a:['4','6','8','16'],r:'C'},
+{c:'💻 تقنية',q:'ما هو أكثر نظام تشغيل انتشاراً في العالم؟',a:['macOS','Linux','Windows','Android'],r:'D'},
+{c:'💻 تقنية',q:'ما هو منشئ موقع ويكيبيديا؟',a:['بيل غيتس','لاري بيدج','جيمي ويلز','تيم بيرنرز لي'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو اختصار AI؟',a:['Advanced Internet','Artificial Intelligence','Automated Input','Active Interface'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو مصطلح "Prompt" في سياق الذكاء الاصطناعي؟',a:['برنامج كمبيوتر','نموذج تدريب','التعليمات أو السؤال المُقدَّم للنموذج','نتيجة التدريب'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو مفهوم Fine-tuning في الذكاء الاصطناعي؟',a:['تدريب نموذج من الصفر','ضبط نموذج مدرب مسبقاً على بيانات جديدة','تحسين سرعة النموذج','تقليص النموذج'],r:'B'},
+{c:'💻 تقنية',q:'ما هو نظام تشغيل هواتف سامسونج؟',a:['iOS','HarmonyOS','Android','Windows Phone'],r:'C'},
+{c:'🎵 موسيقى',q:'من ألّف سيمفونية رقم 9 الشهيرة وهو أصم؟',a:['موزارت','شوبان','بتهوفن','باخ'],r:'C'},
+{c:'🎵 موسيقى',q:'ما هو عدد نوتات السلم الموسيقي الغربي؟',a:['5','7','8','12'],r:'B'},
+{c:'🎵 موسيقى',q:'في أي بلد نشأت موسيقى الجاز؟',a:['كوبا','الولايات المتحدة','فرنسا','البرازيل'],r:'B'},
+{c:'🎵 موسيقى',q:'كم عدد السيمفونيات التي ألّفها بيتهوفن؟',a:['7','8','9','10'],r:'C'},
+{c:'🎵 موسيقى',q:'ما هو اسم المقياس المستخدم لقياس شدة الصوت؟',a:['هرتز','ديسيبل','واط','أمبير'],r:'B'},
+{c:'🎵 فنون',q:'من رسم لوحة "العشاء الأخير"؟',a:['مايكل أنجلو','رافاييل','ليوناردو دافنشي','بيكاسو'],r:'C'},
+{c:'🎵 فنون',q:'في أي دولة بُني متحف اللوفر؟',a:['إيطاليا','ألمانيا','إنجلترا','فرنسا'],r:'D'},
+{c:'🎵 فنون',q:'في أي متحف تُحفظ لوحة الموناليزا؟',a:['متحف بريطاني','متحف الفاتيكان','اللوفر','البرادو'],r:'C'},
+{c:'🎵 فنون',q:'ما هو الأسلوب الفني الذي يصوّر الأحلام واللاوعي؟',a:['الواقعية','الانطباعية','السريالية','التكعيبية'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم الإمبراطور الروماني الذي اعتنق المسيحية؟',a:['ماركوس أوريليوس','يوليوس قيصر','قسطنطين الكبير','نيرون'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم المعبد اليوناني الشهير في أثينا؟',a:['الكولوسيوم','البارثينون','اليوروس','البانثيون'],r:'B'},
+{c:'🏛️ حضارات',q:'ما هي اللغة التي كانت لغة العلم في العصور الوسطى الإسلامية؟',a:['الفارسية','التركية','العربية','الآرامية'],r:'C'},
+{c:'🏛️ حضارات',q:'من هو مؤلف ملحمة الأوديسة؟',a:['فيرجيل','هوميروس','هيرودوت','سوفوكليس'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للكالسيوم؟',a:['Cl','Ca','Co','Ce'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للنحاس؟',a:['Co','Cu','Cp','Cn'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للفضة؟',a:['Si','Ag','Sr','Sb'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي وحدة قياس الكهرباء؟',a:['واط','نيوتن','أمبير','فولت'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي ظاهرة دوبلر؟',a:['انعكاس الضوء','تغير الموجات الصوتية عند الحركة','انتشار الضوء','تشتت الضوء'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هو اسم المسجد الذي فيه قبر النبي ﷺ؟',a:['المسجد الحرام','المسجد الأقصى','المسجد النبوي','مسجد قباء'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما اسم الخليفة الذي جمع القرآن في مصحف واحد؟',a:['أبو بكر الصديق','عمر بن الخطاب','عثمان بن عفان','علي بن أبي طالب'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو عدد آيات الفاتحة؟',a:['5','6','7','8'],r:'C'},
+{c:'🕌 إسلاميات',q:'كم سنة دامت الدولة الأموية؟',a:['69 سنة','89 سنة','99 سنة','109 سنة'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يطير بلا أجنحة ويبكي بلا عيون؟',a:['الغيمة','الريح','الوقت','الدخان'],r:'A'},
+{c:'🧠 ألغاز',q:'ما أسرع شيء في الكون؟',a:['الفكر','الضوء','الصوت','الكهرباء'],r:'B'},
+{c:'🧠 ألغاز',q:'لديّ 10 أصابع في يدي ولكنني لا أستطيع الإمساك بأي شيء — من أنا؟',a:['من يد مبتورة','صورة ليدَين','تمثال','الظل'],r:'B'},
+{c:'⚽ رياضة',q:'من فاز بكأس العالم لكرة القدم 2022؟',a:['فرنسا','البرازيل','الأرجنتين','المغرب'],r:'C'},
+{c:'⚽ رياضة',q:'في أي دولة ستُقام كأس العالم 2026؟',a:['قطر','الولايات المتحدة وكندا والمكسيب','إسبانيا والبرتغال والمغرب','أستراليا ونيوزيلندا'],r:'B'},
+{c:'⚽ رياضة',q:'من فاز بأول بطولة أمم أفريقيا؟',a:['مصر','السودان','إثيوبيا','المغرب'],r:'A'},
+{c:'⚽ رياضة',q:'في أي دولة أُقيمت أولى بطولات كأس العالم؟',a:['البرازيل','الأرجنتين','الأوروغواي','فرنسا'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة باكستان؟',a:['لاهور','كراتشي','إسلام آباد','رواق بندي'],r:'C'},
+{c:'🌍 جغرافيا',q:'في أي دولة يقع نهر المسيسيبي؟',a:['كندا','المكسيك','الولايات المتحدة','البرازيل'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة إندونيسيا الجديدة؟',a:['جاكرتا','سورابايا','نوسانتارا','باليكابابان'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أكبر دولة في أمريكا الجنوبية؟',a:['الأرجنتين','كولومبيا','البيرو','البرازيل'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تمتلك أكبر عدد من البحيرات؟',a:['روسيا','الولايات المتحدة','كندا','فنلندا'],r:'C'},
+{c:'💻 تقنية',q:'ما هو اختصار RAM؟',a:['Read Access Memory','Random Access Memory','Rapid Action Module','Remote Access Memory'],r:'B'},
+{c:'💻 تقنية',q:'ما هي لغة البرمجة التي تستخدمها لتصميم قواعد البيانات؟',a:['HTML','Python','SQL','CSS'],r:'C'},
+{c:'💻 تقنية',q:'في أي سنة تأسست شركة Apple؟',a:['1974','1976','1978','1980'],r:'B'},
+{c:'💻 تقنية',q:'ما هو اسم النظام المفتوح المصدر الأشهر للخوادم؟',a:['Windows Server','macOS Server','Linux','BSD'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو مفهوم التعلم العميق Deep Learning؟',a:['تعلم سريع','شبكات عصبية متعددة الطبقات','تعلم بصري فقط','تعلم بالروبوتات'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هي آلة الموسيقى الهوائية الأشهر في الموسيقى الكلاسيكية؟',a:['الفلوت','الكلارينيت','الأوبوا','الباسون'],r:'A'},
+{c:'🎵 موسيقى',q:'من هو مؤلف موسيقى فيلم Star Wars؟',a:['هانز زيمر','إنيو موريكوني','جون ويليامز','هوارد شور'],r:'C'},
+{c:'🎵 موسيقى',q:'ما هي الآلة الموسيقية التي يعزف عليها يو يو ما؟',a:['البيانو','الكمان','التشيللو','الفيولا'],r:'C'},
+{c:'🎵 فنون',q:'ما هي أشهر أعمال فنان التجهيز الفني كريستو؟',a:['تغليف المباني والجسور','الرسم التجريدي','النحت الكلاسيكي','فن الشارع'],r:'A'},
+{c:'🏛️ حضارات',q:'ما اسم العالِمة التي اخترعت البرمجة الأولى في التاريخ؟',a:['ماري كوري','هيدي لامار','أدا لوفليس','غريس هوبر'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو اسم ملك بابل الذي وضع أول قانون منظّم؟',a:['نبوخذنصر','حمورابي','نمرود','سرجون'],r:'B'},
+{c:'🏛️ حضارات',q:'ما هو اسم عاصمة الإمبراطورية الفارسية الأخمينية؟',a:['طهران','بغداد','بيرسيبوليس','إصفهان'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم الشاعر العربي الملقب بشاعر العروبة؟',a:['المتنبي','أبو تمام','البحتري','أبو نواس'],r:'A'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للصوديوم؟',a:['So','Sd','Na','So'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هي درجة انصهار الحديد؟',a:['800°م','1200°م','1538°م','2000°م'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي الطاقة التي تحتاجها لرفع جسم إلى ارتفاع معين؟',a:['الطاقة الحركية','الطاقة الكامنة','الطاقة الحرارية','الطاقة الضوئية'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي ظاهرة المد والجزر؟',a:['تأثير الرياح','جاذبية القمر والشمس على الماء','الزلازل البحرية','تمدد البحر'],r:'B'},
+{c:'🕌 إسلاميات',q:'من هو الصحابي الذي حفظ القرآن كاملاً في حياة النبي ﷺ؟',a:['عمر بن الخطاب','عثمان بن عفان','أبي بن كعب','ابن مسعود'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو عدد أسماء الله الحسنى؟',a:['66','77','88','99'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما اسم أول من أسلم من الرجال؟',a:['عمر بن الخطاب','علي بن أبي طالب','أبو بكر الصديق','خديجة'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم آخر نبي في الإسلام؟',a:['عيسى','يحيى','إدريس','محمد'],r:'D'},
+{c:'🧠 ألغاز',q:'ما الذي لا يمكنك رؤيته لكنه دائماً أمامك؟',a:['الهواء','المستقبل','الأمل','الحظ'],r:'B'},
+{c:'🧠 ألغاز',q:'أنا في وسط الأرض وفي نهاية الكون — من أنا؟',a:['حرف الراء','حرف الأرض','حرف الضاد','حرف النون'],r:'A'},
+{c:'🧠 ألغاز',q:'ما الذي يُقال دائماً ولا يُسمع أبداً؟',a:['الصمت','الفكر','الكلام الداخلي','الحلم'],r:'B'},
+{c:'⚽ رياضة',q:'من هو أول عربي يفوز بلقب بطولة رولان غاروس للتنس؟',a:['لم يفز أي عربي','أنس جابر','هيشام أرازي','محمد صفوت'],r:'A'},
+{c:'⚽ رياضة',q:'ما هي بطولة التنس التي تُلعب على الأرضية العشبية؟',a:['رولان غاروس','الأمريكية المفتوحة','ويمبلدون','الأسترالية المفتوحة'],r:'C'},
+{c:'⚽ رياضة',q:'من صاحب الرقم القياسي لأطول مباراة في تاريخ كرة القدم الدولية؟',a:['إنجلترا وألمانيا','البرازيل والأرجنتين','أستراليا وأمريكا الجنوبية','إنجلترا وأيرلندا الشمالية'],r:'C'},
+{c:'⚽ رياضة',q:'ما هو الرقم القياسي لأكبر فوز في تاريخ كرة القدم؟',a:['20-0','31-0','36-0','149-0'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما هي أعلى قمة جبلية في القارة الأمريكية؟',a:['جبل ماكنلي','جبل أكونكاغوا','جبل لوغان','جبل روني'],r:'B'},
+{c:'💻 تقنية',q:'ما هو الاسم الكامل لـ AI?',a:['Automated Input','Artificial Intelligence','Advanced Interface','Automatic Integration'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هو اسم الآلة الموسيقية الإيطالية ذات 4 أوتار المشابهة للكمان؟',a:['الفيولا','التشيللو','الكمان المنخفض','الكونترباص'],r:'A'},
+{c:'🏛️ حضارات',q:'ما اسم الفيلسوف الذي مات بشرب السم؟',a:['أفلاطون','أرسطو','سقراط','هيراقليطس'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للبوتاسيوم؟',a:['Po','Pt','K','B'],r:'C'},
+{c:'🕌 إسلاميات',q:'في أي شهر عربي وُلد النبي ﷺ؟',a:['محرم','صفر','ربيع الأول','رجب'],r:'C'},
+{c:'🧠 ألغاز',q:'ما اللغز: كلما أسرعت كلما أبطأت؟',a:['الزمن','العقل','التنفس','الوقت حين تستمتع'],r:'D'},
+{c:'⚽ رياضة',q:'في أي عام أُسس نادي برشلونة؟',a:['1895','1899','1900','1905'],r:'B'},
+{c:'⚽ رياضة',q:'ما هي الدولة التي تُعقد فيها بطولة ويمبلدون؟',a:['أمريكا','فرنسا','إنجلترا','أستراليا'],r:'C'},
+{c:'🌍 جغرافيا',q:'أين يقع جبل فيزوف البركاني الشهير؟',a:['اليونان','إسبانيا','إيطاليا','البرتغال'],r:'C'},
+{c:'💻 تقنية',q:'ما هي أول دولة تعتمد العملة الرقمية رسمياً؟',a:['الصين','السلفادور','الولايات المتحدة','سويسرا'],r:'B'},
+{c:'🎵 موسيقى',q:'ما عدد نوتات السلم الموسيقي الكروماتيكي؟',a:['7','9','12','14'],r:'C'},
+{c:'🏛️ حضارات',q:'من هو كاتب ملحمة الشاهنامه الفارسية؟',a:['الرومي','الفردوسي','الخيام','حافظ'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي الطاقة الكامنة الكهربائية؟',a:['الطاقة المخزنة في المجال الكهربائي','الطاقة الحركية','الطاقة الضوئية','الطاقة الصوتية'],r:'A'},
+{c:'🕌 إسلاميات',q:'ما هو اسم أول سفارة في الإسلام؟',a:['الهجرة إلى الحبشة','بيعة العقبة','صلح الحديبية','فتح مكة'],r:'A'},
+{c:'🧠 ألغاز',q:'ما الذي يتضخم كلما أزلت منه؟',a:['الفراغ','البالون','الحفرة','الفجوة'],r:'C'},
+{c:'⚽ رياضة',q:'ما هو عدد لاعبي كل فريق في رياضة الرغبي؟',a:['11','13','15','16'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أصغر قارة في العالم من حيث المساحة الكلية؟',a:['أوروبا','أنتاركتيكا','أستراليا','أمريكا الجنوبية'],r:'C'},
+{c:'💻 تقنية',q:'ما هو الاختلاف بين HTTP و HTTPS؟',a:['لا فرق','HTTPS مشفّر وأكثر أماناً','HTTP أسرع دائماً','HTTPS خاص بالمواقع البنكية فقط'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هي أقدم آلة موسيقية وترية معروفة؟',a:['البيانو','الكمان','القيثارة أو العود القديم','الغيتار'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هي عاصمة إمبراطورية مالي الإسلامية الشهيرة؟',a:['تمبكتو','نياني','جاو','داكار'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو أكثر عنصر وفرة في الكون؟',a:['الأكسجين','الكربون','الهيليوم','الهيدروجين'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما هو اسم الجهاز الحاكم في الدولة الإسلامية الأولى؟',a:['المجلس','الخلافة','الإمارة','السلطنة'],r:'B'},
+{c:'🧠 ألغاز',q:'ما اسم الشيء الذي تمسكه وتعطيه في نفس الوقت؟',a:['الحب','الوعد','الطعام','المال'],r:'B'},
+{c:'⚽ رياضة',q:'ما هو أكبر ملعب كرة قدم في العالم؟',a:['ملعب سانتياغو برنابيو','ملعب كامب نو','ملعب رانغناراروكن','ملعب نارندرا مودي'],r:'D'},
+
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تحتضن أكبر غابة مطيرة في العالم؟',a:['كولومبيا','البيرو','البرازيل','فنزويلا'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة الأكثر كثافة سكانية في العالم؟',a:['الصين','الهند','بنغلاديش','سنغافورة'],r:'D'},
+{c:'🌍 جغرافيا',q:'أي دولة يطلق عليها "قلب آسيا"؟',a:['نيبال','أفغانستان','طاجيكستان','منغوليا'],r:'B'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة الوحيدة المحاطة بدولتين فقط؟',a:['الأندورا','سان مارينو','ليختنشتاين','لوكسمبورغ'],r:'C'},
+{c:'💻 تقنية',q:'ما هو اسم أبرز هجوم سيبراني استهدف البنية التحتية في 2017؟',a:['Stuxnet','WannaCry','Mirai','Petya'],r:'B'},
+{c:'💻 تقنية',q:'ما هو بروتوكول TCP في شبكات الإنترنت؟',a:['لغة برمجة','بروتوكول نقل مضمون للبيانات','نظام تشفير','بروتوكول لاسلكي'],r:'B'},
+{c:'💻 تقنية',q:'ما هي تقنية VPN؟',a:['شبكة واسعة','شبكة خاصة افتراضية لتأمين الاتصال','شبكة لاسلكية','بروتوكول تشفير فقط'],r:'B'},
+{c:'💻 تقنية',q:'ما هو نظام التشغيل الذي طوّره لينوس تورفالدس؟',a:['Windows','macOS','Android','Linux'],r:'D'},
+{c:'🎵 موسيقى',q:'من ألّف موسيقى فيلم Titanic "My Heart Will Go On"؟',a:['هانز زيمر','جيمس هورنر','جون ويليامز','إنيو موريكوني'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هو اسم الموسيقار العربي الشهير الملقب بـ"موزارت العرب"؟',a:['محمد عبد الوهاب','فريد الأطرش','زكريا أحمد','رياض السنباطي'],r:'A'},
+{c:'🎵 موسيقى',q:'من صمّم تصميم دار أوبرا سيدني الشهيرة؟',a:['فرانك لويد رايت','يورن أوتسون','لو كوربوزييه','زاها حديد'],r:'B'},
+{c:'🎵 فنون',q:'ما هي الحركة الفنية الأدبية التي ابتكرها أندريه بريتون؟',a:['الدادائية','السريالية','الرمزية','التعبيرية'],r:'B'},
+{c:'🏛️ حضارات',q:'ما اسم المدينة المحاطة بالبراكين التي دمرها بركان فيزوف؟',a:['نابولي','روما','بومبي','سورنتو'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو الاسم العلمي لقراءة النصوص المسمارية القديمة؟',a:['الهيروغليفية','الأكادية','الكتابة الوتدية','البروتو سينائية'],r:'C'},
+{c:'🏛️ حضارات',q:'من هو الفيلسوف الصيني مؤسس الكونفوشيوسية؟',a:['تاو','لاو تسه','كونفوشيوس','سن تزو'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم الإمبراطور المغولي الذي حكم أكبر إمبراطورية متصلة في التاريخ؟',a:['تيمورلنك','كوبلاي خان','هولاكو','جنكيز خان'],r:'D'},
+{c:'🧪 كيمياء',q:'ما هي الخاصية التي تميّز الفلزات عن اللافلزات؟',a:['الصلابة','توصيل الكهرباء والحرارة','اللون','الكتلة'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو اسم الجدول الذي رتّب فيه مندليف العناصر الكيميائية؟',a:['الجدول التسلسلي','الجدول الدوري','الجدول الذري','الجدول الجزيئي'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي نظرية أينشتاين الأشهر؟',a:['نظرية الكم','نظرية النسبية','نظرية الكهرومغناطيسية','النظرية الكمومية'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هو الاسم العلمي لظاهرة انكسار الضوء في الماء؟',a:['الانعكاس','الحيود','الانكسار','الاستقطاب'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم الفقيه الذي أسس المذهب المالكي؟',a:['أبو حنيفة','مالك بن أنس','الشافعي','أحمد بن حنبل'],r:'B'},
+{c:'🕌 إسلاميات',q:'في أي سنة هجرية نزل أول وحي على النبي ﷺ؟',a:['قبل الهجرة بـ10 سنوات','قبل الهجرة بـ13 سنة','قبل الهجرة بـ15 سنة','قبل الهجرة بـ20 سنة'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هو اسم الصحابي الذي قال عنه النبي ﷺ "لو كان بعدي نبي لكان عمر"؟',a:['أبو بكر','عمر بن الخطاب','علي','عثمان'],r:'B'},
+{c:'🧠 ألغاز',q:'إذا كان لديك 6 تفاحات وأعطيت نصفها — كم تبقى؟',a:['صفر','ثلاث','ست','واحدة'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يُشترى بالأوزان ويُؤكل بالعيون؟',a:['السكر','الذهب','الطعام','الكتب'],r:'D'},
+{c:'🧠 ألغاز',q:'في عائلة لديها 5 بنات لكل بنت أخ واحد كم عدد الأبناء في العائلة؟',a:['5','6','1','10'],r:'C'},
+{c:'⚽ رياضة',q:'من هو أكثر لاعب تسجيلاً للأهداف في تاريخ دوري أبطال أوروبا؟',a:['ميسي','رونالدو البرتغالي','رائول','بنزيمة'],r:'B'},
+{c:'⚽ رياضة',q:'كم مرة فازت الأرجنتين بكأس العالم حتى 2022؟',a:['1','2','3','4'],r:'C'},
+{c:'⚽ رياضة',q:'ما هي الدولة التي استضافت كأس العالم عام 2010؟',a:['البرازيل','ألمانيا','جنوب أفريقيا','روسيا'],r:'C'},
+{c:'⚽ رياضة',q:'ما هو الرقم القياسي لأهداف كأس العالم للاعب واحد في بطولة واحدة؟',a:['11','12','13','14'],r:'C'},
+
+
+{c:'🌍 ثقافة عامة',q:'ما هي أصغر دولة في العالم من حيث المساحة؟',a:['موناكو','سان مارينو','الفاتيكان','ليختنشتاين'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'كم عدد قارات العالم؟',a:['5','6','7','8'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي أطول نهر في العالم؟',a:['الأمازون','المسيسيبي','النيل','اليانغتسي'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'أي حيوان هو الأسرع في العالم؟',a:['الأسد','الفهد','الصقر','الخيل'],r:'B'},
+{c:'🔬 علوم',q:'ما هو الرمز الكيميائي للذهب؟',a:['Go','Gd','Au','Ag'],r:'C'},
+{c:'🔬 علوم',q:'كم عدد حواس الإنسان الأساسية؟',a:['4','5','6','7'],r:'B'},
+{c:'🔬 علوم',q:'ما اسم أكبر كوكب في المجموعة الشمسية؟',a:['زحل','أورانوس','المشتري','نبتون'],r:'C'},
+{c:'📜 تاريخ',q:'من اخترع الطباعة؟',a:['غوتنبرغ','نيوتن','أرشميدس','فرانكلين'],r:'A'},
+{c:'📜 تاريخ',q:'في أي قرن بنيت الأهرامات المصرية؟',a:['القرن العشرين قبل الميلاد','القرن السادس والعشرين قبل الميلاد','القرن العاشر قبل الميلاد','القرن الخامس قبل الميلاد'],r:'B'},
+{c:'⚽ رياضة',q:'كم عدد لاعبي فريق كرة القدم في الملعب؟',a:['9','10','11','12'],r:'C'},
+{c:'⚽ رياضة',q:'في أي بلد نشأت لعبة كرة السلة؟',a:['كندا','الولايات المتحدة','إنجلترا','البرازيل'],r:'A'},
+{c:'🕌 إسلاميات',q:'كم عدد سور القرآن الكريم؟',a:['110','114','120','100'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هي أول سورة نزلت في القرآن الكريم؟',a:['الفاتحة','البقرة','العلق','المدثر'],r:'C'},
+{c:'🍽️ مطبخ',q:'ما هو المكون الرئيسي في الحمص؟',a:['العدس','الفول','الحمص المطحون','الفاصوليا'],r:'C'},
+{c:'🎬 سينما',q:'ما هو الفيلم الذي فيه "You shall not pass!"؟',a:['Star Wars','The Lord of the Rings','Harry Potter','The Avengers'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي له أذن ولكنه لا يسمع؟',a:['الصخرة','الإبرة','الذرة','المجرفة'],r:'C'},
+{c:'🌐 لغات',q:'ما هي عاصمة اليابان؟',a:['أوساكا','كيوتو','طوكيو','هيروشيما'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أكبر محيط في العالم؟',a:['الأطلسي','الهادئ','الهندي','المتجمد الشمالي'],r:'B'},
+{c:'🔬 علوم',q:'ما هو الغاز الأوفر في الغلاف الجوي للأرض؟',a:['الأكسجين','ثاني أكسيد الكربون','النيتروجين','الهيدروجين'],r:'C'},
+{c:'📜 تاريخ',q:'من هو فاتح مصر الإسلامي؟',a:['خالد بن الوليد','عمر بن الخطاب','عمرو بن العاص','سعد بن أبي وقاص'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة البيرو؟',a:['بوغوتا','ليما','كيتو','سانتياغو'],r:'B'},
+{c:'🌍 جغرافيا',q:'في أي قارة تقع مدغشقر؟',a:['آسيا','أمريكا الجنوبية','أفريقيا','أوقيانوسيا'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة النمسا؟',a:['برن','براغ','بودابست','فيينا'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما هي أكبر مدينة في أفريقيا من حيث السكان؟',a:['القاهرة','لاغوس','كينشاسا','جوهانسبرغ'],r:'B'},
+{c:'🌍 جغرافيا',q:'ما اسم النهر الذي يخترق باريس؟',a:['الراين','اللوار','الرون','السين'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما اسم الجبل الأعلى في أمريكا الشمالية؟',a:['جبل ماكنلي','جبل روني','جبل لوغان','جبل ويتني'],r:'A'},
+{c:'🌍 جغرافيا',q:'أي دولة يطلق عليها "سقف العالم"؟',a:['نيبال','الصين','التبت','باكستان'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تمتلك أكبر احتياطي نفط في العالم؟',a:['السعودية','إيران','العراق','فنزويلا'],r:'D'},
+{c:'🌍 جغرافيا',q:'في أي دولة تقع مدينة دبي؟',a:['قطر','البحرين','الكويت','الإمارات'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة تشيلي؟',a:['بوينس آيرس','لاباز','سانتياغو','براسيليا'],r:'C'},
+{c:'💻 تقنية',q:'ما معنى اختصار SQL؟',a:['Simple Query Language','Structured Query Language','Standard Question Logic','Sequential Query List'],r:'B'},
+{c:'💻 تقنية',q:'ما هو الفرق بين الـ Frontend والـ Backend؟',a:['لا فرق','Frontend واجهة المستخدم والـ Backend الخادم','Frontend للجوال فقط','Backend أسرع دائماً'],r:'B'},
+{c:'💻 تقنية',q:'ما هي لغة برمجة تطبيقات Android الرسمية؟',a:['Java','Swift','Kotlin أو Java','C++'],r:'C'},
+{c:'💻 تقنية',q:'ما هو اختصار CSS؟',a:['Computer Style System','Cascading Style Sheets','Creative Style Syntax','Custom Style Script'],r:'B'},
+{c:'💻 تقنية',q:'ما هو أول متصفح إنترنت في التاريخ؟',a:['Netscape','Internet Explorer','WorldWideWeb','Mosaic'],r:'C'},
+{c:'💻 تقنية',q:'ما اختصار OS في الكمبيوتر؟',a:['Open Source','Output System','Operating System','Online Service'],r:'C'},
+{c:'💻 تقنية',q:'من مؤسس شركة Amazon؟',a:['إيلون ماسك','مارك زوكربرغ','جيف بيزوس','لاري بيدج'],r:'C'},
+{c:'💻 تقنية',q:'ما هي أكثر لغة برمجة شعبية في العالم؟',a:['Java','Python','C++','JavaScript'],r:'D'},
+{c:'💻 ذكاء اصطناعي',q:'من أسس شركة OpenAI؟',a:['إيلون ماسك وسام ألتمان وآخرون','بيل غيتس','مارك زوكربرغ','جيف بيزوس'],r:'A'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو نموذج الذكاء الاصطناعي الذي طورته Meta؟',a:['GPT','Gemini','Llama','Claude'],r:'C'},
+{c:'🎵 موسيقى',q:'ما اسم الملحن الذي ألّف "الرحسودي البلوية" المعروفة؟',a:['موزارت','شوبان','راخمانينوف','ليست'],r:'C'},
+{c:'🎵 موسيقى',q:'ما هي آلة الموسيقى الوترية ذات 88 مفتاحاً؟',a:['الأورغ','البيانو','الهارمونيكا','الأكورديون'],r:'B'},
+{c:'🎵 موسيقى',q:'في أي بلد نشأت موسيقى الفلامنكو؟',a:['البرتغال','إيطاليا','إسبانيا','المكسيك'],r:'C'},
+{c:'🎵 موسيقى',q:'من مغني الأوبرا الأشهر في التاريخ الحديث؟',a:['باباروتي','كاروزو','ديمينغو','أندريا بوتشيلي'],r:'A'},
+{c:'🎵 موسيقى',q:'ما اسم المطربة العربية الأشهر في التاريخ؟',a:['فيروز','وردة','نجاة الصغيرة','أم كلثوم'],r:'D'},
+{c:'🎵 موسيقى',q:'في أي مدينة ولد فيروز المطربة الشهيرة؟',a:['دمشق','عمان','بيروت','القاهرة'],r:'C'},
+{c:'🎵 فنون',q:'ما اسم الأسلوب الفني الذي يعتمد على النقاط الصغيرة لتكوين الصورة؟',a:['الانطباعية','التكعيبية','التنقيطية','التعبيرية'],r:'C'},
+{c:'🎵 فنون',q:'من هو الرسام الأسباني الأشهر في القرن العشرين؟',a:['دالي','غويا','فيلاسكيز','بيكاسو'],r:'D'},
+{c:'🎵 فنون',q:'ما هي أشهر قصيدة لشاعر عربي قديم؟',a:['المعلقات','الإلياذة','الشاهنامه','الأوديسة'],r:'A'},
+{c:'🏛️ حضارات',q:'ما اسم الإمبراطور الأول للصين؟',a:['كونفوشيوس','كوبلاي خان','تشين شي هوانغ','تانغ'],r:'C'},
+{c:'🏛️ حضارات',q:'أين كانت عاصمة الإمبراطورية البيزنطية؟',a:['روما','أثينا','القسطنطينية','الإسكندرية'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم النهرين اللذين نشأت بينهما حضارة بلاد الرافدين؟',a:['النيل والفرات','دجلة والفرات','النيل ودجلة','الأردن والفرات'],r:'B'},
+{c:'🏛️ حضارات',q:'ما هي اللغة التي كتبت بها ملحمة الإلياذة؟',a:['اللاتينية','الإغريقية القديمة','السنسكريتية','الآرامية'],r:'B'},
+{c:'🏛️ حضارات',q:'ما اسم ملك الإسكندر الأكبر الأب؟',a:['داريوس','فيليب الثاني','بطليموس','أنتيباتر'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو الرقم الذري للأكسجين؟',a:['6','7','8','9'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هي المادة الأكثر صلابة في الطبيعة؟',a:['الحديد','الكوارتز','الكوراندم','الماس'],r:'D'},
+{c:'🧪 كيمياء',q:'ما هو اسم أبو الكيمياء العربي؟',a:['ابن سينا','ابن الهيثم','جابر بن حيان','الرازي'],r:'C'},
+{c:'🧪 فيزياء',q:'ما اسم العالم الذي اكتشف قانون الجاذبية؟',a:['أينشتاين','غاليليو','نيوتن','هوكينغ'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي وحدة قياس القوة في النظام الدولي؟',a:['جول','واط','نيوتن','باسكال'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي ظاهرة الكسوف الكلي للشمس؟',a:['مرور زهرة أمام الشمس','حجب القمر للشمس كلياً','دوران الأرض','اختفاء القمر'],r:'B'},
+{c:'🕌 إسلاميات',q:'كم عام استمرت دعوة النبي ﷺ في مكة المكرمة؟',a:['10','11','12','13'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما هو اسم غزوة الأحزاب؟',a:['غزوة بدر','غزوة أُحد','غزوة الخندق','غزوة تبوك'],r:'C'},
+{c:'🕌 إسلاميات',q:'من هو الخليفة الذي فتح بيت المقدس؟',a:['أبو بكر','عمر بن الخطاب','عثمان','علي'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هو اسم والدة النبي ﷺ؟',a:['فاطمة','خديجة','آمنة','حليمة'],r:'C'},
+{c:'🕌 إسلاميات',q:'كم عدد أبواب الجنة في الإسلام؟',a:['5','6','7','8'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما هو اسم أكبر سورة في القرآن عدد الآيات؟',a:['آل عمران','النساء','البقرة','الأعراف'],r:'C'},
+{c:'🧠 ألغاز',q:'ما الذي له شفتان ولا يتكلم؟',a:['الأخرس','الإبريق','التمثال','الكتاب'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يزيد كلما أخذت منه؟',a:['البئر','الحفرة','الجبل','البحيرة'],r:'B'},
+{c:'🧠 ألغاز',q:'أنا عند الغني وعند الفقير، لكن الغني يشتريني والفقير يبيعني — ما أنا؟',a:['الوقت','السعادة','الجوع','المال'],r:'C'},
+{c:'🧠 ألغاز',q:'ما الذي لا يمكنك حمله لأكثر من دقيقتين؟',a:['الحجر الثقيل','نفسك','نفسك حبيساً','النَّفَس'],r:'D'},
+{c:'⚽ رياضة',q:'ما هو الاسم الشعبي لرياضة التنس على الأرضية الحمراء؟',a:['التنس الصلب','تنس الكلاي','التنس السريع','تنس العشب'],r:'B'},
+{c:'⚽ رياضة',q:'كم عدد لاعبي فريق كرة اليد؟',a:['5','6','7','8'],r:'C'},
+{c:'⚽ رياضة',q:'ما هي بطولة كرة القدم الأوروبية للمنتخبات؟',a:['كأس أوروبا','اليورو','كأس القارات','نيشنز ليغ'],r:'B'},
+{c:'⚽ رياضة',q:'من هو أسرع لاعب في تاريخ كأس العالم؟',a:['رونالدو','مبابي','بيكهام','رونالدينيو'],r:'B'},
+{c:'⚽ رياضة',q:'ما هو الرقم القياسي لأهداف موسم واحد في الدوري الإنجليزي؟',a:['30','32','34','36'],r:'C'},
+
+{c:'🌍 جغرافيا',q:'ما هي عاصمة المغرب؟',a:['الدار البيضاء','مراكش','الرباط','فاس'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة تركيا؟',a:['إسطنبول','إزمير','أنقرة','بورصة'],r:'C'},
+{c:'🌍 جغرافيا',q:'كم عدد المحيطات في العالم؟',a:['3','4','5','6'],r:'C'},
+{c:'🌍 جغرافيا',q:'في أي دولة يقع برج بيزا المائل؟',a:['فرنسا','اليونان','إيطاليا','إسبانيا'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة الهند؟',a:['مومباي','كولكاتا','نيودلهي','بنغالور'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أصغر دولة عربية مساحةً؟',a:['قطر','البحرين','الكويت','لبنان'],r:'B'},
+{c:'🌍 جغرافيا',q:'في أي قارة تقع روسيا بشكل رئيسي؟',a:['أوروبا','آسيا','كلاهما','أمريكا الشمالية'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي عاصمة النرويج؟',a:['ستوكهولم','هلسنكي','أوسلو','كوبنهاغن'],r:'C'},
+{c:'🌍 جغرافيا',q:'أي نهر يمر عبر لندن؟',a:['التايمز','السين','الراين','الدانوب'],r:'A'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تُعرف بـ"أرض الفيروز"؟',a:['العراق','مصر','إيران','الأردن'],r:'C'},
+{c:'💻 تقنية',q:'ما تعني كلمة Wi-Fi؟',a:['Wireless Fidelity','Wide Frequency','Wire Fiber','Wireless Fix'],r:'A'},
+{c:'💻 تقنية',q:'ما هو متصفح الإنترنت الأشهر في العالم؟',a:['Firefox','Safari','Chrome','Edge'],r:'C'},
+{c:'💻 تقنية',q:'من أسس شركة Microsoft؟',a:['ستيف جوبز','إيلون ماسك','بيل غيتس','مارك زوكربرغ'],r:'C'},
+{c:'💻 تقنية',q:'ما هو اختصار GB في ذاكرة الكمبيوتر؟',a:['Gigabyte','Gigabit','Globalbit','Giantbyte'],r:'A'},
+{c:'💻 تقنية',q:'ما هي لغة برمجة تطبيقات iPhone؟',a:['Java','Kotlin','Swift','Python'],r:'C'},
+{c:'💻 تقنية',q:'ماذا يعني اختصار URL؟',a:['Uniform Resource Locator','Universal Remote Link','United Resource List','Uniform Remote Location'],r:'A'},
+{c:'🎵 موسيقى',q:'كم عدد أوتار الغيتار الكلاسيكي؟',a:['4','5','6','7'],r:'C'},
+{c:'🎵 موسيقى',q:'من هو موزارت؟',a:['رسام','موسيقار','شاعر','كاتب'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هي الآلة الموسيقية الوترية الأكثر انتشاراً في العالم العربي؟',a:['الكمان','العود','الربابة','القانون'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هي جنسية الموسيقار موزارت؟',a:['ألمانية','سويسرية','نمساوية','إيطالية'],r:'C'},
+{c:'🎵 فنون',q:'في أي دولة يقع برج إيفل؟',a:['إيطاليا','إسبانيا','فرنسا','ألمانيا'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو اسم إله الشمس في مصر القديمة؟',a:['أوزيريس','حورس','رع','أنوبيس'],r:'C'},
+{c:'🏛️ حضارات',q:'أين كانت تقع حضارة بابل؟',a:['مصر','إيران','العراق','سوريا'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو الرمز الكيميائي للماء؟',a:['HO','H2O','H3O','OH2'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هي حالة الماء عند 0 درجة مئوية؟',a:['غاز','سائل','صلب','بلازما'],r:'C'},
+{c:'🧪 كيمياء',q:'ما حالة الزئبق في درجة الحرارة العادية؟',a:['صلب','غاز','سائل','بلازما'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم والد النبي محمد ﷺ؟',a:['عبد المطلب','أبو طالب','عبدالله','الحارث'],r:'C'},
+{c:'🕌 إسلاميات',q:'في أي سنة هجرية وقعت فتح مكة المكرمة؟',a:['السنة 6','السنة 7','السنة 8','السنة 9'],r:'C'},
+{c:'🧠 ألغاز',q:'ما الذي كلما أعطيته للآخرين زاد؟',a:['المال','المحبة والعلم','الطعام','الوقت'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يملأ الغرفة ولا يأخذ حيزاً؟',a:['الهواء','الضوء','الصوت','الرائحة'],r:'B'},
+{c:'⚽ رياضة',q:'كم عدد اللاعبين في فريق كرة الطائرة؟',a:['5','6','7','8'],r:'B'},
+{c:'⚽ رياضة',q:'كم مرة فاز المنتخب الألماني بكأس العالم؟',a:['2','3','4','5'],r:'C'},
+{c:'⚽ رياضة',q:'ما هي الرياضة الأكثر مشاهدة في العالم؟',a:['التنس','كرة السلة','كرة القدم','السباحة'],r:'C'},
+
+],
+medium:[
+{c:'🌍 ثقافة عامة',q:'كم يبلغ عمر الكون تقريباً؟',a:['4.5 مليار سنة','9 مليار سنة','13.8 مليار سنة','20 مليار سنة'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي المادة الأصلب في جسم الإنسان؟',a:['العظام','الأسنان','مينا الأسنان','الأظافر'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'أي دولة تمتلك أكبر عدد سكان في العالم؟',a:['الهند','الصين','الولايات المتحدة','إندونيسيا'],r:'A'},
+{c:'🌍 ثقافة عامة',q:'كم تبلغ سرعة الضوء تقريباً؟',a:['100,000 كم/ث','300,000 كم/ث','500,000 كم/ث','1,000,000 كم/ث'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'ما هو أثقل عنصر في الجدول الدوري؟',a:['الذهب','الرصاص','الأوسميوم','البلاتين'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'كم عدد نجوم العلم الأمريكي؟',a:['48','49','50','51'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هي عاصمة كندا؟',a:['تورونتو','مونتريال','فانكوفر','أوتاوا'],r:'D'},
+{c:'🔬 علوم',q:'من صاغ نظرية النسبية؟',a:['نيوتن','غاليليو','أينشتاين','هوكينغ'],r:'C'},
+{c:'🔬 علوم',q:'كم عدد كروموسومات الإنسان؟',a:['44','46','48','52'],r:'B'},
+{c:'🔬 علوم',q:'من طور نظرية التطور؟',a:['لامارك','مندل','داروين','لينيوس'],r:'C'},
+{c:'🔬 علوم',q:'من أول إنسان وطأت قدماه القمر؟',a:['يوري غاغارين','نيل أرمسترونغ','باز ألدرين','جون غلين'],r:'B'},
+{c:'🔬 علوم',q:'ما هي أطول عظمة في جسم الإنسان؟',a:['عظمة الذراع','عظمة الفخذ','عمود الفقرات','الساق'],r:'B'},
+{c:'🔬 علوم',q:'ما نسبة الأكسجين في الهواء؟',a:['12%','21%','30%','40%'],r:'B'},
+{c:'🔬 علوم',q:'من اخترع البنسلين؟',a:['لويس باستور','روبرت كوك','ألكسندر فلمينغ','ماري كوري'],r:'C'},
+{c:'🔬 علوم',q:'في أي سنة أُطلق iPhone الأول؟',a:['2005','2006','2007','2008'],r:'C'},
+{c:'🔬 علوم',q:'من اخترع شبكة الإنترنت WWW؟',a:['بيل غيتس','ستيف جوبز','تيم بيرنرز لي','فينت سيرف'],r:'C'},
+{c:'🔬 علوم',q:'في أي سنة أُسست غوغل؟',a:['1994','1996','1998','2000'],r:'C'},
+{c:'🔬 علوم',q:'ما هو نموذج الذكاء الاصطناعي في ChatGPT؟',a:['BERT','GPT','LLaMA','Gemini'],r:'B'},
+{c:'📜 تاريخ',q:'في أي سنة بدأت الحرب العالمية الأولى؟',a:['1910','1912','1914','1916'],r:'C'},
+{c:'📜 تاريخ',q:'في أي عام انهار الاتحاد السوفيتي؟',a:['1985','1989','1991','1993'],r:'C'},
+{c:'📜 تاريخ',q:'من بنى الأهرامات؟',a:['الرومان','الفراعنة المصريون','السومريون','الفينيقيون'],r:'B'},
+{c:'📜 تاريخ',q:'في أي سنة سقطت القسطنطينية؟',a:['1300','1389','1453','1517'],r:'C'},
+{c:'📜 تاريخ',q:'في أي سنة قامت الثورة الفرنسية؟',a:['1776','1789','1800','1815'],r:'B'},
+{c:'📜 تاريخ',q:'من هو أول رئيس للولايات المتحدة؟',a:['أبراهام لينكولن','توماس جيفرسون','جورج واشنطن','بنيامين فرانكلين'],r:'C'},
+{c:'📜 تاريخ',q:'في أي سنة فتح المسلمون الأندلس؟',a:['632','700','711','750'],r:'C'},
+{c:'📜 تاريخ',q:'أي دولة أطلقت أول إنسان في الفضاء؟',a:['أمريكا','الصين','فرنسا','الاتحاد السوفيتي'],r:'D'},
+{c:'📜 تاريخ',q:'من هو مؤسس تركيا الحديثة؟',a:['أردوغان','إنونو','أتاتورك','عبد الحميد الثاني'],r:'C'},
+{c:'⚽ رياضة',q:'أي لاعب فاز بأكبر عدد من جوائز الكرة الذهبية؟',a:['رونالدو','نيمار','ميسي','زيدان'],r:'C'},
+{c:'⚽ رياضة',q:'ما هي مسافة الماراثون؟',a:['36 كم','40 كم','42.195 كم','45 كم'],r:'C'},
+{c:'⚽ رياضة',q:'من فاز بكأس العالم 2018؟',a:['إنجلترا','ألمانيا','البرازيل','فرنسا'],r:'D'},
+{c:'⚽ رياضة',q:'أي فريق فاز بدوري أبطال أوروبا أكثر مرة؟',a:['برشلونة','ميلان','ليفربول','ريال مدريد'],r:'D'},
+{c:'⚽ رياضة',q:'من هو أسرع عداء في التاريخ؟',a:['تايسون غاي','كارل لويس','أوساين بولت','يوهان بلايك'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هي أطول سورة في القرآن؟',a:['آل عمران','النساء','البقرة','الأعراف'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو الركن الخامس من أركان الإسلام؟',a:['الزكاة','الصوم','الصلاة','الحج'],r:'D'},
+{c:'🕌 إسلاميات',q:'كم سنة دامت دعوة النبي ﷺ في مكة؟',a:['7','10','13','15'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما عدد الصلوات المفروضة؟',a:['3','4','5','6'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما اسم السورة المسماة قلب القرآن؟',a:['يس','البقرة','الكهف','الرحمن'],r:'A'},
+{c:'🍽️ مطبخ',q:'ما هو مصدر أجود أنواع الزعفران؟',a:['المغرب','الهند','إيران','إسبانيا'],r:'C'},
+{c:'🍽️ مطبخ',q:'ما الفرق بين الفلافل المصرية والشامية؟',a:['لا فرق','المصرية من الفول والشامية من الحمص','المصرية أكبر','الشامية أقل توابل'],r:'B'},
+{c:'🍽️ مطبخ',q:'ما هو المشروب التقليدي الخليجي؟',a:['الشاي','القهوة العربية بالهيل','النسكافيه','اللبن'],r:'B'},
+{c:'🎬 سينما',q:'من أخرج فيلم Inception؟',a:['ستيفن سبيلبرغ','كريستوفر نولان','جيمس كاميرون','ريدلي سكوت'],r:'B'},
+{c:'🎬 سينما',q:'ما الفيلم الذي فاز بأوسكار أفضل فيلم 2020؟',a:['1917','جوكر','باراسايت','أيرلندي'],r:'C'},
+{c:'🎬 سينما',q:'من هو الفنان الذي قطع أذنه؟',a:['بيكاسو','مونيه','رينوار','فان غوخ'],r:'D'},
+{c:'🎬 سينما',q:'ما الفيلم الأعلى إيراداً في تاريخ السينما؟',a:['تيتانيك','أفاتار 2','الأسد الملك','المنتقمون نهاية اللعبة'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يمتلك يدين ووجهاً وليس له جسد؟',a:['الساعة','المرآة','التمثال','العلم'],r:'A'},
+{c:'🧠 ألغاز',q:'ما الشيء الذي يصغر كلما زدته؟',a:['النار','الثلج','الحفرة','الثقب'],r:'C'},
+{c:'🌐 لغات',q:'ما معنى Gracias بالإسبانية؟',a:['مرحباً','من فضلك','شكراً','إلى اللقاء'],r:'C'},
+{c:'🌐 لغات',q:'ما هي اللغة الرسمية في البرازيل؟',a:['الإسبانية','البرتغالية','الإنجليزية','الفرنسية'],r:'B'},
+{c:'🌐 لغات',q:'ما معنى كلمة Arigato باليابانية؟',a:['مرحباً','من فضلك','شكراً','آسف'],r:'C'},
+{c:'🌐 لغات',q:'كم لغة رسمية في الأمم المتحدة؟',a:['4','5','6','7'],r:'C'},
+],
+hard:[
+{c:'🌍 ثقافة عامة',q:'ما هي أطول حدود بين دولتين في العالم؟',a:['الصين-روسيا','المكسيك-أمريكا','كندا-أمريكا','روسيا-كازاخستان'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'كم عدد دول الاتحاد الأوروبي حالياً؟',a:['24','25','27','30'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'في أي بلد تقع مدينة طمبكتو؟',a:['السودان','مالي','موريتانيا','النيجر'],r:'B'},
+{c:'🌍 ثقافة عامة',q:'ما عاصمة أرجنتينا؟',a:['سانتياغو','مونتيفيديو','بوينس آيرس','ليما'],r:'C'},
+{c:'🔬 علوم',q:'ما عدد العناصر في الجدول الدوري الحالي؟',a:['98','108','118','128'],r:'C'},
+{c:'🔬 علوم',q:'ما أساس عمل الذكاء الاصطناعي الحديث؟',a:['الخوارزميات الجينية','الشبكات العصبية','المنطق الضبابي','الحساب الكمومي'],r:'B'},
+{c:'🔬 علوم',q:'ما الاسم الكامل لـ PDF؟',a:['Portable Digital Format','Portable Document Format','Private Data File','Printed Document Format'],r:'B'},
+{c:'🔬 علوم',q:'ما بروتوكول الإنترنت الجديد بدل IPv4؟',a:['IPv5','IPv6','IPv7','TCP/IP 2.0'],r:'B'},
+{c:'🔬 علوم',q:'كم عدد نبضات قلب البالغ في الدقيقة؟',a:['40-50','60-100','110-130','140-160'],r:'B'},
+{c:'🔬 علوم',q:'من هو مخترع المصباح الكهربائي؟',a:['نيكولا تيسلا','توماس إديسون','بنيامين فرانكلين','مايكل فاراداي'],r:'B'},
+{c:'🔬 علوم',q:'ما الرمز الكيميائي للحديد؟',a:['Ir','Id','Fe','Fd'],r:'C'},
+{c:'📜 تاريخ',q:'من هو مؤسس الإمبراطورية المغولية؟',a:['هولاكو','تيمورلنك','جنكيز خان','كوبلاي خان'],r:'C'},
+{c:'📜 تاريخ',q:'من هو الفيلسوف صاحب "أنا أفكر إذن أنا موجود"؟',a:['أرسطو','أفلاطون','سقراط','ديكارت'],r:'D'},
+{c:'📜 تاريخ',q:'في أي سنة أُسست الأمم المتحدة؟',a:['1943','1945','1947','1950'],r:'B'},
+{c:'📜 تاريخ',q:'ما هي أقدم حضارة في التاريخ؟',a:['المصرية','الفارسية','السومرية','الصينية'],r:'C'},
+{c:'📜 تاريخ',q:'في أي سنة اندلعت الثورة الصناعية في إنجلترا؟',a:['1650','1750','1850','1900'],r:'B'},
+{c:'📜 تاريخ',q:'من هو الخليفة الراشدي الأول؟',a:['عمر بن الخطاب','علي بن أبي طالب','عثمان بن عفان','أبو بكر الصديق'],r:'D'},
+{c:'⚽ رياضة',q:'من يملك أكبر عدد من ألقاب كأس العالم؟',a:['ألمانيا','إيطاليا','الأرجنتين','البرازيل'],r:'D'},
+{c:'⚽ رياضة',q:'كم عدد حلقات Game of Thrones؟',a:['60','70','73','80'],r:'C'},
+{c:'⚽ رياضة',q:'من أخرج فيلم الجوكر 2019؟',a:['كريستوفر نولان','مارتن سكورسيزي','تود فيليبس','زاك سنايدر'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما اسم الصحابي الملقب بسيف الله المسلول؟',a:['عمر بن الخطاب','خالد بن الوليد','علي بن أبي طالب','الزبير'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما السورة التي تعادل ثلث القرآن؟',a:['الفلق','الناس','الإخلاص','الكافرون'],r:'C'},
+{c:'🕌 إسلاميات',q:'أي سورة تبدأ ببسم الله مرتين؟',a:['الفاتحة','النمل','الكهف','يس'],r:'B'},
+{c:'🍽️ مطبخ',q:'ما أصل الكباب في المطبخ العالمي؟',a:['تركيا وبلاد الشام','مصر','الهند','إيران'],r:'A'},
+{c:'🍽️ مطبخ',q:'ما هو المكون الأساسي في الهامبرغر التقليدي؟',a:['لحم الدجاج','لحم البقر المفروم','لحم الخروف','لحم السمك'],r:'B'},
+{c:'🎬 سينما',q:'من هو مؤلف رواية مئة عام من العزلة؟',a:['بورخيس','بابلو نيرودا','غارسيا ماركيز','إيزابيل الليندي'],r:'C'},
+{c:'🎬 سينما',q:'ما أشهر متحف فنون في العالم؟',a:['برادو','اللوفر','ميترو بوليتان','برلين'],r:'B'},
+{c:'🎬 سينما',q:'كم عدد أوسكار فيلم تيتانيك؟',a:['7','9','11','14'],r:'C'},
+{c:'🧠 ألغاز',q:'ما الشيء الذي يُكسر بمجرد نطق اسمه؟',a:['الزجاج','الصمت','الثقة','الحجر'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الذي يصعد ولا ينزل؟',a:['الدخان','العمر','الجبل','الماء'],r:'B'},
+{c:'🌐 لغات',q:'ما هي اللغة الأم لغالبية سكان أمريكا اللاتينية؟',a:['البرتغالية','الفرنسية','الإسبانية','الإيطالية'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تمتلك أطول ساحل بحري في العالم؟',a:['روسيا','أستراليا','كندا','النرويج'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أعمق نقطة في المحيطات؟',a:['خندق بورتو ريكو','خندق تونغا','خندق ماريانا','خندق جاوا'],r:'C'},
+{c:'🌍 جغرافيا',q:'أي دولة تضم قارتين؟',a:['مصر','روسيا','تركيا','كازاخستان'],r:'C'},
+{c:'🌍 جغرافيا',q:'أين تقع جزر الكناري؟',a:['قرب فرنسا','قرب البرتغال','قرب أفريقيا وتتبع إسبانيا','في المحيط الهادئ'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي انفصلت عنها تيمور الشرقية عام 2002؟',a:['الفلبين','ماليزيا','إندونيسيا','أستراليا'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أعلى عاصمة في العالم من حيث الارتفاع عن مستوى البحر؟',a:['أديس أبابا','لاباز','كيتو','كابول'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو الذكاء الاصطناعي التوليدي المعروف بـChatGPT؟',a:['BERT','GPT','DALL-E','Copilot'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما اسم نموذج الذكاء الاصطناعي الذي طورته Google؟',a:['Llama','Claude','Gemini','Falcon'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هي الشركة التي طورت نموذج الذكاء الاصطناعي Claude؟',a:['OpenAI','Google','Anthropic','Meta'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو مفهوم Reinforcement Learning من RLHF؟',a:['تعلم بدون بيانات','تعلم معزز من ردود فعل الإنسان','تعلم بصري','تعلم لغوي'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هي خوارزمية التعلم الآلي التي تحاكي عمل الدماغ البشري؟',a:['Decision Tree','Random Forest','Neural Network','Linear Regression'],r:'C'},
+{c:'💻 تقنية',q:'ما هي تقنية Blockchain؟',a:['نوع من الفيروسات','سلسلة كتل لتخزين البيانات بشكل لا مركزي','شبكة اجتماعية','نظام تشغيل'],r:'B'},
+{c:'💻 تقنية',q:'من اخترع لغة Python؟',a:['جيمس غوسلينغ','بيورن ستروستروب','غيدو فان روسوم','لينوس تورفالدس'],r:'C'},
+{c:'💻 تقنية',q:'ما هو نظام ملفات macOS؟',a:['NTFS','FAT32','APFS','ext4'],r:'C'},
+{c:'💻 تقنية',q:'ما هو نظام التحكم في الإصدارات الأشهر بين المبرمجين؟',a:['SVN','Mercurial','Git','CVS'],r:'C'},
+{c:'🎵 موسيقى',q:'ما هو اسم المقام الموسيقي العربي الأكثر استخداماً؟',a:['الراست','الحجاز','البياتي','النهاوند'],r:'C'},
+{c:'🎵 موسيقى',q:'من ألّف أوبرا ماداما باترفلاي؟',a:['فيردي','بوتشيني','روسيني','دونيزيتي'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هي جنسية الموسيقار شوبان؟',a:['روسية','ألمانية','بولندية','تشيكية'],r:'C'},
+{c:'🎵 فنون',q:'من رسم لوحة "الصرخة"؟',a:['دالي','كاندينسكي','مونك','بيكاسو'],r:'C'},
+{c:'🎵 فنون',q:'في أي مدينة يقع متحف الإرميتاج الشهير؟',a:['موسكو','سان بطرسبرغ','باريس','برلين'],r:'B'},
+{c:'🎵 فنون',q:'من نحت تمثال داوود الشهير؟',a:['رافاييل','ليوناردو دافنشي','مايكل أنجلو','برنيني'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو اسم المكتبة الكبرى في الإسكندرية القديمة؟',a:['مكتبة بابل','مكتبة أثينا','مكتبة الإسكندرية','مكتبة روما'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو الخط الكتابي للحضارة المصرية القديمة؟',a:['المسمارية','الهيروغليفية','الآرامية','السنسكريتية'],r:'B'},
+{c:'🏛️ حضارات',q:'من كان القائد الكرثاجي الذي عبر جبال الألب بالأفيال؟',a:['بعل','هاميلكار','هانيبال','ماهاربال'],r:'C'},
+{c:'🏛️ حضارات',q:'ما اسم حاكمة مصر الشهيرة في العصر اليوناني؟',a:['نفرتيتي','هاتشبسوت','كليوباترا','إيزيس'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هي حضارة بنت الماكهو بيتشو في جبال الأنديز؟',a:['المايا','الأزتيك','الإنكا','الأولمك'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو الرقم الذري للكربون؟',a:['4','6','8','12'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو اسم العملية التي يُحوَّل فيها الصلب مباشرة إلى غاز؟',a:['التبخر','الانصهار','التسامي','التكثف'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو اسم العملية التي تكسر الجزيئات الكبيرة بالماء؟',a:['التحلل الكهربائي','التحلل المائي','التكسير الحراري','الأكسدة'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو اسم العملية التي يُحوَّل فيها السكر إلى كحول وغاز؟',a:['الأكسدة','التخمر','التحلل','التبلور'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي وحدة قياس الضغط؟',a:['نيوتن','باسكال','جول','واط'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي أقصر موجة في الطيف الكهرومغناطيسي؟',a:['الأشعة تحت الحمراء','الأشعة فوق البنفسجية','أشعة غاما','الضوء المرئي'],r:'C'},
+{c:'🕌 إسلاميات',q:'من هو الصحابي الذي لُقّب بـ"أمين الأمة"؟',a:['عمر بن الخطاب','أبو عبيدة بن الجراح','علي بن أبي طالب','عثمان بن عفان'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هو اسم أول مسجد بُني في الإسلام؟',a:['المسجد الحرام','المسجد النبوي','مسجد قباء','المسجد الأقصى'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم العلم الذي يبحث في مصطلح الحديث النبوي؟',a:['علم الفقه','علم الرجال','علم مصطلح الحديث','علم الكلام'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم المعركة التي انتصر فيها المسلمون رغم قلة عددهم؟',a:['أُحد','الخندق','خيبر','بدر'],r:'D'},
+{c:'🧠 ألغاز',q:'إذا أخذت 3 تفاحات من 5 تفاحات كم تفاحة عندك؟',a:['2','3','5','0'],r:'B'},
+{c:'🧠 ألغاز',q:'رجل يقف في المطر دون مظلة ودون أن يبلل شعره — كيف؟',a:['يركض بسرعة','يرتدي قبعة','هو أصلع','المطر خفيف'],r:'C'},
+{c:'🧠 ألغاز',q:'إذا كان أمس بعد غد، فأي يوم هو اليوم إذا كان بعد غد هو الجمعة؟',a:['الاثنين','الثلاثاء','الأربعاء','الخميس'],r:'B'},
+{c:'🧠 ألغاز',q:'كلما جريت خلفه هرب منك، وكلما توقفت جاء إليك — ما هو؟',a:['الوقت','الحلم','ظلك','الريح'],r:'C'},
+{c:'⚽ رياضة',q:'من حمل الرقم القياسي في سرعة الجري بـ 9.58 ثانية لـ 100 متر؟',a:['كارل لويس','أوساين بولت','تايسون غاي','يوهان بلايك'],r:'B'},
+{c:'⚽ رياضة',q:'أي لاعب فاز بأكبر عدد من ألقاب دوري أبطال أوروبا كلاعب؟',a:['زيدان','رونالدو','ميسي','كارلوس'],r:'B'},
+{c:'⚽ رياضة',q:'من هو أكثر لاعب تتويجاً بالكرة الذهبية في التاريخ؟',a:['رونالدو البرتغالي','ميسي','رونالدينيو','نيمار'],r:'B'},
+{c:'⚽ رياضة',q:'ما هي أول دولة عربية تصل لربع نهائي كأس العالم؟',a:['مصر','الجزائر','تونس','المغرب'],r:'D'},
+{c:'⚽ رياضة',q:'كم طول حوض السباحة القياسي في المسابقات الأولمبية؟',a:['25م','33م','50م','66م'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما هي أصغر دولة من حيث الناتج المحلي الإجمالي في أفريقيا؟',a:['جزر القمر','ساو تومي وبرينسيبي','جيبوتي','غينيا بيساو','أريتريا','ليسوتو'],r:'B'},
+{c:'🌍 جغرافيا',q:'كم تبلغ المساحة الإجمالية لروسيا تقريباً؟',a:['12 مليون كم²','15 مليون كم²','17 مليون كم²','20 مليون كم²','22 مليون كم²','10 مليون كم²'],r:'C'},
+{c:'💻 تقنية',q:'ما هو بروتوكول TCP/IP في شبكات الإنترنت؟',a:['لغة برمجة','نظام تشفير','مجموعة قواعد الاتصال بين الأجهزة','نوع من المعالجات','نظام ملفات','بروتوكول تشفير فقط'],r:'C'},
+{c:'💻 تقنية',q:'ما هو نظام اكتشاف التسلل IDS؟',a:['نظام حماية من الفيروسات','نظام رصد الشبكة للأنشطة المشبوهة','جدار حماية','نظام تشفير','نظام نسخ احتياطي','برنامج مكافحة تجسس'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هو اسم المؤلف الموسيقي الروسي الذي ألّف "رقصة السيوف"؟',a:['تشايكوفسكي','راخمانينوف','خاتشاتوريان','شوستاكوفيتش','بروكوفييف','ريمسكي كورساكوف'],r:'C'},
+{c:'🎵 فنون',q:'ما هي حركة الفن التي رفضت جميع أشكال الجماليات التقليدية بعد الحرب العالمية الأولى؟',a:['السريالية','التعبيرية','الدادائية','المستقبلية','التجريدية','التكعيبية'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هي اللغة التي نُقشت بها شريعة حمورابي؟',a:['السومرية','الآرامية','الأكادية البابلية','الفينيقية','الهيروغليفية','الكنعانية'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو اسم المدينة الضائعة للإنكا التي اكتُشفت عام 1911؟',a:['كوسكو','تياهواناكو','ماكهو بيتشو','تشان تشان','كاراله','ويلكابامبا'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو عدد إلكترونات ذرة الكربون؟',a:['4','5','6','7','8','9'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو الاسم العلمي لعملية تحضير الأسمدة من النيتروجين؟',a:['عملية هابر','عملية أوستوالد','عملية سولفاي','عملية كونتاكت','عملية فريش','عملية بيسيمر'],r:'A'},
+{c:'🧪 فيزياء',q:'ما هي تجربة شرودنجر الفكرية التي تصف التراكب الكمومي؟',a:['قطة نيوتن','قطة شرودنجر','كلب بافلوف','قرود المرآة','تجربة يونغ','مفارقة زينو'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هو اسم الجسيم الذي يحمل قوة الجاذبية نظرياً؟',a:['الفوتون','البوزيترون','الغرافيتون','الغلوون','البوزيون','النيوترينو'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم أكبر كتب الفقه الحنفي؟',a:['الموطأ','المبسوط','الأم','المغني','الروضة','المختصر'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما عدد أحاديث صحيح البخاري بالمكرر تقريباً؟',a:['3000','4000','7563','9000','5000','6000'],r:'C'},
+{c:'🧠 ألغاز',q:'ما هو أصغر رقم يقبل القسمة على كل الأرقام من 1 إلى 10؟',a:['100','1260','2520','5040','3628800','720'],r:'C'},
+{c:'🧠 ألغاز',q:'ثلاثة أطباء قالوا إن روبرت أخوهم، لكن روبرت قال ليس لدي إخوة — كيف؟',a:['روبرت يكذب','الأطباء أخواته الثلاث','الأطباء أبناء عمه','الأطباء أخواه من الأم فقط','روبرت مجنون','لا يوجد تفسير'],r:'B'},
+{c:'⚽ رياضة',q:'ما هو الاسم الكامل لمنظمة الكرة العالمية FIFA؟',a:['Federation Internationale de Football Association','Federal International Football Agency','Formal International Football Association','Federation Internal Football Alliance','Fédération Internationale du Football Associé','Federal International Football Alliance'],r:'A'},
+{c:'⚽ رياضة',q:'من هو أول لاعب يفوز بكأس العالم كلاعباً ثم كمدرب؟',a:['زيدان','بيكنباور','كروف','مورينيو','كلوب','فيرغسون'],r:'B'},
+
+
+{c:'🌐 لغات',q:'كم عدد الحروف في الأبجدية العربية؟',a:['26','28','29','30'],r:'B'},
+],
+vhard:[
+{c:'🌍 ثقافة عامة',q:'ما الاسم العلمي لظاهرة أضواء الشفق القطبي الشمالي؟',a:['Aurora Australis','Zodiac Light','Aurora Borealis','Gegenschein','Airglow','Noctiluca'],r:'C'},
+{c:'🔬 علوم',q:'في فيزياء الجسيمات، أي جسيم يُعطي الجسيمات الأخرى كتلتها؟',a:['الكوارك','الليبتون','بوزون هيغز','الغلوون','البوزيترون','النيوترينو'],r:'C'},
+{c:'🔬 علوم',q:'ما الترتيب الصحيح للكواكب من الأقرب للأبعد عن الشمس؟',a:['عطارد-الزهرة-الأرض-المريخ','الزهرة-عطارد-الأرض-المريخ','عطارد-الأرض-الزهرة-المريخ','الأرض-عطارد-الزهرة-المريخ','المريخ-الأرض-الزهرة-عطارد','عطارد-المريخ-الأرض-الزهرة'],r:'A'},
+{c:'🔬 علوم',q:'ما خوارزمية التشفير الأكثر استخداماً في أمن الإنترنت؟',a:['DES','MD5','AES-256','SHA-1','RC4','Blowfish'],r:'C'},
+{c:'🔬 علوم',q:'ما اسم العالم العربي الملقب بأبي علم البصريات؟',a:['ابن سينا','الخوارزمي','الرازي','ابن الهيثم','البيروني','جابر بن حيان'],r:'D'},
+{c:'📜 تاريخ',q:'في أي معركة هُزم نابليون بونابرت نهائياً؟',a:['أوسترليتز','لايبزيغ','واترلو','بورودينو','ترافلغار','ينا'],r:'C'},
+{c:'📜 تاريخ',q:'ما هي أول دولة في العالم تمنح المرأة حق التصويت؟',a:['المملكة المتحدة','الولايات المتحدة','فرنسا','نيوزيلندا','السويد','أستراليا'],r:'D'},
+{c:'📜 تاريخ',q:'ما هو اسم أول حضارة في وادي الرافدين؟',a:['الأكادية','البابلية','الآشورية','السومرية','الحيثية','العيلامية'],r:'D'},
+{c:'📜 تاريخ',q:'من هو أول مسلم يؤذن في الإسلام؟',a:['سلمان الفارسي','عمار بن ياسر','بلال بن رباح','أبو ذر الغفاري','عبد الله بن مسعود','خباب بن الأرت'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو ترتيب سورة يس في القرآن الكريم؟',a:['السورة 34','السورة 36','السورة 38','السورة 40','السورة 32','السورة 30'],r:'B'},
+{c:'🕌 إسلاميات',q:'كم عدد آيات سورة البقرة؟',a:['280 آية','282 آية','286 آية','290 آية','284 آية','288 آية'],r:'C'},
+{c:'🕌 إسلاميات',q:'في أي سنة هجرية وقعت غزوة بدر الكبرى؟',a:['السنة الأولى','السنة الثانية','السنة الثالثة','السنة الرابعة','السنة الخامسة','السنة السادسة'],r:'B'},
+{c:'⚽ رياضة',q:'كم عدد أفلام سلسلة James Bond الرسمية حتى 2024؟',a:['23','24','25','26','27','28'],r:'C'},
+{c:'⚽ رياضة',q:'من هو الموسيقار الذي ألّف موسيقى Star Wars؟',a:['هانز زيمر','إنيو موريكوني','برنارد هيرمان','جون ويليامز','ألان سيلفيستري','هوارد شور'],r:'D'},
+{c:'🎬 سينما',q:'ما هو أعلى تقييم فيلم حصل عليه على IMDb تاريخياً؟',a:['The Godfather','The Shawshank Redemption','Schindlers List','12 Angry Men','Interstellar','Inception'],r:'B'},
+{c:'🍽️ مطبخ',q:'ما هي التوابل الأكثر ثمناً في العالم بعد الزعفران؟',a:['الهيل','القرنفل','الفانيليا','جوزة الطيب','القرفة الحقيقية','الفلفل الأسود'],r:'C'},
+{c:'🧠 ألغاز',q:'إذا كان عندك 3 تفاحات وأخذت منها واحدة، كم تفاحة عندك؟',a:['لا شيء','واحدة','اثنتان','ثلاث','أربع','خمس'],r:'B'},
+{c:'🧠 ألغاز',q:'ما الشيء الذي كلما أسرعت في الحصول عليه كلما لم تجده؟',a:['الفرح','الراحة','النوم','المال','الوقت','الحظ'],r:'C'},
+{c:'🌐 لغات',q:'ما هي اللغة التي لها أكبر عدد من الكلمات في قاموسها؟',a:['المندرينية','الإسبانية','الإنجليزية','الألمانية','الفرنسية','العربية'],r:'C'},
+{c:'🌐 لغات',q:'كم عدد الحروف في الأبجدية اليابانية Hiragana؟',a:['26','36','46','56','66','76'],r:'C'},
+{c:'🌍 ثقافة عامة',q:'ما هو أعلى نقطة في القارة الأفريقية؟',a:['جبل كينيا','جبل رووينزوري','قمة كليمنجارو','جبل كامرون','جبل توبقال','جبل ستانلي'],r:'C'},
+{c:'🔬 علوم',q:'ما هي خاصية ال Superconductivity؟',a:['مقاومة صفرية للحرارة المرتفعة','مقاومة كهربائية معدومة عند درجات حرارة منخفضة جداً','تحويل الضوء لكهرباء','تضخيم الإشارات الكهربائية','خزن الطاقة المغناطيسية','توصيل الصوت'],r:'B'},
+{c:'📜 تاريخ',q:'في أي عام تأسست الخلافة العباسية؟',a:['650 م','700 م','750 م','800 م','850 م','900 م'],r:'C'},
+{c:'🎬 سينما',q:'من هو المخرج الياباني صاحب فيلم Spirited Away؟',a:['أكيرا كوروساوا','هاياو ميازاكي','ماموارو هوسودا','سترو مياموتو','هيروايوكي ايماي','ساتوشي كون'],r:'B'},
+{c:'🍽️ مطبخ',q:'ما هو مصدر صوص Worcestershire الشهير أصلاً؟',a:['فرنسا','إيطاليا','إنجلترا','الهند','تايلاند','الصين'],r:'C'},
+{c:'💻 تقنية',q:'ما هو بروتوكول نقل البيانات الأكثر أماناً على الإنترنت؟',a:['HTTP','FTP','HTTPS','SMTP','POP3','IMAP'],r:'C'},
+{c:'💻 تقنية',q:'ما هو نظام التشغيل الذي طوّره لينوس تورفالدس؟',a:['Windows','macOS','Android','Linux','Unix','BSD'],r:'D'},
+{c:'🌍 ثقافة عامة',q:'ما هو الجسر المعلق الأطول في العالم؟',a:['جسر البوسفور','جسر Golden Gate','جسر Akashi Kaikyō','جسر Messina','جسر Hong Kong','جسر Øresund'],r:'C'},
+{c:'🔬 علوم',q:'ما اسم العالمة الحائزة على جائزتي نوبل في مجالين مختلفين؟',a:['روزالند فرانكلين','باربرا ماكلينتوك','ماري كوري','ريتا ليفي مونتالشيني','دوروثي هودجكين','كارولين بيرتوز'],r:'C'},
+{c:'📜 تاريخ',q:'أي إمبراطورية كانت الأوسع في تاريخ البشرية؟',a:['الرومانية','الإسلامية','المغولية','البريطانية','العثمانية','الإسبانية'],r:'D'},
+{c:'🧠 ألغاز',q:'إذا كان يوم الاثنين هو بعد غد، فأي يوم هو قبل أمس؟',a:['الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما هو اسم الكتاب الذي جمع أحاديث النبي ﷺ وعُدّ الأصح بعد القرآن؟',a:['الموطأ','سنن النسائي','صحيح مسلم','صحيح البخاري','سنن أبي داود','مسند أحمد'],r:'D'},
+{c:'⚽ رياضة',q:'من يحمل رقم الأهداف العالمي في تاريخ كرة القدم الدولية؟',a:['رونالدو البرتغالي','ميسي','دافيد فيا','علي دائي','زلاتان','مولر'],r:'A'},
+{c:'🌍 جغرافيا',q:'ما هي الدولة التي تمتلك أكبر عدد من الفوهات البركانية النشطة؟',a:['اليابان','الفلبين','إيسلندا','إندونيسيا','تشيلي','روسيا'],r:'D'},
+{c:'🌍 جغرافيا',q:'ما اسم المضيق الذي يفصل أوروبا عن أفريقيا؟',a:['مضيق هرمز','مضيق ملقا','مضيق جبل طارق','مضيق باب المندب','مضيق البوسفور','مضيق الدردنيل'],r:'C'},
+{c:'🌍 جغرافيا',q:'ما اسم النقطة الجغرافية التي تلتقي عندها خطوط الطول الـ180°؟',a:['خط الاستواء','خط التاريخ الدولي','المدار القطبي','خط غرينتش','دائرة العرض','خط المدار'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو مفهوم Transformer في الذكاء الاصطناعي؟',a:['نموذج ترجمة فقط','بنية شبكة عصبية للمعالجة التسلسلية','روبوت تحويل','نظام تشفير بيانات','محرك بحث','نظام تعلم معزز'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما اختصار LLM في تقنية الذكاء الاصطناعي؟',a:['Large Learning Model','Low Level Machine','Large Language Model','Linear Logic Module','Layered Learning Method','Local Language Module'],r:'C'},
+{c:'💻 ذكاء اصطناعي',q:'ما هي ظاهرة Hallucination في الذكاء الاصطناعي؟',a:['خطأ في الترجمة','توليد معلومات خاطئة بثقة','مشكلة في الاتصال','ضعف في الذاكرة','تأخر في الاستجابة','تضارب في البيانات'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هي خوارزمية Attention في نماذج Transformer؟',a:['طريقة لتسريع الحساب','آلية لتحديد أهمية كل كلمة في السياق','نظام ذاكرة','أسلوب ضغط بيانات','طريقة تدريب','نظام تصفية'],r:'B'},
+{c:'💻 ذكاء اصطناعي',q:'ما هو الفرق بين الذكاء الاصطناعي الضيق والعام؟',a:['لا فرق','الضيق لمهمة واحدة، العام يؤدي أي مهمة بشرية','الضيق أسرع','العام متوفر حالياً','الضيق أرخص','العام مفتوح المصدر'],r:'B'},
+{c:'💻 تقنية',q:'ما هو مفهوم Quantum Computing؟',a:['كمبيوتر فائق السرعة','حاسوب يستخدم مبادئ ميكانيكا الكم','كمبيوتر صغير جداً','شبكة كمبيوترات موزعة','كمبيوتر بيولوجي','كمبيوتر شمسي'],r:'B'},
+{c:'💻 تقنية',q:'ما هو مفهوم Zero-Day في الأمن السيبراني؟',a:['يوم إطلاق التطبيق','ثغرة أمنية غير معروفة للمطورين','أول يوم عمل','حذف كل البيانات','تحديث النظام','يوم الإغلاق'],r:'B'},
+{c:'🎵 موسيقى',q:'ما هو اسم الأوبرا الأشهر لفيردي؟',a:['كارمن','ماداما باترفلاي','عايدة','دون جيوفاني','توسكا','لا ترافياتا'],r:'C'},
+{c:'🎵 فنون',q:'ما هو الأسلوب الفني الذي ابتكره مارسيل دوشان بتحويل أشياء عادية لفن؟',a:['الدادائية','السريالية','Ready-made','الانطباعية','التعبيرية التجريدية','المستقبلية'],r:'C'},
+{c:'🏛️ حضارات',q:'ما هو اسم أول قانون مكتوب في التاريخ؟',a:['قانون لبيت عشتار','شريعة حمورابي','قانون أور نمو','شريعة إيشنونا','قانون أورونمو','قانون ليبت عشتار'],r:'B'},
+{c:'🏛️ حضارات',q:'ما الكتابة التي فكّ رموزها شامبليون؟',a:['المسمارية','الهيروغليفية','الآرامية','الفينيقية','السنسكريتية','الديموطيقية'],r:'B'},
+{c:'🏛️ حضارات',q:'أي حضارة اخترعت العجلة أول مرة؟',a:['المصرية','الفارسية','السومرية','الأكادية','العيلامية','الحيثية'],r:'C'},
+{c:'🧪 كيمياء',q:'ما هو اسم المبدأ الذي يقول أنه لا يمكن معرفة الموضع والسرعة معاً بدقة؟',a:['مبدأ لوران','مبدأ هايزنبرغ للارتياب','مبدأ باولي','قانون هيس','نظرية شرودنجر','مبدأ بور'],r:'B'},
+{c:'🧪 كيمياء',q:'ما هو اسم المركب الناتج عن تفاعل حمض مع قاعدة؟',a:['أكسيد','إيستر','ملح وماء','أميد','ألدهيد','كيتون'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي الجسيمات الثلاثة الأساسية في الذرة؟',a:['كواركات وليبتونات وبوزونات','بروتون ونيوترون وإلكترون','نيوترينو وفوتون وغلوون','كوارك وأنتي كوارك وبوزون','بروتون وفوتون وبوزيترون','إلكترون وبوزيترون ونيوترينو'],r:'B'},
+{c:'🧪 فيزياء',q:'ما هي الظاهرة العلمية لانحناء الضوء حول الأجسام الضخمة؟',a:['الانكسار','الانعكاس','العدسة الجاذبية','الاستقطاب','التشتت','الحيود'],r:'C'},
+{c:'🧪 فيزياء',q:'ما هي وحدة قياس الطاقة في النظام الدولي؟',a:['واط','كالوري','جول','نيوتن','إرغ','بيوتي'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو اسم علم دراسة أسانيد رواة الحديث؟',a:['علم الفقه','علم الرجال والجرح والتعديل','علم التفسير','علم البلاغة','علم الأصول','علم الكلام'],r:'B'},
+{c:'🕌 إسلاميات',q:'ما هو المذهب الفقهي المنتشر في شمال أفريقيا؟',a:['الحنفي','الحنبلي','الشافعي','المالكي','الزيدي','الجعفري'],r:'D'},
+{c:'🕌 إسلاميات',q:'ما هو اسم آخر سورة نزلت من القرآن الكريم؟',a:['النصر','البقرة الآية 281','المائدة الآية 3','الإخلاص','التوبة','العلق'],r:'C'},
+{c:'🕌 إسلاميات',q:'ما هو أول حديث في صحيح البخاري؟',a:['إنما الأعمال بالنيات','الدين النصيحة','المسلم من سلم المسلمون','من كان يؤمن بالله','الحلال بين والحرام بين','ابدأ بنفسك'],r:'A'},
+{c:'🧠 ألغاز',q:'إذا كانت اليوم الثلاثاء، فأي يوم سيكون بعد 100 يوم؟',a:['الثلاثاء','الأربعاء','الخميس','الجمعة','السبت','الأحد'],r:'C'},
+{c:'🧠 ألغاز',q:'لديّ مدن ولكن لا بشر، لديّ جبال ولكن لا أشجار، لديّ ماء ولكن لا سمك — ما أنا؟',a:['لوحة الرسم','الكرة الأرضية','الخريطة','الصورة الجوية','الجزيرة','المتحف'],r:'C'},
+{c:'🧠 ألغاز',q:'أنا لا أكل ولا أشرب وأعيش أكثر منك — قتلني الماء — من أنا؟',a:['الصخرة','النار','الحديد','الملح','الرمل','الرصاص'],r:'B'},
+{c:'🧠 ألغاز',q:'لو أن طائراً يجلس على حبل ممدود فأي جانب سيقع البيض؟',a:['الأيمن','الأيسر','الأمام','الطائر لا يضع بيضاً وهو جالس على الحبل','الخلف','الأسفل'],r:'D'},
+{c:'⚽ رياضة',q:'في أي عام أُسس الاتحاد الدولي لكرة القدم FIFA؟',a:['1900','1902','1904','1906','1908','1910'],r:'C'},
+{c:'⚽ رياضة',q:'ما هو اسم التقنية المستخدمة لمراجعة القرارات في كرة القدم؟',a:['GAR','DAR','VAR','HAR','SAR','TAR'],r:'C'},
+{c:'⚽ رياضة',q:'كم مرة فاز ريال مدريد بدوري أبطال أوروبا حتى 2024؟',a:['12','13','14','15','16','17'],r:'D'},
+
+]};
+
+
+// ══════════════════════════════════
+// GAME STATE
+// ══════════════════════════════════
+let gameQ=[], usedTxt=new Set(), curQ=0;
+let shieldActive=false, freezeAvail=false, freezeClassic=false, doubleQAvail=false, doubleQUsed=false, swapQAvail=false, crystalAvail=false, ansColorActive=false, crystalShown=false;
+let lls={f50:true,ph:true,au:true,sk:true};
+let rm50=[], active=false, tmrInt=null, tLeft=30;
+let corCnt=0, skipped=false, withdrew=false;
+let sessionStars=0, isDaily=false, qStartTime=0, gStreak=0;
+let soundOn=true, isLight=false;
+
+// ══════════════════════════════════
+// AUDIO — نظام صوت احترافي
+// ══════════════════════════════════
+let AC=null;
+let bgMusicPlaying=false, bgMusicGain=null;
+const ga=()=>{if(!AC)AC=new(window.AudioContext||window.webkitAudioContext)();return AC;};
+const tn=(f,d,t='sine',g=.27,dl=0)=>{if(!soundOn)return;try{const a=ga(),o=a.createOscillator(),gn=a.createGain();o.connect(gn);gn.connect(a.destination);o.type=t;o.frequency.setValueAtTime(f,a.currentTime+dl);gn.gain.setValueAtTime(0,a.currentTime+dl);gn.gain.linearRampToValueAtTime(g,a.currentTime+dl+.01);gn.gain.linearRampToValueAtTime(0,a.currentTime+dl+d);o.start(a.currentTime+dl);o.stop(a.currentTime+dl+d+.05);}catch{}};
+
+function startBgMusic(){
+  if(!soundOn||bgMusicPlaying)return;
+  try{
+    const a=ga();
+    bgMusicGain=a.createGain();
+    bgMusicGain.gain.setValueAtTime(0.055,a.currentTime);
+    bgMusicGain.connect(a.destination);
+    bgMusicPlaying=true;
+    const notes=[262,294,330,349,392,440,494,523,494,440,392,349,330,294];
+    let step=0;
+    function playNote(){
+      if(!bgMusicPlaying||!soundOn)return;
+      try{
+        const o=a.createOscillator(),g=a.createGain();
+        o.connect(g);g.connect(bgMusicGain);
+        o.type='sine';
+        o.frequency.setValueAtTime(notes[step%notes.length],a.currentTime);
+        g.gain.setValueAtTime(0,a.currentTime);
+        g.gain.linearRampToValueAtTime(0.5,a.currentTime+0.05);
+        g.gain.linearRampToValueAtTime(0,a.currentTime+0.38);
+        o.start(a.currentTime);o.stop(a.currentTime+0.42);
+        step++;
+      }catch(e){}
+      setTimeout(playNote,430);
+    }
+    playNote();
+  }catch(e){}
+}
+function stopBgMusic(){bgMusicPlaying=false;}
+
+const sOk=()=>{
+  if(!soundOn)return;
+  [523,659,784,1047].forEach((f,i)=>tn(f,.22,'sine',.32,i*.1));
+  setTimeout(()=>[330,415,494,659].forEach((f,i)=>tn(f,.18,'triangle',.14,i*.08)),60);
+};
+const sNo=()=>{
+  if(!soundOn)return;
+  [330,277,220,165,110].forEach((f,i)=>tn(f,.3,'sawtooth',.22,i*.14));
+  setTimeout(()=>tn(80,.9,'triangle',.08),200);
+};
+const sSel=()=>{tn(660,.08,'sine',.2);tn(880,.07,'sine',.15,.05);};
+const sWin=()=>{
+  if(!soundOn)return;
+  [523,659,784,1047,1319,1568,2093].forEach((f,i)=>tn(f,.25,'sine',.35,i*.1));
+  setTimeout(()=>[659,784,1047,1319].forEach((f,i)=>tn(f,.2,'triangle',.25,i*.1)),120);
+};
+const sMegaWin=()=>{
+  if(!soundOn)return;
+  const m=[523,659,784,1047,1319,1568,2093,1568,2093,2637];
+  m.forEach((f,i)=>tn(f,.28,'sine',.42,i*.11));
+  setTimeout(()=>m.forEach((f,i)=>tn(f*.5,.22,'triangle',.3,i*.11)),160);
+  setTimeout(()=>[784,1047,1319,1568,2093].forEach((f,i)=>tn(f,.3,'sine',.4,i*.1)),700);
+};
+const sClap=()=>{
+  try{const a=ga();
+  for(let w=0;w<3;w++){setTimeout(()=>{
+    const buf=a.createBuffer(1,a.sampleRate*.13,a.sampleRate),d=buf.getChannelData(0);
+    for(let i=0;i<d.length;i++)d[i]=(Math.random()*2-1)*(1-i/d.length)*.42;
+    const src=a.createBufferSource();src.buffer=buf;
+    const g=a.createGain();g.gain.setValueAtTime(.42,a.currentTime);
+    src.connect(g);g.connect(a.destination);src.start();
+  },w*155);}
+  }catch(e){}
+};
+const sLL=()=>{tn(880,.15,'sine',.28,0);tn(1108,.14,'sine',.24,.1);tn(1320,.13,'sine',.2,.2);};
+const sTick=()=>tn(900,.04,'square',.08);
+const sTickDanger=()=>{tn(1100,.04,'square',.14);tn(550,.04,'square',.07,.04);};
+const sQ=()=>{tn(523,.12,'sine',.2,0);tn(659,.1,'sine',.18,.1);tn(784,.1,'sine',.16,.2);};
+const sStar=()=>{tn(1320,.1,'sine',.3);tn(1568,.09,'sine',.25,.08);tn(1976,.08,'sine',.2,.16);};
+const sMilestone=()=>{
+  if(!soundOn)return;
+  [523,659,784,1047,1319].forEach((f,i)=>tn(f,.25,'sine',.42,i*.09));
+  setTimeout(()=>[659,784,1047].forEach((f,i)=>tn(f,.22,'triangle',.3,i*.09)),300);
+};
+
+// ══════════════════════════════════
+// STARS BG
+// ══════════════════════════════════
+function mkStars(){const c=document.getElementById('stars-bg');for(let i=0;i<140;i++){const s=document.createElement('div');s.className='star';const z=Math.random()*2.5+.5;s.style.cssText=`width:${z}px;height:${z}px;left:${Math.random()*100}%;top:${Math.random()*100}%;--d:${2+Math.random()*4}s;--dl:${Math.random()*6}s;`;c.appendChild(s);}}
+
+// ══════════════════════════════════
+// THEME / MODE / SOUND
+// ══════════════════════════════════
+const themeAccents={blue:'',green:'tg',red:'tr'};
+let curTheme='blue';
+function setThm(t,btn){
+  curTheme=t;
+  const base=isLight?'light':'dark';
+  document.body.className=base+' '+themeAccents[t];
+  document.querySelectorAll('.tbtn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+function toggleMode(){
+  isLight=!isLight;
+  document.getElementById('mode-btn').textContent=isLight?'☀️ نهاري':'🌙 ليلي';
+  document.body.className=(isLight?'light':'dark')+' '+themeAccents[curTheme];
+}
+function toggleSound(){
+  soundOn=!soundOn;
+  document.getElementById('sound-btn').textContent=soundOn?'🔊 مفعّل':'🔇 مكتوم';
+}
+
+// ══════════════════════════════════
+// SIDEBAR
+// ══════════════════════════════════
+function openSB(){document.getElementById('sidebar').classList.add('open');document.getElementById('sb-ov').classList.add('on');}
+function closeSB(){document.getElementById('sidebar').classList.remove('open');document.getElementById('sb-ov').classList.remove('on');}
+function openPG(id){
+  closeSB();
+  if(id==='pg-stats')renderStats();
+  if(id==='pg-achievements')renderAchievements();
+  document.getElementById(id).classList.add('on');
+}
+function closePG(id){document.getElementById(id).classList.remove('on');}
+function renderStats(){
+  document.getElementById('stats-body').innerHTML=`
+    <h3>🏆 أفضل جائزة</h3><p style="font-size:26px;font-weight:900;color:var(--gold);">${PD.best?'$'+PD.best.toLocaleString():'لم تلعب بعد'}</p>
+    <h3>🎮 عدد الجلسات</h3><p style="font-size:22px;font-weight:700;color:var(--cyan);">${PD.games} جلسة</p>
+    <h3>✅ إجمالي الصحيحة</h3><p style="font-size:22px;font-weight:700;color:var(--green);">${PD.totalCor} إجابة</p>
+    <h3>⭐ إجمالي النجوم</h3><p style="font-size:22px;font-weight:700;color:var(--gold);">${PD.totalStars} نجمة</p>
+    <h3>🔥 أطول سلسلة أيام</h3><p style="font-size:22px;font-weight:700;color:#FF8C00;">${PD.streak} يوم</p>
+    <h3>📝 آخر جائزة</h3><p style="color:var(--gold2);">${PD.lastPrize}</p>
+    <h3>📊 معدل الدقة</h3><p>${PD.games>0?Math.round((PD.totalCor/PD.games/25)*100)+'%':'---'}</p>`;
+}
+function renderAchievements(){
+  document.getElementById('ach-body').innerHTML=ACHIEVEMENTS.map(a=>`
+    <div style="display:flex;align-items:center;gap:12px;padding:14px;background:${PD.achievements[a.id]?'rgba(255,215,0,.1)':'rgba(255,255,255,.03)'};border:1.5px solid ${PD.achievements[a.id]?'rgba(255,215,0,.4)':'rgba(255,255,255,.08)'};border-radius:14px;margin-bottom:10px;">
+      <div style="font-size:32px;${PD.achievements[a.id]?'':'filter:grayscale(1);opacity:.4;'}">${a.ic}</div>
+      <div>
+        <div style="font-size:16px;font-weight:900;color:${PD.achievements[a.id]?'var(--gold)':'var(--dim)'};">${a.name}</div>
+        <div style="font-size:13px;color:var(--dim);">${a.desc}</div>
+        <div style="font-size:12px;margin-top:3px;color:${PD.achievements[a.id]?'var(--green)':'var(--dim2)'};">${PD.achievements[a.id]?'✅ تم الإنجاز':'🔒 لم يُنجز بعد'}</div>
+      </div>
+    </div>`).join('');
+}
+function doReset(){closeSB();if(confirm('⚠️ سيتم حذف كل إحصائياتك وإنجازاتك! هل أنت متأكد؟')){localStorage.removeItem('mq7');PD={best:0,games:0,totalCor:0,totalStars:0,lastPrize:'$0',streak:0,lastPlay:'',achievements:{},dailyDone:'',maxStreak5:0};persist();updateIntroUI();showNotif('✅ تم إعادة الضبط!');}}
+function shareGame(t){const url=window.location.href;const msg='🏆 جرّب لعبة "من سيربح المليون؟" — 25 مرحلة — 350+ سؤال! هل ستصل إلى $5,000,000؟ 🎯';if(t==='whatsapp')window.open('https://wa.me/?text='+encodeURIComponent(msg+'\n'+url));else if(t==='twitter')window.open('https://twitter.com/intent/tweet?text='+encodeURIComponent(msg)+'&url='+encodeURIComponent(url));else if(t==='telegram')window.open('https://t.me/share/url?url='+encodeURIComponent(url)+'&text='+encodeURIComponent(msg));else if(t==='copy'){navigator.clipboard.writeText(url).then(()=>showNotif('📋 تم نسخ الرابط!')).catch(()=>showNotif('⚠️ تعذّر النسخ'));}}
+function shareRes(){const txt=`🏆 حققت ${PD.lastPrize} في "من سيربح المليون؟"!\nنجومي: ${PD.totalStars}⭐ · سلسلة: ${PD.streak}🔥\nهل يمكنك التفوق عليّ؟ 🎯`;navigator.clipboard.writeText(txt).then(()=>showNotif('📊 تم نسخ نتيجتك!')).catch(()=>showNotif('⚠️ تعذّر النسخ'));}
+
+// ══════════════════════════════════
+// DAILY CHALLENGE + STREAK
+// ══════════════════════════════════
+const today=()=>new Date().toISOString().split('T')[0];
+function updateStreak(){
+  const t=today(),last=PD.lastPlay;
+  if(last===t)return;
+  const yesterday=new Date();yesterday.setDate(yesterday.getDate()-1);
+  const yd=yesterday.toISOString().split('T')[0];
+  if(last===yd)PD.streak++;
+  else if(last!==t)PD.streak=1;
+  PD.lastPlay=t;persist();
+}
+function updateIntroUI(){
+  document.getElementById('chip-best').textContent=PD.best?'$'+PD.best.toLocaleString():'$0';
+  document.getElementById('chip-games').textContent=PD.games;
+  document.getElementById('chip-stars').textContent=(PD.totalStars||0)+'⭐';
+  // Also update shop balance if shop is open
+  const sb=document.getElementById('shop-stars-bal');
+  if(sb) sb.textContent=PD.totalStars||0;
+  document.getElementById('streak-num').textContent=PD.streak||0;
+  document.getElementById('sb-meta').textContent='أفضل نتيجة: '+(PD.best?'$'+PD.best.toLocaleString():'$0');
+  document.getElementById('sb-streak-txt').textContent=(PD.streak||0)+' يوم متتالي';
+  // Daily
+  const dc=document.getElementById('daily-card');
+  const dd=document.getElementById('daily-desc');
+  const t2=today();
+  const todayPlays=(PD.dailyPlays||{})[t2]||0;
+  const remaining=3-todayPlays;
+  if(remaining<=0){
+    dc.classList.add('done');
+    dd.textContent='🔒 انتهت محاولاتك الـ3 اليوم! عُد غداً للتحدي الجديد';
+  } else {
+    dc.classList.remove('done');
+    const played=todayPlays>0?` (${todayPlays}/3 محاولات)`:'';
+    dd.textContent='🎯 مكافأة ×3 — '+remaining+' محاولات متبقية اليوم'+played;
+  }
+  // Badges on intro
+  renderIntroBadges();
+  document.getElementById('share-res').textContent='آخر نتيجة: '+PD.lastPrize+' · نجوم: '+(PD.totalStars||0)+'⭐';
+  renderWeekTitle();
+  // Refresh host avatar
+  const _hav=document.querySelector('.h-av');
+  if(_hav) _hav.textContent=getActiveAvatarEmoji();
+}
+function renderIntroBadges(){
+  const el=document.getElementById('badges-intro');
+  el.innerHTML=ACHIEVEMENTS.slice(0,6).map(a=>`
+    <div class="badge ${PD.achievements[a.id]?'unlocked':''}">
+      <span class="badge-ic">${a.ic}</span>${a.name.substring(0,10)}
+    </div>`).join('');
+}
+function startDaily(){
+  const t=today();
+  const todayPlays=(PD.dailyPlays||{})[t]||0;
+  if(todayPlays>=3){
+    document.getElementById('daily-card').classList.add('done');
+    document.getElementById('daily-desc').textContent='🔒 استنفدت محاولاتك الـ3 اليوم! عُد غداً للتحدي الجديد';
+    showNotif('🔒 استخدمت 3 محاولات اليوم! عُد غداً');
+    return;
+  }
+  isDaily=true;
+  startGame(true);
+}
+
+// ══════════════════════════════════
+// STAGES TABLE + LADDER
+// ══════════════════════════════════
+function buildStagesTable(){
+  const el=document.getElementById('stages-tbl');
+  const dc={easy:'ce',medium:'cm',hard:'ch',vhard:'cv'};
+  const di={easy:'🟢',medium:'🟡',hard:'🟠',vhard:'🔴'};
+  el.innerHTML=STAGES.map(s=>`
+    <div class="st-row${s.ms?' ms':''}">
+      <div class="st-num">${s.n}</div>
+      <div class="st-ic">${di[s.d]}</div>
+      <div class="st-lbl">${s.lbl}</div>
+      ${s.a===6?'<span class="st-tag tag-ans">6 خيارات</span>':''}
+      ${s.ms?'<span class="st-tag tag-ms">🔒 أمان</span>':''}
+      <div class="st-prize ${dc[s.d]}">${s.p}</div>
+    </div>`).join('');
+}
+function buildLadder(){const el=document.getElementById('ladder');el.innerHTML='';for(let i=STAGES.length-1;i>=0;i--){const d=document.createElement('div');d.className='li'+(STAGES[i].ms?' ms':'');d.id='li'+i;d.textContent=STAGES[i].p;el.appendChild(d);}}
+function updLadder(){for(let i=0;i<STAGES.length;i++){const el=document.getElementById('li'+i);if(!el)continue;el.className='li'+(STAGES[i].ms?' ms':'');if(i===curQ)el.classList.add('cur');else if(i<curQ)el.classList.add('dn');}}
+
+// ══════════════════════════════════
+// LUCKY WHEEL
+// ══════════════════════════════════
+const WHEEL_PRIZES=['مساعدة مجانية! 🎁','3 نجوم إضافية ⭐⭐⭐','تهانينا! جائزة مضاعفة ×2 💰','حظاً أوفر! جرّب مجدداً 🎯','إنجاز خاص! 🏅','نصيحة من المقدم 💡','مفاجأة! نقطة أمان إضافية 🔒','برافو! 10 نجوم ⭐'];
+const WHEEL_COLORS=['#FF1744','#FFD700','#00E676','#00E5FF','#9C27B0','#FF9800','#2196F3','#E91E63'];
+let wheelSpun=false;
+function openWheel(){
+  wheelSpun=false;
+  document.getElementById('wheel-result').textContent='';
+  document.getElementById('spin-btn').disabled=false;
+  document.getElementById('wheel-close').style.display='none';
+  drawWheel(0);
+  document.getElementById('wheel-pop').classList.add('open');
+}
+function drawWheel(angle){
+  const canvas=document.getElementById('lucky-wheel');
+  const ctx=canvas.getContext('2d');
+  const cx=130,cy=130,r=122;
+  const n=WHEEL_PRIZES.length;
+  ctx.clearRect(0,0,260,260);
+  for(let i=0;i<n;i++){
+    const start=angle+(i/n)*Math.PI*2;
+    const end=angle+((i+1)/n)*Math.PI*2;
+    ctx.beginPath();ctx.moveTo(cx,cy);ctx.arc(cx,cy,r,start,end);ctx.closePath();
+    ctx.fillStyle=WHEEL_COLORS[i];ctx.fill();
+    ctx.strokeStyle='rgba(255,255,255,.3)';ctx.lineWidth=2;ctx.stroke();
+    ctx.save();ctx.translate(cx,cy);ctx.rotate(angle+(i+.5)/n*Math.PI*2);
+    ctx.textAlign='right';ctx.fillStyle='#fff';ctx.font='bold 11px Cairo, sans-serif';
+    ctx.shadowColor='rgba(0,0,0,.5)';ctx.shadowBlur=4;
+    ctx.fillText(WHEEL_PRIZES[i].substring(0,12),r-8,4);
+    ctx.restore();
+  }
+  // Center circle
+  ctx.beginPath();ctx.arc(cx,cy,22,0,Math.PI*2);
+  ctx.fillStyle='#010C1E';ctx.fill();
+  ctx.strokeStyle=WHEEL_COLORS[0];ctx.lineWidth=3;ctx.stroke();
+  ctx.fillStyle='#FFD700';ctx.font='bold 20px Arial';ctx.textAlign='center';ctx.fillText('💰',cx,cy+7);
+}
+function spinWheel(){
+  if(wheelSpun)return;
+  wheelSpun=true;
+  document.getElementById('spin-btn').disabled=true;
+  const totalRot=(5+Math.random()*8)*Math.PI*2;
+  const duration=4000;
+  const start=Date.now();
+  const winner=Math.floor(Math.random()*WHEEL_PRIZES.length);
+  function animate(){
+    const elapsed=Date.now()-start;
+    const t=Math.min(elapsed/duration,1);
+    const ease=1-Math.pow(1-t,4);
+    const angle=ease*totalRot;
+    drawWheel(angle);
+    if(t<1){requestAnimationFrame(animate);}
+    else{
+      const finalAngle=totalRot%(Math.PI*2);
+      // Show result
+      const res=WHEEL_PRIZES[winner];
+      document.getElementById('wheel-result').textContent='🎉 '+res;
+      sStar();
+      if(res.includes('نجوم') || res.includes('10')){
+        const bonus=res.includes('10')?10:3;
+        PD.totalStars=(PD.totalStars||0)+bonus;persist();
+        showNotif('⭐ حصلت على '+bonus+' نجوم إضافية!');
+      }
+      setTimeout(()=>{document.getElementById('wheel-close').style.display='inline-block';},800);
+    }
+  }
+  requestAnimationFrame(animate);
+}
+
+// ══════════════════════════════════
+// GAME FLOW
+// ══════════════════════════════════
+const shuffle=a=>{const r=[...a];for(let i=r.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[r[i],r[j]]=[r[j],r[i]];}return r;};
+const rnd=a=>a[Math.floor(Math.random()*a.length)];
+function pickQ(diff){
+  let pool=[...Q[diff]].filter(q=>!usedTxt.has(q.q));
+  if(!pool.length)pool=[...Q[diff]];
+  const q=rnd(pool);usedTxt.add(q.q);return q;
+}
+
+function startGame(daily=false){
+  updateStreak();
+  usedTxt=new Set();gameQ=[];curQ=0;corCnt=0;skipped=false;withdrew=false;
+  rm50=[];active=false;
+  sessionStars=0;gStreak=0;isDaily=daily;
+  // تشغيل الموسيقى
+  startBgMusic();
+
+  // ★ تحميل المشتريات — تُحمَّل للعرض، تُستهلك فقط عند الاستخدام الفعلي
+  const ex=PD.shopExtras||{};
+  lls={f50:true, f50b:(ex.extra50||0)>0, ph:true, phb:(ex.extraPh||0)>0, au:true, sk:true};
+  shieldActive=(ex.shield||0)>0;
+  freezeAvail=(ex.timeBomb||0)>0;
+  freezeClassic=(ex.freeze||0)>0;
+  doubleQAvail=(ex.doubleQ||0)>0;
+  doubleQUsed=false;
+  swapQAvail=(ex.swapQ||0)>0;
+  crystalAvail=(ex.crystal||0)>0;
+  ansColorActive=(ex.ansColor||0)>0;
+  applyAnsColor();
+
+  for(const st of STAGES)gameQ.push(pickQ(st.d));
+  showScr('game');buildLadder();updLLBtns();
+  setHost(rnd(HI));
+  // Update host avatar
+  const hav=document.querySelector('.h-av');
+  if(hav)hav.textContent=getActiveAvatarEmoji();
+  // Show/hide streak in game
+  document.getElementById('streak-pill').style.display='none';
+  active=false; // loadQ will set active=true
+  setTimeout(loadQ,500);
+}
+
+const HI=['مرحباً! هيا نبدأ رحلتنا نحو 5 ملايين! 🌟','أهلاً! الكرسي مريح... الأسئلة لا! 😄','المليون ينتظرك! هل أنت مستعد؟ 💰'];
+const HC=['رائع! واصل! 👏','ممتاز! أبهرتني! 🔥','إجابة رائعة! 💪','أحسنت! الخزينة تزداد! 💰','عبقري! ✨','مذهل! 🎯'];
+const HW=['للأسف خاطئة... حظاً أوفر!','آسف، الإجابة خاطئة!','لم تكن هذه المرة موفقة...'];
+const HH=['سؤال صعب... فكّر جيداً! 🤔','خذ وقتك، لا تتسرع! ⏳','تركيز تركيز! 🧠'];
+const HVH=['⚠️ سؤال بستة خيارات! كن حذراً!','🔴 المستوى الأعلى! فكّر بعمق!','💀 المستوى المستحيل! استخدم مساعداتك بحكمة!'];
+const HMS=['🔒 تهانينا! ضمنت هذا المبلغ حتى لو أخطأت لاحقاً!'];
+function setHost(t){document.getElementById('h-msg').textContent=t;}
+
+function loadQ(){
+  if(curQ>=25){endGame(true);return;}
+  rm50=[];qStartTime=Date.now();crystalShown=false;
+  // Reset any previously modified answers
+  LTRS.forEach(l=>{const b=document.getElementById('b'+l);if(b){b.style.opacity='';b.style.pointerEvents='';b.style.transform='';b.style.transition='';b.style.borderColor='';b.style.filter='';}});
+  const q=gameQ[curQ];const st=STAGES[curQ];
+  document.getElementById('q-text').textContent=q.q;
+  document.getElementById('q-cat').textContent=q.c;
+  document.getElementById('qnum').textContent=curQ+1;
+  document.getElementById('prize-val').textContent=st.p;
+  // Reset stars
+  [0,1,2].forEach(i=>{const s=document.getElementById('ss'+i);if(s){s.classList.remove('lit');}});
+
+  const n=q.a.length;
+  const grid=document.getElementById('ans-grid');
+  grid.className='ans-grid '+(n===6?'ag6':'ag4');
+  // Fade out old, then build new
+  const qbox=document.getElementById('q-text');
+  const agrid=document.getElementById('ans-grid');
+  qbox.style.opacity='0'; agrid.style.opacity='0';
+  qbox.style.transition='opacity 0.25s'; agrid.style.transition='opacity 0.25s';
+  setTimeout(()=>{
+    grid.innerHTML=q.a.map((txt,i)=>`<button class="ans-btn" id="b${LTRS[i]}" onclick="pick('${LTRS[i]}')"><span class="a-ltr">${AR[i]}</span><span>${txt}</span></button>`).join('');
+    document.querySelectorAll('.ans-btn').forEach(b=>{b.removeAttribute('disabled');b.style.cursor='pointer';});
+    qbox.style.opacity='1'; agrid.style.opacity='1';
+  }, 240);
+
+  const pct=Math.round((curQ/25)*100);
+  document.getElementById('pf').style.width=pct+'%';
+  document.getElementById('pl').textContent=curQ+'/25';
+  document.getElementById('pp').textContent=pct+'%';
+
+  active=true;
+  updLadder();sQ();
+  if(st.d==='vhard')setHost(rnd(HVH));
+  else if(curQ>=10)setHost(rnd(HH));
+  if(MS_IDX.includes(curQ))setHost('🔒 سؤال نقطة الأمان! إجابة صحيحة = المبلغ محمي!');
+  startTimer();
+}
+
+function startTimer(){
+  clearInterval(tmrInt);tLeft=30;
+  const fill=document.getElementById('tf'),num=document.getElementById('tn');
+  fill.style.transition='none';fill.style.width='100%';
+  fill.style.background='linear-gradient(90deg,var(--cyan),var(--gold))';
+  num.textContent=30;num.className='tn';
+  // Show live star countdown
+  const starDisplay=document.getElementById('live-stars');
+  if(starDisplay)starDisplay.textContent='⭐×10';
+  tmrInt=setInterval(()=>{
+    tLeft--;
+    fill.style.transition='width 1s linear';
+    fill.style.width=((tLeft/30)*100)+'%';
+    num.textContent=tLeft;
+    // Live stars update
+    const liveStars=Math.max(1,Math.round(10-(((30-tLeft)/30)*10)+0.5));
+    if(starDisplay)starDisplay.textContent='⭐×'+liveStars;
+    if(tLeft<=10){fill.style.background='linear-gradient(90deg,#FF6B6B,var(--red))';num.className='tn danger';sTick();}
+    if(tLeft<=0){clearInterval(tmrInt);timeOut();}
+  },1000);
+}
+
+function timeOut(){
+  if(!active)return;
+  active=false;
+  clearInterval(tmrInt);
+  disableAll();
+  if(!gameQ[curQ])return;
+  const corr=gameQ[curQ].r;
+  const idx=LTRS.indexOf(corr);
+  const corrBtn=document.getElementById('b'+corr);
+
+  // ★ Show correct answer with bright green highlight
+  if(corrBtn){
+    corrBtn.className='ans-btn timeout-reveal';
+    corrBtn.style.cssText='border-color:var(--green)!important;background:linear-gradient(145deg,rgba(0,230,118,.35),rgba(0,150,60,.2))!important;box-shadow:0 0 30px rgba(0,230,118,.6)!important;animation:fok .4s ease 4!important;';
+  }
+
+  // ★ Also dim all wrong answers so correct stands out
+  LTRS.slice(0,gameQ[curQ].a.length).forEach(l=>{
+    if(l!==corr){
+      const b=document.getElementById('b'+l);
+      if(b&&!rm50.includes(l)){
+        b.style.opacity='0.3';
+        b.style.filter='grayscale(1)';
+      }
+    }
+  });
+
+  setHost('⏰ انتهى الوقت! الإجابة الصحيحة: '+AR[idx]+' — '+gameQ[curQ].a[idx]);
+  sNo();
+  if(navigator.vibrate) navigator.vibrate([200,60,200]);
+  gStreak=0;
+  updateGameStreak();
+  // Wait 3s so player can see the answer, then end
+  setTimeout(()=>endGame(false), 3200);
+}
+
+function pick(l){
+  // Guard: must be active and answer not removed by 50/50
+  if(!active)return;
+  if(rm50.includes(l))return;
+  const btn=document.getElementById('b'+l);
+  if(!btn||btn.hasAttribute('disabled'))return;
+
+  // Lock everything immediately
+  clearInterval(tmrInt);
+  active=false;
+  disableAll();
+
+  // Show selected state
+  btn.className='ans-btn sel';
+  sSel();
+
+  // Reveal result after brief pause (lets user see selection)
+  setTimeout(()=>{
+    const corr=gameQ[curQ].r;
+    const corrBtn=document.getElementById('b'+corr);
+
+    if(l===corr){
+      // ✅ CORRECT
+      btn.className='ans-btn ok';
+      corCnt++;
+      PD.totalCor++;
+
+      sOk();
+      setTimeout(()=>sClap(),300);
+
+      // ★ Shield: does NOT protect here (shield is for wrong answers)
+      // ★ Double prize if active
+      let displayPrize=STAGES[curQ].p;
+      if(doubleQUsed){
+        const doubled='$'+(STAGES[curQ].v*2).toLocaleString();
+        displayPrize=doubled+' ×2!';
+        doubleQUsed=false; // reset for next use
+        showNotif('🎉 جائزة مضاعفة! '+doubled);
+      }
+      document.getElementById('prize-val').textContent=displayPrize;
+
+      // ★ Stars decrease with time: max 10 at instant, min 1 after 25s
+      const elapsed=(Date.now()-qStartTime)/1000;
+      const maxStars=10;
+      const starsEarned=Math.max(1, Math.round(maxStars - (elapsed/30)*maxStars + 0.5));
+      const stars=Math.min(maxStars, starsEarned);
+      sessionStars+=stars;
+
+      // Animate stars
+      for(let i=0;i<stars;i++){
+        const s=document.getElementById('ss'+i);
+        if(s)setTimeout(()=>{s.classList.add('lit');sStar();},i*180);
+      }
+
+      // Update streak
+      gStreak++;
+      if(gStreak>(PD.maxStreak5||0))PD.maxStreak5=gStreak;
+      updateGameStreak();
+
+      // Host message
+      if(MS_IDX.includes(curQ)){
+        showNotif('🔒 جائزة محمية! '+STAGES[curQ].p+' مضمونة!');
+        setTimeout(()=>sWin(),200);
+        setHost(rnd(HMS));
+      } else {
+        setHost(rnd(HC));
+      }
+      if(gStreak===5)showNotif('🔥 5 متتالية!! عظيم!');
+      if(gStreak===10)showNotif('⚡ 10 متتالية!!! أسطوري!');
+
+      persist();
+      checkAchievements();
+
+      // Move to next question
+      setTimeout(()=>{
+        curQ++;
+        if(curQ>=25) endGame(true);
+        else loadQ(); // loadQ sets active=true internally
+      },1900);
+
+    } else {
+      // ❌ WRONG
+      btn.className='ans-btn no';
+      sNo();
+      if(navigator.vibrate) navigator.vibrate([120,50,120]);
+      gStreak=0;
+      updateGameStreak();
+      doubleQUsed=false; // cancel double if wrong
+
+      const idx=LTRS.indexOf(corr);
+
+      // ★ SHIELD: protect once against wrong answer
+      if(shieldActive){
+        shieldActive=false;
+        consumeItem('shield');
+        document.getElementById('ll-shd').style.display='none';
+        setHost('🛡️ الدرع حماك هذه المرة! واصل! الإجابة الصحيحة كانت: '+AR[idx]);
+        showNotif('🛡️ الدرع أنقذك! ابدأ السؤال التالي!');
+        // Show correct briefly then continue
+        setTimeout(()=>{
+          if(corrBtn){corrBtn.className='ans-btn ok';}
+          setTimeout(()=>{curQ++;if(curQ>=25)endGame(true);else loadQ();},1500);
+        },800);
+        return; // don't end game
+      }
+
+      setHost('❌ '+rnd(HW)+' الصحيحة: '+AR[idx]+' — '+gameQ[curQ].a[idx]);
+
+      // After 800ms show the correct answer clearly
+      setTimeout(()=>{
+        if(corrBtn){
+          corrBtn.className='ans-btn ok';
+          corrBtn.style.cssText='border-color:var(--green)!important;background:linear-gradient(145deg,rgba(0,230,118,.35),rgba(0,150,60,.2))!important;box-shadow:0 0 30px rgba(0,230,118,.6)!important;';
+        }
+        // Dim remaining wrong answers
+        LTRS.slice(0,gameQ[curQ].a.length).forEach(l=>{
+          if(l!==corr&&l!==btn.id.replace('b','')){
+            const wb=document.getElementById('b'+l);
+            if(wb&&!rm50.includes(l)){wb.style.opacity='0.3';wb.style.filter='grayscale(1)';}
+          }
+        });
+      },700);
+
+      setTimeout(()=>endGame(false), 3000);
+    }
+  },1000);
+}
+
+function updateGameStreak(){
+  const pill=document.getElementById('streak-pill');
+  const num=document.getElementById('g-streak');
+  if(gStreak>=2){pill.style.display='flex';num.textContent=gStreak;}
+  else pill.style.display='none';
+}
+
+function disableAll(){
+  // Disable all answer buttons (works with dynamically built buttons)
+  document.querySelectorAll('.ans-btn').forEach(b=>{
+    b.setAttribute('disabled','');
+    b.style.cursor='default';
+  });
+}
+
+// ══════════════════════════════════
+// LIFELINES
+// ══════════════════════════════════
+function updLLBtns(){
+  const show=(id,visible)=>{const el=document.getElementById(id);if(el)el.style.display=visible?'flex':'none';};
+  const dis=(id,disabled)=>{const el=document.getElementById(id);if(el){if(disabled)el.setAttribute('disabled','');else el.removeAttribute('disabled');}};
+  // الأزرار الأساسية
+  dis('ll-50',!lls.f50); dis('ll-ph',!lls.ph); dis('ll-au',!lls.au); dis('ll-sk',!lls.sk);
+  // المشتريات — تظهر فقط إذا مشتراة
+  show('ll-50b',    lls.f50b);
+  show('ll-phb',    lls.phb);
+  show('ll-bomb',   freezeAvail);        // قنبلة الوقت
+  show('ll-frz',    freezeClassic);      // تجميد الوقت
+  show('ll-crystal',crystalAvail&&!crystalShown); // الكرة السحرية
+  show('ll-dbl',    doubleQAvail&&!doubleQUsed);
+  show('ll-swap',   swapQAvail);
+  show('ll-shd',    shieldActive);
+}
+function use50(){
+  if(!lls.f50||!active)return;
+  lls.f50=false;
+  document.getElementById('ll-50').setAttribute('disabled','');
+  sLL();
+  showNotif('✂️ تم إزالة نصف الإجابات الخاطئة!');
+  setHost('50/50 مفعّل! خياراك أصبحا أوضح! 🎯');
+  const corr=gameQ[curQ].r;
+  const n=gameQ[curQ].a.length;
+  const wrongs=LTRS.slice(0,n).filter(l=>l!==corr&&!rm50.includes(l));
+  const removeCount=n===6?3:2;
+  const toRm=shuffle(wrongs).slice(0,removeCount);
+  toRm.forEach(l=>{
+    rm50.push(l);
+    const b=document.getElementById('b'+l);
+    if(b){
+      b.style.opacity='0.12';
+      b.style.pointerEvents='none';
+      b.style.transform='scale(0.92)';
+      b.style.transition='all 0.45s ease';
+      b.style.borderColor='rgba(255,255,255,0.06)';
+      b.style.filter='grayscale(1)';
+      b.setAttribute('disabled','');
+    }
+  });
+}
+function usePh(){if(!lls.ph||!active)return;lls.ph=false;document.getElementById('ll-ph').setAttribute('disabled','');sLL();setHost('📞 يتصل الصديق...');const corr=gameQ[curQ].r;const ci=LTRS.indexOf(corr);const conf=Math.random()>.25;document.getElementById('ph-msg').textContent=conf?`أهلاً! أعتقد بشدة أن الجواب "${AR[ci]}: ${gameQ[curQ].a[ci]}"... واثق تقريباً! 🙏`:`والله ما أعرف... ربما "${AR[Math.floor(Math.random()*gameQ[curQ].a.length)]}" لكن خذ قرارك! 😅`;document.getElementById('ph-pop').classList.add('open');}
+function useAu(){if(!lls.au||!active)return;lls.au=false;document.getElementById('ll-au').setAttribute('disabled','');sLL();setHost('👥 الجمهور يصوت...');const corr=gameQ[curQ].r,n=gameQ[curQ].a.length;const avail=LTRS.slice(0,n).filter(l=>!rm50.includes(l));let pcts={},rem=100;const cp=45+Math.floor(Math.random()*35);pcts[corr]=cp;rem-=cp;const oth=avail.filter(l=>l!==corr);oth.forEach((l,i)=>{if(i===oth.length-1)pcts[l]=rem;else{const p=Math.floor(Math.random()*(rem/(oth.length-i)));pcts[l]=p;rem-=p;}});rm50.forEach(l=>pcts[l]=0);const bars=document.getElementById('aud-bars');bars.innerHTML='';LTRS.slice(0,n).forEach((l,i)=>{const p=pcts[l]||0;const div=document.createElement('div');div.className='bw';div.innerHTML=`<div class="bar" style="height:3px" data-h="${Math.round(p*1.05)}px"></div><div class="bp">${p}%</div><div class="bl">${AR[i]}</div>`;bars.appendChild(div);});document.getElementById('aud-pop').classList.add('open');setTimeout(()=>bars.querySelectorAll('.bar').forEach(b=>b.style.height=b.dataset.h),100);}
+function useSk(){
+  if(!lls.sk||!active||skipped)return;
+  lls.sk=false;skipped=true;active=false;
+  document.getElementById('ll-sk').setAttribute('disabled','');
+  disableAll();
+  sLL();
+  showNotif('⏭️ تم تخطي السؤال بنجاح!');
+  setHost('⏭️ تخطيت بحكمة! واصل! 💪');
+  clearInterval(tmrInt);
+  setTimeout(()=>{curQ++;if(curQ>=25)endGame(true);else loadQ();},600);
+}
+
+// ══════════════════════════════════
+// ★ دوال المشتريات الجديدة
+// ══════════════════════════════════
+
+// 💣 قنبلة الوقت — تضيف 20 ثانية
+function useTimeBomb(){
+  if(!freezeAvail||!active)return;
+  freezeAvail=false;
+  consumeItem('timeBomb');
+  document.getElementById('ll-bomb').style.display='none';
+  sLL();
+  tLeft=Math.min(tLeft+20,30);
+  const fill=document.getElementById('tf'),num=document.getElementById('tn');
+  fill.style.width=((tLeft/30)*100)+'%';
+  fill.style.background='linear-gradient(90deg,var(--cyan),var(--gold))';
+  num.textContent=tLeft; num.className='tn';
+  showNotif('💣 انفجرت القنبلة! +20 ثانية إضافية!');
+  setHost('💣 وقت إضافي! استغل الفرصة! ⏰');
+}
+
+// 🔮 الكرة السحرية — تكشف صعوبة السؤال القادم
+function useCrystal(){
+  if(!crystalAvail||!active||crystalShown)return;
+  crystalAvail=false; crystalShown=true;
+  consumeItem('crystal');
+  document.getElementById('ll-crystal').style.display='none';
+  sLL();
+  if(curQ+1<25){
+    const nextSt=STAGES[curQ+1];
+    const diffNames={easy:'🟢 سهل',medium:'🟡 متوسط',hard:'🟠 صعب',vhard:'🔴 صعب جداً'};
+    const nextDiff=diffNames[nextSt.d]||'غير معروف';
+    showNotif('🔮 السؤال القادم: '+nextDiff+' · جائزته '+nextSt.p);
+    setHost('🔮 الكرة السحرية تقول: السؤال القادم '+nextDiff+' بجائزة '+nextSt.p+'!');
+  } else {
+    showNotif('🔮 هذا آخر سؤال — أنت على وشك الفوز!');
+  }
+}
+
+// 🔄 تبديل السؤال — استبدل بسؤال آخر من نفس المستوى
+function useSwap(){
+  if(!swapQAvail||!active)return;
+  swapQAvail=false;
+  consumeItem('swapQ');
+  document.getElementById('ll-swap').style.display='none';
+  sLL();
+  clearInterval(tmrInt);
+  active=false;
+  showNotif('🔄 تم تبديل السؤال بآخر من نفس المستوى!');
+  setHost('🔄 سؤال جديد قادم...');
+  const diff=STAGES[curQ].d;
+  let newQ=pickQ(diff);
+  let attempts=0;
+  while(newQ.q===gameQ[curQ].q && attempts<10){ newQ=pickQ(diff); attempts++; }
+  gameQ[curQ]=newQ;
+  setTimeout(()=>{ active=true; loadQ(); },600);
+}
+
+// 🎨 لون الإجابات — يُطبَّق عند بدء اللعبة
+const ANS_COLORS=[
+  {name:'ذهبي',    border:'rgba(255,215,0,.6)',  bg:'linear-gradient(145deg,rgba(255,215,0,.15),rgba(255,165,0,.08))'},
+  {name:'نيون',    border:'rgba(0,229,255,.6)',   bg:'linear-gradient(145deg,rgba(0,229,255,.12),rgba(0,150,200,.06))'},
+  {name:'ماسي',    border:'rgba(180,100,255,.6)', bg:'linear-gradient(145deg,rgba(180,100,255,.15),rgba(100,50,200,.08))'},
+  {name:'زمردي',   border:'rgba(0,230,118,.6)',   bg:'linear-gradient(145deg,rgba(0,230,118,.12),rgba(0,150,70,.06))'},
+  {name:'ورديّ',   border:'rgba(255,100,180,.6)', bg:'linear-gradient(145deg,rgba(255,100,180,.12),rgba(200,50,120,.06))'},
+];
+let currentAnsColorIdx=0;
+function applyAnsColor(){
+  if(!ansColorActive)return;
+  const scheme=ANS_COLORS[currentAnsColorIdx%ANS_COLORS.length];
+  // CSS variable override
+  document.documentElement.style.setProperty('--ans-border-override',scheme.border);
+  document.documentElement.style.setProperty('--ans-bg-override',scheme.bg);
+}
+function cycleAnsColor(){
+  // يُستدعى من المتجر لتغيير اللون
+  currentAnsColorIdx=(currentAnsColorIdx+1)%ANS_COLORS.length;
+  applyAnsColor();
+  showNotif('🎨 لون الإجابات: '+ANS_COLORS[currentAnsColorIdx].name+'!');
+}
+
+// ★ Extra purchased lifelines
+function use50b(){
+  if(!lls.f50b||!active)return;
+  lls.f50b=false;
+  consumeItem('extra50');
+  document.getElementById('ll-50b').style.display='none';
+  sLL();showNotif('✂️ 50:50 الإضافي مفعّل!');
+  setHost('50/50 الإضافي مفعّل! خياراك أوضح! 🎯');
+  const corr=gameQ[curQ].r;
+  const n=gameQ[curQ].a.length;
+  const wrongs=LTRS.slice(0,n).filter(l=>l!==corr&&!rm50.includes(l));
+  const removeCount=n===6?3:2;
+  shuffle(wrongs).slice(0,removeCount).forEach(l=>{
+    rm50.push(l);
+    const b=document.getElementById('b'+l);
+    if(b){b.style.opacity='0.12';b.style.pointerEvents='none';b.style.transform='scale(0.92)';b.style.transition='all 0.45s ease';b.style.borderColor='rgba(255,255,255,0.06)';b.style.filter='grayscale(1)';b.setAttribute('disabled','');}
+  });
+}
+
+function usePhb(){
+  if(!lls.phb||!active)return;
+  lls.phb=false;
+  consumeItem('extraPh');
+  document.getElementById('ll-phb').style.display='none';
+  sLL();setHost('📞 مكالمة إضافية من المتجر...');
+  const corr=gameQ[curQ].r;const ci=LTRS.indexOf(corr);const conf=Math.random()>.2;
+  document.getElementById('ph-msg').textContent=conf
+    ?`مرحباً (مساعدة المتجر)! الجواب هو "${AR[ci]}: ${gameQ[curQ].a[ci]}" — أنا متأكد! 🙏`
+    :`والله ما أعرف... شايف بس "${AR[Math.floor(Math.random()*gameQ[curQ].a.length)]}" لكن ما أضمن 😅`;
+  document.getElementById('ph-pop').classList.add('open');
+}
+
+function useFreeze(){
+  if(!freezeClassic||!active)return;
+  freezeClassic=false;
+  consumeItem('freeze');
+  document.getElementById('ll-frz').style.display='none';
+  sLL();showNotif('⏸️ تم تجميد الوقت لـ 10 ثوانٍ!');
+  setHost('⏸️ الوقت مجمّد! استغل الفرصة وفكّر! 🧊');
+  clearInterval(tmrInt);
+  setTimeout(()=>{
+    if(active){
+      showNotif('▶️ استُؤنف الوقت!');
+      setHost('▶️ الوقت عاد للتشغيل! تصرّف بسرعة!');
+      const fill=document.getElementById('tf'),num=document.getElementById('tn');
+      tmrInt=setInterval(()=>{
+        tLeft--;
+        fill.style.transition='width 1s linear';
+        fill.style.width=((tLeft/30)*100)+'%';
+        num.textContent=tLeft;
+        if(tLeft<=10){fill.style.background='linear-gradient(90deg,#FF6B6B,var(--red))';num.className='tn danger';sTick();}
+        if(tLeft<=0){clearInterval(tmrInt);timeOut();}
+      },1000);
+    }
+  },10000);
+}
+
+function useDouble(){
+  if(!doubleQAvail||doubleQUsed||!active)return;
+  doubleQUsed=true;doubleQAvail=false;
+  consumeItem('doubleQ');
+  document.getElementById('ll-dbl').style.display='none';
+  sLL();showNotif('×2 الجائزة ستتضاعف على هذا السؤال!');
+  setHost('×2 مفعّل! إن أجبت صحيحاً تضاعفت جائزتك! 💰💰');
+}
+
+// ══════════════════════════════════
+// WITHDRAW
+// ══════════════════════════════════
+function openWD(){
+  if(!active){showNotif('⚠️ لا يمكن الانسحاب الآن!');return;}
+  if(curQ===0){showNotif('⚠️ أجب على سؤال واحد أولاً!');return;}
+  const safeAmount=STAGES[curQ-1].p;
+  document.getElementById('wd-amt').textContent=safeAmount;
+  document.getElementById('wd-pop').classList.add('open');
+}
+function doWD(){closePop('wd-pop');clearInterval(tmrInt);active=false;withdrew=true;const p=STAGES[curQ-1];if(p.v>PD.best)PD.best=p.v;PD.games++;PD.lastPrize=p.p;persist();checkAchievements();showNotif('💸 انسحبت بـ '+p.p+'!');setTimeout(()=>endGame('wd'),500);}
+
+// ══════════════════════════════════
+// END GAME
+// ══════════════════════════════════
+function endGame(res){
+  clearInterval(tmrInt);active=false;
+  stopBgMusic();
+  let fp='$0',fv=0;
+  if(res===true){fp=STAGES[24].p;fv=STAGES[24].v;}
+  else if(res==='wd'){fp=STAGES[curQ-1]?STAGES[curQ-1].p:'$0';fv=STAGES[curQ-1]?STAGES[curQ-1].v:0;}
+  else{let si=-1;for(let i=MS_IDX.length-1;i>=0;i--){if(MS_IDX[i]<curQ){si=MS_IDX[i];break;}}if(si>=0){fp=STAGES[si].p;fv=STAGES[si].v;}}
+  if(!withdrew&&res!=='wd'){PD.games++;if(fv>PD.best)PD.best=fv;PD.lastPrize=fp;persist();}
+  if(isDaily){
+    const t=today();
+    PD.dailyPlays=PD.dailyPlays||{};
+    PD.dailyPlays[t]=(PD.dailyPlays[t]||0)+1;
+    if(PD.dailyPlays[t]>=3) PD.dailyDone=t;
+    persist();
+  }
+  // check daily bonus
+  let bonusMsg='';if(isDaily&&res===true){sessionStars*=3;bonusMsg=' (مكافأة يومية ×3!)';}
+  // Save session stars
+  PD.totalStars=(PD.totalStars||0)+sessionStars;
+  PD.allTimeStars=(PD.allTimeStars||0)+sessionStars;
+  if(sessionStars>(PD.bestSessionStars||0)) PD.bestSessionStars=sessionStars;
+  persist();
+  // Track no-help challenge
+  if(lls.f50&&lls.ph&&lls.au&&lls.sk&&corCnt>=15){
+    PD.shopExtras=PD.shopExtras||{};PD.shopExtras.noHelpDone=true;persist();
+  }
+  checkAchievements();
+  document.getElementById('share-res').textContent='آخر نتيجة: '+fp+' · نجوم: '+sessionStars+'⭐';
+
+  setTimeout(()=>{
+    document.getElementById('end-em').textContent=res===true?'🏆':(res==='wd'?'💸':fv>0?'💵':'😢');
+    const et=document.getElementById('end-ttl');
+    if(res===true){
+      et.textContent='مبروك! 🎉 وصلت للنهاية!';et.className='end-ttl tw';
+      sMegaWin();megaConfetti();
+      // Big Win Overlay
+      const ov=document.getElementById('big-win-overlay');
+      document.getElementById('bwo-prize').textContent=STAGES[24].p;
+      document.getElementById('bwo-msg').textContent='👑 أنت المليونير! مبروك! 👑';
+      ov.classList.add('show');
+      setTimeout(()=>{ov.classList.remove('show');},4000);
+    }
+    else if(res==='wd'){et.textContent='انسحبت بذكاء! 💸';et.className='end-ttl twd';sWin();confetti();}
+    else if(fv>=1000000){
+      et.textContent='أحسنت! جائزة ضخمة!';et.className='end-ttl tw';
+      sWin();confetti();
+      // Show big win for milestone prizes
+      const ov=document.getElementById('big-win-overlay');
+      document.getElementById('bwo-prize').textContent=fp;
+      document.getElementById('bwo-msg').textContent='🏆 إنجاز رائع! 🏆';
+      ov.classList.add('show');
+      setTimeout(()=>ov.classList.remove('show'),3000);
+    }
+    else if(fv>0){et.textContent='أحسنت! ضمنت جائزة آمنة!';et.className='end-ttl tw';sMilestone();}
+    else{et.textContent='حاول مجدداً! 💪';et.className='end-ttl tl';}
+    document.getElementById('end-amt').textContent=fp;
+    // Stars earned display
+    const starsEl=document.getElementById('earned-stars');
+    starsEl.innerHTML=`<div style="font-size:22px;font-weight:900;color:var(--gold);">+${sessionStars} ⭐${bonusMsg}</div><div style="font-size:12px;color:var(--dim);">إجمالي نجومك: ${PD.totalStars||0} ⭐</div>`;
+    document.getElementById('es-c').textContent=corCnt;
+    document.getElementById('es-q').textContent=curQ;
+    document.getElementById('es-st').textContent=sessionStars+'⭐';
+    document.getElementById('es-b').textContent='$'+(PD.best||0).toLocaleString();
+    // ★ Contextual message + next step
+    let msg='';
+    let nextStep='';
+    if(res===true){
+      msg='أجبت صحيحاً على جميع الأسئلة الـ 25! أنت أسطورة حقيقية! 👑';
+      nextStep='🏆 حاول "وضع البطل" في التحديات الخاصة!';
+    } else if(res==='wd'){
+      msg=`قرار حكيم! انسحبت بمبلغ مضمون. أفضل نتيجة: $${PD.best.toLocaleString()}`;
+      nextStep='💡 اشترِ درع الحماية من المتجر لتأمين إجابتك القادمة!';
+    } else if(fv===0){
+      msg=`وصلت للسؤال ${curQ+1} من 25 وأجبت صحيحاً على ${corCnt}. أفضل: $${PD.best.toLocaleString()}`;
+      if(curQ<5) nextStep='🎯 حاول مجدداً — الأسئلة الأولى سهلة!';
+      else if(curQ<10) nextStep='💡 استخدم مساعدة 50:50 في الأسئلة الصعبة!';
+      else nextStep='🛒 اشترِ درعاً من المتجر لحماية نفسك من الأخطاء!';
+    } else {
+      msg=`أحسنت! ضمنت ${fp}. وصلت للسؤال ${curQ+1}.`;
+      nextStep=`⭐ كسبت ${sessionStars} نجمة هذه الجلسة — اذهب للمتجر!`;
+    }
+    document.getElementById('end-msg').innerHTML=`<div>${msg}</div><div style="margin-top:8px;font-size:13px;color:var(--cyan);background:rgba(0,229,255,.08);border-radius:10px;padding:8px 14px;">${nextStep}</div>`;
+    // Wheel button
+    const wb=document.getElementById('wheel-end-btn');
+    wb.style.display=(res===true||res==='wd'||fv>0)?'inline-block':'none';
+    updateIntroUI();
+    showScr('end');
+  },700);
+}
+
+function goIntro(){showScr('intro');updateIntroUI();}
+
+// ══════════════════════════════════
+// UTILS
+// ══════════════════════════════════
+function showScr(id){document.querySelectorAll('.scr').forEach(s=>s.classList.remove('on'));document.getElementById(id).classList.add('on');}
+function closePop(id){document.getElementById(id).classList.remove('open');}
+function showNotif(msg){const n=document.getElementById('notif');n.textContent=msg;n.classList.add('show');setTimeout(()=>n.classList.remove('show'),2800);}
+function confetti(){
+  const c=['#FFD700','#FFA500','#FF6B6B','#00E5FF','#00E676','#FF69B4','#9B59B6','#fff','#FFD700','#FFA500'];
+  const shapes=['■','●','▲','★','♦','✦'];
+  for(let i=0;i<180;i++){
+    const el=document.createElement('div');
+    el.className='cf';
+    const size=5+Math.random()*10;
+    el.style.cssText=`left:${Math.random()*100}vw;top:-20px;color:${c[Math.floor(Math.random()*c.length)]};font-size:${size}px;width:${size}px;height:${size}px;background:${c[Math.floor(Math.random()*c.length)]};border-radius:${Math.random()>.5?'50%':'2px'};animation:fall ${2+Math.random()*3.5}s ${Math.random()*1.5}s linear forwards;`;
+    document.body.appendChild(el);
+    setTimeout(()=>el.remove(),7000);
+  }
+}
+
+function megaConfetti(){
+  // انفجار احتفالي ضخم للفوز الكبير
+  const c=['#FFD700','#FFA500','#FF6B6B','#00E5FF','#00E676','#FF69B4','#9B59B6','#fff','#CE93D8','#80DEEA'];
+  for(let wave=0;wave<3;wave++){
+    setTimeout(()=>{
+      for(let i=0;i<100;i++){
+        const el=document.createElement('div');
+        el.className='cf';
+        const size=6+Math.random()*14;
+        el.style.cssText=`left:${10+Math.random()*80}vw;top:-${Math.random()*30}px;background:${c[Math.floor(Math.random()*c.length)]};width:${size}px;height:${size}px;border-radius:${Math.random()>.4?'50%':'3px'};animation:fall ${1.8+Math.random()*3}s ${Math.random()*.8}s linear forwards;`;
+        document.body.appendChild(el);
+        setTimeout(()=>el.remove(),6000);
+      }
+    },wave*600);
+  }
+  // حلقات توهج
+  const ring=document.createElement('div');
+  ring.style.cssText='position:fixed;top:50%;left:50%;width:10px;height:10px;border-radius:50%;border:4px solid var(--gold);transform:translate(-50%,-50%);animation:ringExpand 1.2s ease-out forwards;z-index:850;';
+  document.body.appendChild(ring);
+  setTimeout(()=>ring.remove(),1300);
+}
+
+// ══════════════════════════════════
+// STARS SHOP ENGINE
+// ══════════════════════════════════
+
+// ─── Shop Items (Lifelines/Helps) ───
+// ★ كل عنصر له: id, ic, name, desc, price, key (مفتاح PD.shopExtras)
+// ★ لا يمكن شراء عنصر مرتين حتى يُستعمل — يُحفظ دائماً حتى تلعب
+const SHOP_ITEMS=[
+  {id:'extra_50',    ic:'✂️', name:'50:50 إضافي',    key:'extra50',  price:20, pricy:false,
+   desc:'خمسون إضافية — تُحذف نصف الخيارات الخاطئة مرة أخرى'},
+  {id:'extra_phone', ic:'📞', name:'اتصال إضافي',    key:'extraPh',  price:22, pricy:false,
+   desc:'مكالمة إضافية من صديق ذكي جداً'},
+  {id:'time_bomb',   ic:'💣', name:'قنبلة الوقت',    key:'timeBomb', price:28, pricy:false,
+   desc:'أضف 20 ثانية للمؤقت في أي لحظة تريد!'},
+  {id:'crystal_ball',ic:'🔮', name:'الكرة السحرية',  key:'crystal',  price:35, pricy:true,
+   desc:'تكشف مستوى صعوبة السؤال القادم قبل ظهوره'},
+  {id:'safe_floor',  ic:'🛡️', name:'درع الحماية',    key:'shield',   price:40, pricy:true,
+   desc:'يحميك من إجابة خاطئة واحدة — تكمل اللعبة كأن شيئاً لم يكن'},
+  {id:'double_next', ic:'×2', name:'جائزة مضاعفة',   key:'doubleQ',  price:45, pricy:true,
+   desc:'ضاعف جائزة سؤال واحد — خاطر واكسب أكثر!'},
+  {id:'swap_q',      ic:'🔄', name:'تبديل السؤال',   key:'swapQ',    price:30, pricy:false,
+   desc:'استبدل السؤال الحالي بآخر من نفس المستوى'},
+  {id:'ans_color',   ic:'🎨', name:'لون الإجابات',   key:'ansColor', price:18, pricy:false,
+   desc:'غيّر لون أزرار الإجابة — ذهبي أو نيون أو ماسي!'},
+  {id:'time_freeze', ic:'⏸️', name:'تجميد الوقت',    key:'freeze',   price:25, pricy:false,
+   desc:'أوقف المؤقت 10 ثوانٍ كاملة في أي لحظة'},
+];
+
+// دالة مساعدة: هل هذا المشتري موجود عند اللاعب؟
+function hasItem(key){ return ((PD.shopExtras||{})[key]||0)>0; }
+function consumeItem(key){
+  if(!PD.shopExtras) return;
+  if((PD.shopExtras[key]||0)>0){
+    PD.shopExtras[key]--;
+    persist();
+  }
+}
+
+// ─── Avatars ───
+const AVATARS=[
+  {id:'av_mic',em:'🎙️',name:'المقدم الكلاسيكي',cost:0,free:true},
+  {id:'av_star',em:'🌟',name:'النجم',cost:30},
+  {id:'av_crown',em:'👑',name:'الملك',cost:50},
+  {id:'av_robot',em:'🤖',name:'الروبوت',cost:40},
+  {id:'av_wizard',em:'🧙',name:'الساحر',cost:60},
+  {id:'av_lion',em:'🦁',name:'الأسد',cost:45},
+  {id:'av_fire',em:'🔥',name:'النار',cost:55},
+  {id:'av_diamond',em:'💎',name:'الماسة',cost:80},
+  {id:'av_rocket',em:'🚀',name:'الصاروخ',cost:70},
+];
+
+// ─── Exclusive Themes ───
+const EXCL_THEMES=[
+  {id:'thm_gold',name:'الذهب الخالص',cost:0,free:true,bg:'linear-gradient(135deg,#1a1200,#2d1f00)',border:'#FFD700',preview:'🌟'},
+  {id:'thm_ocean',name:'أعماق المحيط',cost:30,bg:'linear-gradient(135deg,#001428,#002855)',border:'#00BFFF',preview:'🌊'},
+  {id:'thm_galaxy',name:'المجرة',cost:50,bg:'linear-gradient(135deg,#0d001a,#1a0033)',border:'#9B59B6',preview:'🌌'},
+  {id:'thm_fire',name:'لهيب النار',cost:40,bg:'linear-gradient(135deg,#1a0000,#330d00)',border:'#FF4500',preview:'🔥'},
+  {id:'thm_emerald',name:'الزمرد',cost:35,bg:'linear-gradient(135deg,#001a0d,#003319)',border:'#00E676',preview:'💚'},
+  {id:'thm_royal',name:'الملكي',cost:60,bg:'linear-gradient(135deg,#0d0029,#1a0052)',border:'#7B68EE',preview:'👑'},
+];
+
+// ─── Special Challenges ───
+// ★ Escalating challenges — each completion unlocks harder one
+const CHALLENGES=[
+  // Tier 1 — always visible
+  {id:'ch1_play3',ic:'🎮',name:'الخطوة الأولى',desc:'العب 3 جلسات',reward:15,tier:1,
+   check:()=>(PD.games||0)>=3,prog:()=>Math.min(PD.games||0,3),total:3},
+  {id:'ch1_stars10',ic:'⭐',name:'جامع النجوم',desc:'اكسب 10 نجوم في جلسة واحدة',reward:20,tier:1,
+   check:()=>(PD.bestSessionStars||0)>=10,prog:()=>Math.min(PD.bestSessionStars||0,10),total:10},
+  // Tier 2 — unlocks after finishing 1 tier-1
+  {id:'ch2_streak5',ic:'🔥',name:'خمسة متتالية',desc:'حافظ على 5 إجابات صحيحة متتالية',reward:30,tier:2,
+   check:()=>(PD.maxStreak5||0)>=5,prog:()=>Math.min(PD.maxStreak5||0,5),total:5},
+  {id:'ch2_reach100k',ic:'💵',name:'مئة ألف',desc:'وصل إلى $100,000 في جلسة واحدة',reward:35,tier:2,
+   check:()=>(PD.best||0)>=100000,prog:()=>PD.best>=100000?1:0,total:1},
+  // Tier 3 — unlocks after finishing 2 tier-2
+  {id:'ch3_streak10',ic:'⚡',name:'عشرة متتالية',desc:'10 إجابات صحيحة متتالية في جلسة واحدة',reward:50,tier:3,
+   check:()=>(PD.maxStreak5||0)>=10,prog:()=>Math.min(PD.maxStreak5||0,10),total:10},
+  {id:'ch3_stars50',ic:'🌟',name:'ملك النجوم',desc:'اكسب 50 نجمة إجمالاً',reward:55,tier:3,
+   check:()=>(PD.allTimeStars||0)>=50,prog:()=>Math.min(PD.allTimeStars||0,50),total:50},
+  // Tier 4 — unlocks after all tier-3
+  {id:'ch4_million',ic:'💰',name:'المليونير',desc:'وصل إلى $1,000,000',reward:80,tier:4,
+   check:()=>(PD.best||0)>=1000000,prog:()=>PD.best>=1000000?1:0,total:1},
+  {id:'ch4_nohelp',ic:'🦸',name:'البطل بلا مساعدات',desc:'أكمل 15 سؤالاً بدون أي مساعدة',reward:70,tier:4,
+   check:()=>(PD.shopExtras?.noHelpDone),prog:()=>PD.shopExtras?.noHelpDone?1:0,total:1},
+  // Tier 5 — HARDEST — unlocks after all tier-4
+  {id:'ch5_perfect',ic:'👑',name:'الإجابة المثالية',desc:'أجب على 25 سؤالاً كلها صحيحة في جلسة واحدة',reward:150,tier:5,
+   check:()=>(PD.best||0)>=5000000,prog:()=>PD.best>=5000000?1:0,total:1},
+  {id:'ch5_stars200',ic:'💎',name:'أسطورة النجوم',desc:'اكسب 200 نجمة إجمالاً — التحدي النهائي',reward:200,tier:5,
+   check:()=>(PD.allTimeStars||0)>=200,prog:()=>Math.min(PD.allTimeStars||0,200),total:200},
+];
+
+function getUnlockedTier(){
+  const claimed=PD.claimedChallenges||[];
+  const tiers=[1,2,3,4,5];
+  for(const t of tiers){
+    const tierChallenges=CHALLENGES.filter(c=>c.tier===t);
+    const allDone=tierChallenges.every(c=>claimed.includes(c.id));
+    if(!allDone) return t; // current highest unlocked tier
+  }
+  return 5;
+}
+
+// ─── Leaderboard (mock global + player) ───
+const MOCK_LEADERS=[
+  {rank:1,av:'👑',name:'عبد الله المحمد',stars:482,best:'$5,000,000'},
+  {rank:2,av:'💎',name:'سارة الأحمد',stars:415,best:'$5,000,000'},
+  {rank:3,av:'🌟',name:'محمد العمري',stars:388,best:'$4,000,000'},
+  {rank:4,av:'🔥',name:'فاطمة الزهراني',stars:310,best:'$3,000,000'},
+  {rank:5,av:'🚀',name:'خالد النصر',stars:275,best:'$2,500,000'},
+  {rank:6,av:'🦁',name:'نورة السيد',stars:240,best:'$2,000,000'},
+  {rank:7,av:'🧙',name:'يوسف الرحمة',stars:198,best:'$1,500,000'},
+];
+
+// ─── Shop functions ───
+function openStarsShop(){
+  renderShopItems();renderAvatars();renderExclThemes();
+  const bal=PD.totalStars||0;
+  document.getElementById('shop-stars-bal').textContent=bal;
+  document.getElementById('boxes-opened').textContent=PD.boxesOpened||0;
+  document.getElementById('mbox-result').textContent='';
+  document.getElementById('m-box').textContent='🎁';
+  document.getElementById('mbox-price').textContent=getMboxPrice();
+  switchShopTab('tab-items',document.querySelector('.shop-tab'));
+  showScr('stars-shop');
+}
+function switchShopTab(tabId,btn){
+  document.querySelectorAll('.shop-section').forEach(s=>s.classList.remove('active'));
+  document.querySelectorAll('.shop-tab').forEach(b=>b.classList.remove('active'));
+  document.getElementById(tabId).classList.add('active');
+  if(btn)btn.classList.add('active');
+}
+function renderShopItems(){
+  const el=document.getElementById('shop-items-grid');
+  if(!el)return;
+  el.innerHTML=SHOP_ITEMS.map(item=>{
+    const owned=hasItem(item.key);
+    const price=getItemPrice(item.id);
+    const purchases=(PD.purchaseCount||{})[item.id]||0;
+    const affordable=(PD.totalStars||0)>=price;
+    const lvl=getPriceLevel(item.id);
+
+    if(owned){
+      return `<div class="shop-item" style="cursor:default;border-color:rgba(0,230,118,.55);background:linear-gradient(145deg,rgba(0,80,30,.5),rgba(0,40,15,.4));">
+        <div class="si-badge" style="background:linear-gradient(135deg,#00C851,#007A30);">جاهز ✓</div>
+        <div class="si-ic" style="font-size:${item.ic.length>2?'22px':'30px'}">${item.ic}</div>
+        <div class="si-name">${item.name}</div>
+        <div class="si-desc" style="color:rgba(0,230,118,.7);">${item.desc}</div>
+        <div style="font-size:12px;color:var(--green);font-weight:700;margin-top:6px;background:rgba(0,230,118,.1);border-radius:8px;padding:5px;">
+          🎮 سيظهر في اللعبة القادمة
+        </div>
+      </div>`;
+    }
+
+    // حساب جدول الأسعار القادمة
+    const nextPrices=[];
+    for(let i=1;i<=3;i++){
+      const futurePurchases=purchases+i;
+      let p=item.price;
+      for(let j=0;j<futurePurchases;j++){
+        if(j<3) p*=1.4; else if(j<7) p*=1.7; else p*=2.0;
+      }
+      nextPrices.push(Math.round(p));
+    }
+
+    return `<div class="shop-item" onclick="buyShopItem('${item.id}')"
+      style="${!affordable?'opacity:.6;':''}cursor:${!affordable?'not-allowed':'pointer'};">
+      ${lvl.label?`<div class="si-badge" style="background:none;border:1px solid ${lvl.color};color:${lvl.color};font-size:10px;">${lvl.label}</div>`:''}
+      <div class="si-ic" style="font-size:${item.ic.length>2?'22px':'30px'}">${item.ic}</div>
+      <div class="si-name">${item.name}</div>
+      <div class="si-desc">${item.desc}</div>
+      <div class="si-price" style="color:${purchases>=8?'#CE93D8':purchases>=5?'#FF4444':purchases>=2?'#FF9100':'var(--gold)'};">
+        ⭐ ${price.toLocaleString()}
+      </div>
+      ${purchases>0?`<div style="font-size:10px;color:var(--dim);margin-top:3px;text-align:center;">
+        المرة القادمة: ⭐${nextPrices[0].toLocaleString()}
+      </div>`:''}
+      ${!affordable?`<div style="font-size:11px;color:var(--red);margin-top:4px;text-align:center;">
+        تحتاج ⭐${(price-(PD.totalStars||0)).toLocaleString()} إضافية
+      </div>`:''}
+    </div>`;
+  }).join('');
+}
+function getItemPrice(id){
+  const purchases=(PD.purchaseCount||{})[id]||0;
+  const item=SHOP_ITEMS.find(i=>i.id===id);
+  if(!item)return 0;
+  // السعر يزيد +10 نجمة بعد كل شراء
+  return item.price + (purchases * 10);
+}
+function getPriceLevel(id){
+  const p=(PD.purchaseCount||{})[id]||0;
+  if(p===0) return {label:'',color:''};
+  if(p<=3)  return {label:'+'+( p*10)+'⭐',color:'#FFD700'};
+  if(p<=6)  return {label:'+'+( p*10)+'⭐',color:'#FF9100'};
+  if(p<=9)  return {label:'+'+( p*10)+'⭐',color:'#FF4444'};
+  return          {label:'+'+( p*10)+'⭐ 💎',color:'#CE93D8'};
+}
+function buyShopItem(id){
+  const item=SHOP_ITEMS.find(i=>i.id===id);
+  if(!item)return;
+  PD.shopExtras=PD.shopExtras||{};
+
+  // ★ لا يمكن شراء نفس العنصر مرتين قبل استخدامه
+  if(hasItem(item.key)){
+    showNotif('⚠️ لديك هذا العنصر! العب واستخدمه أولاً');
+    return;
+  }
+
+  const price=getItemPrice(id);
+  if((PD.totalStars||0)<price){
+    showNotif('⭐ تحتاج '+price+' نجمة'+(((PD.purchaseCount||{})[id]||0)>0?' (السعر ارتفع!)':''));
+    return;
+  }
+
+  // ★ خصم النجوم وحفظ العنصر
+  PD.totalStars-=price;
+  PD.shopExtras[item.key]=(PD.shopExtras[item.key]||0)+1;
+  PD.purchaseCount=PD.purchaseCount||{};
+  PD.purchaseCount[id]=(PD.purchaseCount[id]||0)+1;
+  persist();
+
+  const nextPrice=getItemPrice(id);
+  showNotif('✅ تم شراء "'+item.name+'"! سيظهر في اللعبة القادمة 🎮');
+  document.getElementById('shop-stars-bal').textContent=PD.totalStars;
+
+  // تحديث الواجهة فوراً — يظهر "جاهز ✓" بدل زر الشراء
+  renderShopItems();
+}
+function renderAvatars(){
+  const el=document.getElementById('avatars-grid');
+  if(!el)return;
+  const owned=PD.ownedAvatars||['av_mic'];
+  const active=PD.activeAvatar||'av_mic';
+  el.innerHTML=AVATARS.map(av=>`
+    <div class="av-item ${active===av.id?'av-active':''} ${!owned.includes(av.id)&&!av.free?'av-locked':''}" onclick="selectAvatar('${av.id}')">
+      <div class="av-em">${av.em}</div>
+      <div class="av-name">${av.name}</div>
+      ${owned.includes(av.id)||av.free?`<div class="av-owned">${active===av.id?'✓ نشط':'اضغط للتفعيل'}</div>`:`<div class="av-cost">⭐ ${av.cost}</div>`}
+    </div>`).join('');
+}
+function selectAvatar(id){
+  const av=AVATARS.find(a=>a.id===id);if(!av)return;
+  const owned=PD.ownedAvatars||['av_mic'];
+  if(!owned.includes(id)&&!av.free){
+    if((PD.totalStars||0)<av.cost){showNotif('⭐ تحتاج '+av.cost+' نجمة لفتح هذا الأفاتار!');return;}
+    PD.totalStars-=av.cost;
+    PD.ownedAvatars=[...owned,id];persist();showNotif('🎭 تم فتح الأفاتار: '+av.name+'!');
+    document.getElementById('shop-stars-bal').textContent=PD.totalStars;
+  }
+  PD.activeAvatar=id;persist();
+  renderAvatars();showNotif('✓ تم تفعيل '+av.name);
+}
+function getActiveAvatarEmoji(){
+  const av=AVATARS.find(a=>a.id===(PD.activeAvatar||'av_mic'));
+  return av?av.em:'🎙️';
+}
+function renderExclThemes(){
+  const el=document.getElementById('themes-grid');if(!el)return;
+  const owned=PD.ownedThemes||['thm_gold'];
+  const active=PD.activeTheme||'thm_gold';
+  el.innerHTML=EXCL_THEMES.map(t=>`
+    <div class="thm-item ${active===t.id?'thm-active':''} ${!owned.includes(t.id)&&!t.free?'thm-locked':''}" onclick="selectExclTheme('${t.id}')" style="border-color:${owned.includes(t.id)||t.free?t.border:'rgba(255,255,255,.15)'}">
+      <div class="thm-preview" style="background:${t.bg}">${t.preview}</div>
+      <div class="thm-info">
+        <div class="thm-name">${t.name}</div>
+        <div class="thm-cost">${owned.includes(t.id)||t.free?'✓ مملوك':'⭐ '+t.cost}</div>
+      </div>
+    </div>`).join('');
+}
+function selectExclTheme(id){
+  const t=EXCL_THEMES.find(x=>x.id===id);if(!t)return;
+  const owned=PD.ownedThemes||['thm_gold'];
+  if(!owned.includes(id)&&!t.free){
+    if((PD.totalStars||0)<t.cost){showNotif('⭐ تحتاج '+t.cost+' نجمة لفتح هذا الثيم!');return;}
+    PD.totalStars-=t.cost;PD.ownedThemes=[...owned,id];persist();
+    showNotif('🎨 تم فتح ثيم: '+t.name+'!');
+    document.getElementById('shop-stars-bal').textContent=PD.totalStars;
+  }
+  PD.activeTheme=id;
+  // Apply theme
+  document.body.style.setProperty('--bg-override',t.bg);
+  persist();renderExclThemes();showNotif('✓ تم تفعيل ثيم '+t.name);
+}
+
+// ─── Mystery Box ───
+// سعر الصندوق يرتفع بعد كل شراء
+const MBOX_BASE_PRICE=15;
+function getMboxPrice(){
+  const opened=PD.boxesOpened||0;
+  // السعر يزيد +10 نجمة بعد كل فتح
+  return MBOX_BASE_PRICE + (opened * 10);
+}
+
+const MBOX_PRIZES=[
+  {ic:'⭐',name:'5 نجوم مجانية!',action:()=>{PD.totalStars=(PD.totalStars||0)+5;persist();}},
+  {ic:'⭐⭐⭐',name:'10 نجوم مجانية!',action:()=>{PD.totalStars=(PD.totalStars||0)+10;persist();}},
+  {ic:'⭐×20',name:'20 نجمة دفعة واحدة!',action:()=>{PD.totalStars=(PD.totalStars||0)+20;persist();}},
+  {ic:'50:50',name:'مساعدة 50:50 مجانية!',action:()=>{PD.shopExtras=PD.shopExtras||{};PD.shopExtras.extra50=(PD.shopExtras.extra50||0)+1;persist();}},
+  {ic:'🛡️',name:'درع حماية مجاني!',action:()=>{PD.shopExtras=PD.shopExtras||{};PD.shopExtras.shield=(PD.shopExtras.shield||0)+1;persist();}},
+  {ic:'×2',name:'جائزة مضاعفة مجانية!',action:()=>{PD.shopExtras=PD.shopExtras||{};PD.shopExtras.doubleQ=(PD.shopExtras.doubleQ||0)+1;persist();}},
+  {ic:'🎭',name:'أفاتار نادر مفتوح!',action:()=>{const unlocked=['av_star','av_wizard','av_fire'];const pick=unlocked[Math.floor(Math.random()*unlocked.length)];const owned=PD.ownedAvatars||['av_mic'];if(!owned.includes(pick)){PD.ownedAvatars=[...owned,pick];}persist();}},
+  {ic:'💨',name:'حظاً أوفر المرة القادمة!',action:()=>{}},
+];
+
+let mboxOpen=false;
+function openMysteryBox(){
+  if(mboxOpen)return;
+  const price=getMboxPrice();
+  if((PD.totalStars||0)<price){
+    showNotif('⭐ تحتاج '+price+' نجمة لفتح الصندوق!');
+    return;
+  }
+  mboxOpen=true;
+  PD.totalStars-=price;
+  PD.boxesOpened=(PD.boxesOpened||0)+1;
+  persist();
+
+  // تحديث الواجهة فوراً
+  const nextPrice=getMboxPrice();
+  document.getElementById('shop-stars-bal').textContent=PD.totalStars;
+  document.getElementById('mbox-price').textContent=nextPrice;
+  document.getElementById('open-box-btn').disabled=true;
+  document.getElementById('mbox-result').textContent='';
+
+  const box=document.getElementById('m-box');
+  box.classList.add('opened');
+  box.textContent='✨';
+
+  const prize=MBOX_PRIZES[Math.floor(Math.random()*MBOX_PRIZES.length)];
+  setTimeout(()=>{
+    prize.action();
+    document.getElementById('mbox-result').textContent=prize.ic+' '+prize.name;
+    document.getElementById('boxes-opened').textContent=PD.boxesOpened;
+    document.getElementById('shop-stars-bal').textContent=PD.totalStars;
+    // تحديث السعر الجديد بعد الشراء
+    document.getElementById('mbox-price').textContent=getMboxPrice();
+    showNotif('🎁 '+prize.name);
+    box.textContent='🎁';box.classList.remove('opened');
+    document.getElementById('open-box-btn').disabled=false;
+    mboxOpen=false;
+  },1000);
+}
+
+// ─── Special Challenges ───
+function openSpecialChallenges(){
+  renderChallenges();
+  document.getElementById('chal-stars-bal').textContent=PD.totalStars||0;
+  showScr('special-challenges');
+}
+function renderChallenges(){
+  const el=document.getElementById('challenges-list');if(!el)return;
+  const claimed=PD.claimedChallenges||[];
+  const unlockedTier=getUnlockedTier();
+  const tierNames={1:'المستوى 1 — مبتدئ',2:'المستوى 2 — متعلم',3:'المستوى 3 — متقدم',4:'المستوى 4 — خبير',5:'المستوى 5 — أسطوري 👑'};
+  const tierColors={1:'#69F0AE',2:'#FFD700',3:'#FF9100',4:'#FF1744',5:'#CE93D8'};
+  let html='';
+  [1,2,3,4,5].forEach(tier=>{
+    const tierChs=CHALLENGES.filter(c=>c.tier===tier);
+    const isLocked=tier>unlockedTier;
+    const allDone=tierChs.every(c=>claimed.includes(c.id));
+    html+=`<div style="margin:10px 0 6px;padding:8px 14px;background:rgba(255,255,255,.04);border-radius:10px;display:flex;align-items:center;justify-content:space-between;">
+      <span style="font-size:13px;font-weight:900;color:${tierColors[tier]}">${tierNames[tier]}</span>
+      <span style="font-size:12px;color:var(--dim)">${isLocked?'🔒 مقفل':'✓ '+(allDone?'مكتمل!':'جارٍ')}</span>
+    </div>`;
+    tierChs.forEach(ch=>{
+      const done=ch.check();
+      const isClaimed=claimed.includes(ch.id);
+      const prog=ch.prog();
+      const pct=Math.round((prog/ch.total)*100);
+      html+=`<div class="chal-item ${isClaimed?'chal-done':''} ${isLocked?'chal-locked':''}" onclick="tryChallenge('${ch.id}')">
+        <div class="chal-ic">${ch.ic}</div>
+        <div class="chal-info">
+          <div class="chal-name">${ch.name}</div>
+          <div class="chal-desc">${isLocked?'🔒 أكمل المستوى السابق لفتح هذا التحدي':ch.desc}</div>
+          <div class="chal-reward" style="color:${tierColors[tier]}">مكافأة: ⭐ ${ch.reward} نجمة</div>
+          <div class="chal-prog"><div class="chal-prog-fill" style="width:${isLocked?0:pct}%;background:${tierColors[tier]}"></div></div>
+        </div>
+        <div class="chal-status">${isClaimed?'✅':isLocked?'🔒':done?'🎁':'▶️'}</div>
+      </div>`;
+    });
+    if(tier<5){
+      html+=`<div style="text-align:center;color:var(--dim);font-size:20px;padding:4px;">↓</div>`;
+    }
+  });
+  el.innerHTML=html;
+}
+function tryChallenge(id){
+  const ch=CHALLENGES.find(c=>c.id===id);if(!ch)return;
+  const claimed=(PD.claimedChallenges||[]).includes(id);
+  if(claimed){showNotif('✅ هذا التحدي مكتمل بالفعل!');return;}
+  // Check tier lock
+  const unlockedTier=getUnlockedTier();
+  if(ch.tier>unlockedTier){
+    showNotif('🔒 أكمل تحديات المستوى '+(ch.tier-1)+' أولاً!');
+    return;
+  }
+  if(ch.check()){
+    PD.claimedChallenges=PD.claimedChallenges||[];
+    if(!PD.claimedChallenges.includes(id)){
+      PD.claimedChallenges.push(id);
+      PD.totalStars=(PD.totalStars||0)+ch.reward;
+      persist();
+      // Check if new tier unlocked
+      const newTier=getUnlockedTier();
+      if(newTier>ch.tier) showNotif('🎉 مستوى جديد مفتوح! المستوى '+newTier+' متاح الآن! ⭐'+ch.reward);
+      else showNotif('🎉 إنجاز! ⭐'+ch.reward+' نجمة!');
+      document.getElementById('chal-stars-bal').textContent=PD.totalStars;
+      renderChallenges();
+    }
+  } else {
+    showNotif('⚡ العب أكثر لإكمال هذا التحدي! التقدم: '+Math.round((ch.prog()/ch.total)*100)+'%');
+  }
+}
+
+// ─── Leaderboard ───
+function openLeaderboard(){
+  renderLeaderboard();showScr('leaderboard-scr');
+}
+function renderLeaderboard(){
+  const el=document.getElementById('lboard');if(!el)return;
+  const myStars=PD.totalStars||0;
+  const myBest='$'+(PD.best||0).toLocaleString();
+  const myRank=MOCK_LEADERS.filter(l=>l.stars>myStars).length+1;
+  const myAv=getActiveAvatarEmoji();
+  // Insert player in right position
+  const all=[...MOCK_LEADERS];
+  const myRow={rank:myRank,av:myAv,name:'أنت',stars:myStars,best:myBest,isMe:true};
+  // Build display
+  const top7=all.slice(0,7);
+  let html=top7.map(r=>`
+    <div class="lb-row">
+      <div class="lb-rank">${r.rank===1?'🥇':r.rank===2?'🥈':r.rank===3?'🥉':r.rank}</div>
+      <div class="lb-av">${r.av}</div>
+      <div class="lb-info"><div class="lb-name">${r.name}</div><div class="lb-score">أفضل: ${r.best}</div></div>
+      <div class="lb-stars">⭐ ${r.stars}</div>
+    </div>`).join('');
+  html+=`<div style="text-align:center;color:var(--dim);font-size:20px;padding:6px 0;">···</div>`;
+  html+=`<div class="lb-row lb-me">
+    <div class="lb-rank">${myRank}</div>
+    <div class="lb-av">${myAv}</div>
+    <div class="lb-info"><div class="lb-name">أنت</div><div class="lb-score">أفضل: ${myBest}</div></div>
+    <div class="lb-stars">⭐ ${myStars}</div>
+  </div>`;
+  html+=`<div class="lb-note">🔒 تحتاج ⭐${Math.max(0,(MOCK_LEADERS[Math.min(myRank-2,6)]?.stars||0)-myStars+1)} نجمة للمرتبة التالية</div>`;
+  el.innerHTML=html;
+}
+
+// ══════════════════════════════════
+// UPDATE INTRO — ADD SHOP BUTTONS
+// ══════════════════════════════════
+function injectIntroShopButtons(){
+  if(document.getElementById('shop-btn-wrap'))return;
+  const target=document.querySelector('.big-start');
+  if(!target)return;
+  const wrap=document.createElement('div');
+  wrap.id='shop-btn-wrap';
+  wrap.style.cssText='display:flex;gap:9px;flex-wrap:wrap;justify-content:center;width:100%;max-width:320px;';
+  wrap.innerHTML=`
+    <button class="open-shop-btn" onclick="openStarsShop()" style="flex:1;">⭐ متجر النجوم</button>
+    <button class="open-shop-btn" onclick="openSpecialChallenges()" style="flex:1;border-color:rgba(255,100,0,.45);color:#FF8C00;background:rgba(255,100,0,.1);">⚡ تحديات</button>
+    <button class="open-shop-btn" onclick="openLeaderboard()" style="flex:1;border-color:rgba(0,229,255,.4);color:var(--cyan);background:rgba(0,229,255,.08);">🏆 لوحة الترتيب</button>`;
+  target.insertAdjacentElement('afterend',wrap);
+}
+
+
+
+// ══════════════════════════════════
+// FIRST-TIME TUTORIAL
+// ══════════════════════════════════
+const TUT_STEPS=[
+  {ic:'🎯',title:'مرحباً بك!',body:'هذه لعبة "من سيربح المليون؟"<br>أجب على 25 سؤالاً متدرجاً للوصول إلى <b style="color:var(--gold)">$5,000,000</b>!'},
+  {ic:'⭐',title:'نظام النجوم',body:'كلما أجبت <b style="color:var(--gold)">بسرعة أكبر</b> كسبت نجوماً أكثر!<br>من ⭐×10 فوراً حتى ⭐×1 في الثانية الأخيرة'},
+  {ic:'🛒',title:'متجر النجوم',body:'استخدم نجومك لشراء <b style="color:var(--gold)">مساعدات إضافية</b><br>وثيمات حصرية وأفاتارات نادرة!<br><span style="color:var(--red);font-size:13px;">⚠️ الأسعار ترتفع مع كل شراء!</span>'},
+  {ic:'💡',title:'المساعدات الأربع',body:'<b>50:50</b> — احذف نصف الخاطئة<br><b>📞 اتصال</b> — تلميح من صديق<br><b>👥 جمهور</b> — تصويت الجمهور<br><b>⏭️ تخطي</b> — تجاوز السؤال مجاناً'},
+  {ic:'📅',title:'تحدي اليوم',body:'كل يوم هناك تحدٍّ خاص بمكافأة <b style="color:var(--gold)">×3 نجوم</b><br>لديك <b>3 محاولات فقط</b> يومياً — لا تهدرها!'},
+  {ic:'🚀',title:'جاهز للعب!',body:'الآن تعرف كل شيء!<br>انطلق نحو المليون وحظاً موفقاً! 🏆'},
+];
+let tutCur=0;
+function showTutorial(){
+  if(PD.tutDone)return;
+  tutCur=0;renderTutStep();
+  document.getElementById('tutorial-overlay').style.display='flex';
+}
+function renderTutStep(){
+  const s=TUT_STEPS[tutCur];
+  document.getElementById('tut-icon').textContent=s.ic;
+  document.getElementById('tut-title').textContent=s.title;
+  document.getElementById('tut-body').innerHTML=s.body;
+  const dots=document.getElementById('tut-dots');
+  dots.innerHTML=TUT_STEPS.map((_,i)=>`<div style="width:8px;height:8px;border-radius:50%;background:${i===tutCur?'var(--gold)':'rgba(255,255,255,.25)'}"></div>`).join('');
+  document.getElementById('tut-prev').style.display=tutCur>0?'block':'none';
+  const nextBtn=document.getElementById('tut-next');
+  nextBtn.textContent=tutCur===TUT_STEPS.length-1?'ابدأ اللعبة! 🎯':'التالي →';
+}
+function tutStep(dir){
+  tutCur+=dir;
+  if(tutCur>=TUT_STEPS.length){
+    document.getElementById('tutorial-overlay').style.display='none';
+    PD.tutDone=true;persist();
+    return;
+  }
+  if(tutCur<0)tutCur=0;
+  renderTutStep();
+}
+
+// ══════════════════════════════════
+// 🏅 لقب الأسبوع
+// ══════════════════════════════════
+function getWeekTitle(){
+  const g=PD.games||0, b=PD.best||0, s=PD.totalStars||0, streak=PD.streak||0;
+  const week=Math.floor(Date.now()/(7*24*3600*1000));
+  // اللقب يتغير كل أسبوع بناءً على أداء اللاعب
+  if(b>=5000000) return {title:'👑 أسطورة الأسبوع', color:'#CE93D8'};
+  if(b>=1000000) return {title:'💰 مليونير الأسبوع', color:'#FFD700'};
+  if(s>=100)     return {title:'⭐ جامع النجوم', color:'#FFD700'};
+  if(streak>=7)  return {title:'🔥 الثابت الأسبوعي', color:'#FF8C00'};
+  if(g>=10)      return {title:'🎮 لاعب الأسبوع', color:'#00E5FF'};
+  if(g>=3)       return {title:'🌱 النجم الصاعد', color:'#00E676'};
+  if(g>=1)       return {title:'🎯 المبتدئ المميز', color:'#69F0AE'};
+  return {title:'🆕 لاعب جديد', color:'var(--dim)'};
+}
+function renderWeekTitle(){
+  const wt=getWeekTitle();
+  const el=document.getElementById('week-title-badge');
+  if(el){ el.textContent=wt.title; el.style.color=wt.color; }
+}
+// ══════════════════════════════════
+// قراءة المكافأة من الرابط (من صفحة المكافأة)
+// ══════════════════════════════════
+function readRewardFromURL(){
+  const p = new URLSearchParams(window.location.search);
+  if(!p.has('reward')) return; // لا توجد مكافأة
+  PD.shopExtras = PD.shopExtras || {};
+  let msg = '🎁 مكافأتك: ';
+  if(p.get('stars'))    { const s=parseInt(p.get('stars')); PD.totalStars=(PD.totalStars||0)+s; msg+='⭐'+s+' '; }
+  if(p.get('shield'))   { PD.shopExtras.shield   =(PD.shopExtras.shield||0)  +1; msg+='🛡️ '; }
+  if(p.get('timeBomb')) { PD.shopExtras.timeBomb =(PD.shopExtras.timeBomb||0)+1; msg+='💣 '; }
+  if(p.get('doubleQ'))  { PD.shopExtras.doubleQ  =(PD.shopExtras.doubleQ||0) +1; msg+='×2 '; }
+  if(p.get('crystal'))  { PD.shopExtras.crystal  =(PD.shopExtras.crystal||0) +1; msg+='🔮 '; }
+  if(p.get('extra50'))  { PD.shopExtras.extra50  =(PD.shopExtras.extra50||0) +1; msg+='✂️ '; }
+  persist();
+  // امسح البارامترات من الرابط
+  window.history.replaceState({}, '', window.location.pathname);
+  // أظهر إشعار بعد ثانية
+  setTimeout(()=>showNotif(msg.trim()), 1000);
+}
+(function(){
+  const tips=[
+    '💡 أجب بسرعة للحصول على نجوم أكثر!',
+    '🛡️ اشترِ درع الحماية من المتجر لتجنب الخسارة',
+    '🔥 حافظ على سلسلتك اليومية لمكافآت ضخمة',
+    '⭐ النجوم تتراكم — استخدمها بذكاء في المتجر',
+    '🎯 نقطة الأمان عند السؤال 5 و10 و15 و20',
+    '📅 تحدي اليوم يعطيك ×3 نجوم — لا تفوّته!',
+    '🔮 الكرة السحرية تكشف السؤال القادم مسبقاً',
+    '🎰 أدر عجلة الحظ بعد كل فوز لمكافأة إضافية',
+    '💣 قنبلة الوقت تضيف 20 ثانية في أي لحظة',
+    '🌟 500+ سؤال في 12 فئة — الأسئلة لا تتكرر',
+  ];
+  let tipIdx=0;
+  const bar=document.getElementById('splash-bar');
+  const tipEl=document.getElementById('splash-tip');
+  if(!bar)return;
+  let pct=0;
+  const iv=setInterval(()=>{
+    pct+=Math.random()*4+2;
+    if(pct>100)pct=100;
+    bar.style.width=pct+'%';
+    if(pct%22<4&&tipEl){
+      tipEl.style.opacity='0';
+      setTimeout(()=>{
+        tipEl.textContent=tips[tipIdx%tips.length];
+        tipIdx++;
+        tipEl.style.opacity='1';
+        tipEl.style.transition='opacity .4s';
+      },300);
+    }
+    if(pct>=100){
+      clearInterval(iv);
+      setTimeout(()=>{
+        const splash=document.getElementById('splash');
+        if(splash){splash.classList.add('hide');setTimeout(()=>splash.remove(),900);}
+      },500);
+    }
+  },60);
+})();
+updateStreak();
+updateIntroUI();
+buildStagesTable();
+mkStars();
+drawWheel(0);
+readRewardFromURL();
+
+// ══ تحقق من انتهاء صلاحية المساعدات المُمنوحة من صندوق المكافآت ══
+(function checkItemExpiry(){
+  const EXPIRY_KEY  = 'rewardbox_expiry';
+  const EXPIRY_MS   = 12 * 60 * 60 * 1000;
+  const ITEMS       = ['shield','timeBomb','doubleQ','crystal','swapQ','freeze','extra50','extraPh'];
+  const granted     = parseInt(localStorage.getItem(EXPIRY_KEY)||'0');
+  if(!granted) return;
+  if((Date.now()-granted) < EXPIRY_MS) return;
+  // انتهت المدة
+  let expired=false;
+  ITEMS.forEach(k=>{
+    if((PD.shopExtras||{})[k]>0){
+      PD.shopExtras[k]=0;
+      expired=true;
+    }
+  });
+  if(expired){
+    persist();
+    localStorage.removeItem(EXPIRY_KEY);
+    showNotif('⏰ انتهت صلاحية المساعدات غير المستخدمة');
+  }
+})();
+// Inject shop buttons after DOM ready
+injectIntroShopButtons();
+// Show tutorial on first visit
+setTimeout(showTutorial, 800);
+// Add sidebar links
+const sbMenu=document.querySelector('.sb-menu');
+if(sbMenu){
+  const d=document.createElement('div');
+  d.innerHTML=`<div class="sb-div"></div>
+    <div class="sbi" onclick="closeSB();openStarsShop();"><span class="sbi-ic">⭐</span><span class="sbi-tx">متجر النجوم</span></div>
+    <div class="sbi" onclick="closeSB();openSpecialChallenges();"><span class="sbi-ic">⚡</span><span class="sbi-tx">تحديات خاصة</span></div>
+    <div class="sbi" onclick="closeSB();openLeaderboard();"><span class="sbi-ic">🏆</span><span class="sbi-tx">لوحة المتصدرين</span></div>`;
+  sbMenu.appendChild(d);
+}
+</script>
+
+<!-- FIRST-TIME TUTORIAL -->
+<div id="tutorial-overlay" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.88);z-index:900;align-items:center;justify-content:center;padding:20px;">
+  <div style="background:linear-gradient(145deg,rgba(4,16,64,.99),rgba(1,8,24,1));border:2px solid var(--gold);border-radius:20px;padding:26px;max-width:400px;width:100%;text-align:center;animation:pi .4s ease;">
+    <div style="font-size:48px;margin-bottom:10px;" id="tut-icon">🎯</div>
+    <div style="font-size:20px;font-weight:900;color:var(--gold);margin-bottom:8px;" id="tut-title">مرحباً بك!</div>
+    <div style="font-size:15px;color:rgba(255,255,255,.85);line-height:2;margin-bottom:18px;" id="tut-body">هذه لعبة من سيربح المليون؟<br>أجب على 25 سؤالاً متدرجاً للوصول إلى $5,000,000!</div>
+    <div style="display:flex;gap:6px;justify-content:center;margin-bottom:16px;" id="tut-dots"></div>
+    <div style="display:flex;gap:10px;justify-content:center;">
+      <button id="tut-prev" onclick="tutStep(-1)" style="background:rgba(255,255,255,.08);border:1px solid rgba(255,255,255,.2);color:var(--dim);border-radius:20px;padding:9px 20px;font-family:'Cairo',sans-serif;font-size:14px;cursor:pointer;display:none;">← السابق</button>
+      <button id="tut-next" onclick="tutStep(1)" style="background:linear-gradient(135deg,var(--gold),var(--gold2));color:var(--bg);border:none;border-radius:20px;padding:10px 28px;font-size:16px;font-family:'Cairo',sans-serif;font-weight:900;cursor:pointer;">التالي →</button>
+    </div>
+  </div>
+</div>
+</body>
+</html>
